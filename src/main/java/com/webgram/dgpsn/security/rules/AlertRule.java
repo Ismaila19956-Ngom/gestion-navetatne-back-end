@@ -1,0 +1,47 @@
+package com.webgram.dgpsn.security.rules;
+
+import com.webgram.dgpsn.security.SecurityPermissions;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
+import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
+import org.springframework.stereotype.Component;
+
+@Component
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class AlertRule {
+    static final String ALERTE_API_PREFIX = "/alertes";
+    static final String ALERT_ID = "/{alertId}";
+
+    @Bean
+    public SecurityRule setAlertTotRead() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(ALERTE_API_PREFIX + ALERT_ID)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.READ_ALERTE)
+                .hasPermission(SecurityPermissions.ADD_ALERTE)
+                .hasPermission(SecurityPermissions.EDIT_ALERTE)
+                .hasPermission(SecurityPermissions.DELETE_ALERTE)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+
+    @Bean
+    public SecurityRule readAll() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(ALERTE_API_PREFIX)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.READ_ALERTE)
+                .hasPermission(SecurityPermissions.ADD_ALERTE)
+                .hasPermission(SecurityPermissions.EDIT_ALERTE)
+                .hasPermission(SecurityPermissions.DELETE_ALERTE)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+
+
+}

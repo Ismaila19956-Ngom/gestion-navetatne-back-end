@@ -1,11 +1,11 @@
-package sn.webg.paad.security;
+package com.webgram.dgpsn.security;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 
 import java.util.Collection;
 
-public class CustomUserDetails extends org.springframework.security.core.userdetails.User {
-
+public class CustomUserDetails extends User {
     private final Long userId;
 
     public CustomUserDetails(Long userId, String username, String password,
