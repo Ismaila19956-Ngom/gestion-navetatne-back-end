@@ -86,6 +86,8 @@ public enum ReferentielType {
     PROFIL_RH("Profil RH", "Profil Agent RH"),
     CONTRAT_RH("Contrat Rh", "Type Contrat Agent Rh"),
     DIPLOME("Diplome", "Diplome Agent Rh"),
+    FRAIS("Frais", "Frais"),
+    PRISE_EN_CHARGE("Prise en charge", "Prise en charge"),
     POSTE("Poste", "Poste Agent Rh");
 //    STARTUP("Startup", "Paramétrage startup"),;
 
