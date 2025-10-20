@@ -1,0 +1,27 @@
+package com.webgram.dgpsn.models;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.*;
+import lombok.experimental.Accessors;
+
+import java.io.Serializable;
+
+@Data
+@Builder
+@Accessors(chain = true)
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+//exclure les propriétés ayant des valeurs nulles / vides ou par défaut.
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class UpdatePasswordDTO implements Serializable {
+
+    private String password;
+    private String holdPassword;
+    private String confirmPassword;
+    private String login;
+
+
+}
