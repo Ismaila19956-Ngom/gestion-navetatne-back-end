@@ -8,6 +8,7 @@ import lombok.*;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -32,13 +33,23 @@ public class UserDTO implements Serializable {
 
     private boolean status;
 
+    private boolean online;
+
+    private LocalDateTime lastConnexion;
+
     private Long agentId;
+
+    private Long structureId;
 
     private Long profileId;
 
     @Schema(description = "", accessMode = Schema.AccessMode.READ_ONLY)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private AgentDTO agent;
+
+    @Schema(description = "", accessMode = Schema.AccessMode.READ_ONLY)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private StructureDTO structure;
 
     @Schema(description = "", accessMode = Schema.AccessMode.READ_ONLY)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)

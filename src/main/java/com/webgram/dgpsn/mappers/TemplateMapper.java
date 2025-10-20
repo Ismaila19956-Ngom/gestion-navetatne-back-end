@@ -1,12 +1,12 @@
 package com.webgram.dgpsn.mappers;
 
-import com.webgram.dgpsn.entities.ProfileEntity;
-import com.webgram.dgpsn.entities.TemplateEntity;
-import com.webgram.dgpsn.models.TemplateDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.mapstruct.ReportingPolicy;
+import com.webgram.dgpsn.entities.ProfileEntity;
+import com.webgram.dgpsn.models.TemplateDto;
+import com.webgram.dgpsn.entities.TemplateEntity;
 
 import java.util.HashSet;
 import java.util.Set;

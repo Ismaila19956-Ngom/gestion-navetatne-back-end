@@ -1,10 +1,10 @@
 package com.webgram.dgpsn.entities;
 
+import lombok.*;
 import com.webgram.dgpsn.entities.audits.Auditable;
 import com.webgram.dgpsn.entities.enums.Priority;
-import jakarta.persistence.*;
-import lombok.*;
 
+import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 

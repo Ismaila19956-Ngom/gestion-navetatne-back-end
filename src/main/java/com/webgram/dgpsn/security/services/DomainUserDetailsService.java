@@ -1,11 +1,5 @@
 package com.webgram.dgpsn.security.services;
 
-import com.webgram.dgpsn.entities.ProfileEntity;
-import com.webgram.dgpsn.entities.UserEntity;
-import com.webgram.dgpsn.exceptions.UserNotActivatedException;
-import com.webgram.dgpsn.repositories.ProfileRepository;
-import com.webgram.dgpsn.repositories.UserRepository;
-import com.webgram.dgpsn.security.CustomUserDetails;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -17,6 +11,11 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
+import com.webgram.dgpsn.entities.ProfileEntity;
+import com.webgram.dgpsn.entities.UserEntity;
+import com.webgram.dgpsn.exceptions.UserNotActivatedException;
+import com.webgram.dgpsn.repositories.ProfileRepository;
+import com.webgram.dgpsn.repositories.UserRepository;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -47,7 +46,7 @@ public class DomainUserDetailsService implements UserDetailsService {
          var userEntity = userRepository.findByLogin(username)
                  .orElseThrow(() -> new UsernameNotFoundException(MessageFormat.format("User {0}  was not found in the database", username)));
 
-         if(!userEntity.getStatus()) {
+         if(userEntity.getStatus() == false) {
             throw new UserNotActivatedException(MessageFormat.format(ACCOUNT_LOCKED, username));
         }
 
@@ -59,6 +58,7 @@ public class DomainUserDetailsService implements UserDetailsService {
         }
 
         return createSpringSecurityUser(username, userEntity);
+
     }
 
     private User createSpringSecurityUser(String username, UserEntity user) {
@@ -78,6 +78,6 @@ public class DomainUserDetailsService implements UserDetailsService {
 
         }
 
-        return new CustomUserDetails(user.getId(), user.getLogin(), user.getPassword(), grantedAuthorities);
+        return new User(user.getLogin(), user.getPassword(), grantedAuthorities);
     }
 }

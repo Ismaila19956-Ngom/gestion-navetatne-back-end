@@ -1,11 +1,11 @@
 package com.webgram.dgpsn.security.rules;
 
-import com.webgram.dgpsn.security.SecurityPermissions;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
+import com.webgram.dgpsn.security.SecurityPermissions;
 
 @Component
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -20,37 +20,50 @@ public class FolderRule {
                 .apiPattern(FOLDER_API_PREFIX)
                 .build()
                 .condition()
-                .hasPermission(SecurityPermissions.ADD_FOLDER)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
 
     @Bean
-    public SecurityRule readFolder() {
+    public SecurityRule createSubFolder() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.POST)
+                .apiPattern(FOLDER_API_PREFIX + FOLDER_ID)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+
+    @Bean
+    public SecurityRule readAFolder() {
         return SecurityRule.builder()
                 .httpMethod(HttpMethod.GET)
                 .apiPattern(FOLDER_API_PREFIX + FOLDER_ID)
                 .build()
                 .condition()
-                .hasPermission(SecurityPermissions.READ_FOLDER)
-                .hasPermission(SecurityPermissions.ADD_FOLDER)
-                .hasPermission(SecurityPermissions.EDIT_FOLDER)
-                .hasPermission(SecurityPermissions.DELETE_FOLDER)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
 
     @Bean
-    public SecurityRule readAllFolder() {
+    public SecurityRule readParentsFolder() {
         return SecurityRule.builder()
                 .httpMethod(HttpMethod.GET)
                 .apiPattern(FOLDER_API_PREFIX)
                 .build()
                 .condition()
-                .hasPermission(SecurityPermissions.READ_FOLDER)
-                .hasPermission(SecurityPermissions.EDIT_FOLDER)
-                .hasPermission(SecurityPermissions.DELETE_FOLDER)
-                .hasPermission(SecurityPermissions.ADD_FOLDER)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+
+    @Bean
+    public SecurityRule readAllFolders() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(FOLDER_API_PREFIX+"/all")
+                .build()
+                .condition()
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
@@ -62,10 +75,10 @@ public class FolderRule {
                 .apiPattern(FOLDER_API_PREFIX + FOLDER_ID)
                 .build()
                 .condition()
-                .hasPermission(SecurityPermissions.EDIT_FOLDER)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
+
     @Bean
     public SecurityRule deleteFolder() {
         return SecurityRule.builder()
@@ -73,7 +86,6 @@ public class FolderRule {
                 .apiPattern(FOLDER_API_PREFIX + FOLDER_ID)
                 .build()
                 .condition()
-                .hasPermission(SecurityPermissions.DELETE_FOLDER)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }

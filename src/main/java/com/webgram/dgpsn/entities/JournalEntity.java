@@ -1,10 +1,10 @@
 package com.webgram.dgpsn.entities;
 
-import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Table(name = "journal")
@@ -66,6 +66,7 @@ public class JournalEntity {
 
     @Column(name = "path")
     private String path;
+
 
 
 }

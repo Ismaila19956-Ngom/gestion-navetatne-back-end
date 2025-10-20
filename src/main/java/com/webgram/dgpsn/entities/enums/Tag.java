@@ -7,76 +7,40 @@ import java.text.MessageFormat;
 import java.util.Map;
 
 public enum Tag {
-    USER,
-    ACTIF_PASSIF,
-    PASSIF,
-    ACTIF,
-    DIFFERENCE,
-    DATE_DETECTION,
-    //tag relatif au solde tresorie
-    TOTAL_ENTREE,
-    TOTAL_SORTIE,
-    MOIS,
-    LIBELLE,
-    //tag relatif au bilan
-    MONTANT_ACTIF,
-    MONTANT_PASSIF,
-    DATE,
-
-    // Tags relatifs àu compte de resultat
-    RESULTAT_NET,
-    RESULTAT_COMMISSION,
-    TOTAL_NET,
-    CHARGE_EXPLOITATION,
-    CHARGE_BRUTE_EXPLOITATION,
-    RESULTAT_EXPLOITATION,
-    RESULTAT_NET_EXPLOITATION,
-    // Tags relatifs à la validaton etape workflow
+    TYPE_DEMANDE,
+    DATE_INSPECTION,
+    REFERENCE_INSPECTION,
     AGENT,
-    ETAPE,
-    DATE_VALIDATION,
-    // Tags relatifs à la liquidité
-    LIQUIDITE,
-    FINANCEMENT,
-    // workflow negative alerte seuil > 80
-    RESULT_VALUE,
-    ALERT_LEVEL,
-    RECOMMENDED_ACTION,
-    // Tags relatifs aux risques
-    RISQUE_STRATEGIQUE,
-    RISQUE_FINANCIER,
-    REGLEMENTATION,
-
-    // Tags relatifs aux ratios prudentiels
-    SOLVABILITE,
-    LIQUIDITE_RATIO,
-    ENDETTEMENT,
-
-    // Tags généraux
-    DESCRIPTION,
-    DATE_CREATION,
-    UTILISATEUR_RESPONSABLE,
-    ENTITE_AFFECTEE,
-    SEVERITE,
-
-    // Tags spécifiques aux alertes
-    ALERT_TYPE,
-    RESOLUTION_STATUS,
-    IMPACT_POTENTIEL,
-
-    // Tags relatifs aux personnes ou agents
-    AGENT_CONCERNE,
-    CHEF_DE_SERVICE,
-    EQUIPE_RESPONSABLE,
-
-    // Tags relatifs aux périodes ou durées
-    PERIODE_IMPACT,
-    DUREE_RESOLUTION,
-
-    // Tags relatifs aux documents ou informations supplémentaires
-    DOCUMENTS_ASSOCIES,
-    COMMENTAIRES;
-
+    NUMERO_REFERENCE,
+    SECTEUR_ACTIVITE,
+    TITRE_PROJET,
+    LiBELLE,
+    DATE_MESURE,
+    POLLUANT_PRINCIPAL,
+    NOM_ENTREPRISE,
+    DATE_PRELEVEMENT,
+    POINT_PRELEVEMENT,
+    DESTINATION,
+    ORIGINE,
+    DATE_TRANSPORT,
+    PRODUIT,
+    QUANTITE,
+    DATE_MOUVEMENT,
+    NUMERO_RCCM,
+    DATE,
+    TYPE_PROJET,
+    DATE_VISITE,
+    PROMATEUR,
+    REFERENCE,
+    DATE_RECEPTION,
+    MONTANT_BUDGET,
+    LIGNE_BUDGET,
+    MONTANT_DEPENSE,
+    NOM,
+    PRENOM,
+    DATE_DEBUT,
+    DATE_FIN,
+    ANNEE;
 
 
     @JsonCreator(mode = JsonCreator.Mode.DELEGATING)

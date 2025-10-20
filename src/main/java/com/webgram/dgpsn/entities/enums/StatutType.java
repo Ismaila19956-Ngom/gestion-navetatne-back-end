@@ -7,17 +7,11 @@ import lombok.Setter;
 
 import java.text.MessageFormat;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
-import static java.util.Arrays.stream;
-
-public enum     StatutType {
-    TRAITEMENT_ENCOUR("En cours..."),
-    ACCEPTER("Accepté"),
-    REFUSER("Rejeté"),
-    FERMER("Fermé");
-
+public enum StatutType {
+    NON_CONFORME("Non conforme"),
+    COMFORME("Conforme"),
+    EN_COURS("En cours");
 
     @Getter
     @Setter
@@ -28,29 +22,25 @@ public enum     StatutType {
     }
 
     @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
-    public static StatutType fromValue(Object typeConge) {
-        if (typeConge instanceof Map) {
-            Map<String, Object> mapTypeConge = (Map<String, Object>) typeConge;
-            if (mapTypeConge.containsKey("name")) {
-                return StatutType.valueOf(mapTypeConge.get("name").toString());
+    public static StatutType fromValue(Object actionType) {
+        if (actionType instanceof Map) {
+            Map<String, Object> mapActionType = (Map<String, Object>) actionType;
+            if (mapActionType.containsKey("name")) {
+                return StatutType.valueOf(mapActionType.get("name").toString());
             }
         }
-        if (typeConge instanceof String) {
-            return StatutType.valueOf(typeConge.toString());
+        if (actionType instanceof String) {
+            return StatutType.valueOf(actionType.toString());
         }
-        throw new IllegalArgumentException(MessageFormat.format("{0} not found with the value: {1} in [{2}]", StatutType.class, typeConge, values()));
+        throw new IllegalArgumentException(MessageFormat.format("{0} not found with the value: {1} in [{2}]", StatutType.class, actionType, values()));
     }
 
     @JsonValue
-    Map<String, Object> getModule() {
+    Map<String, Object> getActionType() {
         return Map.of(
                 "name", name(),
                 "description", description
         );
     }
 
-    public static Set<StatutType> getAllSexe() {
-        return stream(values())
-                .collect(Collectors.toSet());
-    }
 }

@@ -1,0 +1,39 @@
+package com.webgram.dgpsn.models;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.*;
+import lombok.experimental.Accessors;
+import com.webgram.dgpsn.entities.enums.Sexe;
+import com.webgram.dgpsn.entities.enums.StatutDeclaration;
+
+import java.time.LocalDate;
+
+@Data
+@Builder
+@Accessors(chain = true)
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+//exclure les propriétés ayant des valeurs nulles / vides ou par défaut.
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class DeclarationDTO {
+
+    @Schema(description = "L'id technique, généré au moment de persister l'objet", accessMode = Schema.AccessMode.READ_ONLY)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private Long id;
+    private String reference;
+    private LocalDate dateReception;
+    private String prenom;
+    private String nom;
+    private String age;
+    private String telephone;
+    private String localisation;
+    private String description;
+    private String operateur;
+    private Sexe sexe;
+    private StatutDeclaration statut;
+}

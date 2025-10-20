@@ -8,6 +8,7 @@ import com.webgram.dgpsn.repositories.AgentRepository;
 import com.webgram.dgpsn.repositories.ProfileRepository;
 import com.webgram.dgpsn.repositories.UserRepository;
 import com.webgram.dgpsn.security.SecurityPermissions;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -17,8 +18,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.List;
-
-@SpringBootApplication(scanBasePackages = {"com.webgram.dgpsn"})
+@Slf4j
+@SpringBootApplication(scanBasePackages = {"com.webgram.dgpsn", "com.khoutech.*"})
 @EnableScheduling
 public class WebgramDgpsnApplication {
 

@@ -12,8 +12,15 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public enum CategorieAlerte {
-    ACTIF_PASSIF("ACTIF/PASSIF"),
-    RESULTAT_INDICATEUR(" RESULTAT INDICATEUR");
+//    PROJET("Activite"),
+    EVALUATION_ENVIRONNEMENTAL("Evaluation Environmental"),
+    GESTION_POLLUTION("Gestions pollution");
+//    QUALITE_AIR("Gestions qualite air"),
+//    INSPECTION_ICPE("Gestions inspection icpe"),
+//    URGENCE_ENVIRONNEMENTAL("Urgence Environmental"),
+//    FORMULAIRE_GENERAL("Formulaire General"),
+//    DIRECTION_REGIONAL("Direction Regional"),
+//    EVALUATION_STARTUP("Evaluation Startup");
 
     @Getter
     @Setter

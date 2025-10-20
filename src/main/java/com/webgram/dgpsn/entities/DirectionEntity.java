@@ -1,10 +1,13 @@
 package com.webgram.dgpsn.entities;
 
-import com.webgram.dgpsn.entities.audits.Auditable;
-import jakarta.persistence.*;
 import lombok.*;
+import com.webgram.dgpsn.entities.audits.Auditable;
 
+import jakarta.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Table(name = "direction")
 @Entity
@@ -30,4 +33,15 @@ public class DirectionEntity extends Auditable<Long> implements Serializable {
     @ManyToOne
     @JoinColumn(name = "dir_parent")
     private DirectionEntity parent;
+
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<DirectionEntity> children = new ArrayList<>();
+
+    public void addChildren(List<DirectionEntity> children) {
+        if(Objects.isNull(this.children)) {
+            this.children = new ArrayList<>();
+        }
+        children.forEach(child -> child.setParent(this));
+        this.children.addAll(children);
+    }
 }

@@ -1,11 +1,11 @@
 package com.webgram.dgpsn.security.rules;
 
-import com.webgram.dgpsn.security.SecurityPermissions;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
+import com.webgram.dgpsn.security.SecurityPermissions;
 
 @Component
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -20,7 +20,7 @@ public class ProfileRule {
                 .apiPattern(PROFILE_API_PREFIX)
                 .build()
                 .condition()
-                .hasPermission(SecurityPermissions.ADD_PROFIL)
+                .hasPermission(SecurityPermissions.ADD_PROFILE)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
@@ -32,12 +32,12 @@ public class ProfileRule {
                 .apiPattern(PROFILE_API_PREFIX + PROFILE_ID)
                 .build()
                 .condition()
-                .hasPermission(SecurityPermissions.READ_PROFIL)
-                .hasPermission(SecurityPermissions.ADD_PROFIL)
-                .hasPermission(SecurityPermissions.EDIT_PROFIL)
-                .hasPermission(SecurityPermissions.DELETE_PROFIL)
+                .hasPermission(SecurityPermissions.READ_PROFILE)
+                .hasPermission(SecurityPermissions.ADD_PROFILE)
+                .hasPermission(SecurityPermissions.EDIT_PROFILE)
+                .hasPermission(SecurityPermissions.DELETE_PROFILE)
                 .hasPermission(SecurityPermissions.ADD_USER)
-                .hasPermission(SecurityPermissions.CONFIGURE_PROFIL)
+                .hasPermission(SecurityPermissions.CONFIGURE_PROFILE)
                 .hasPermission(SecurityPermissions.EDIT_USER)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
@@ -50,11 +50,11 @@ public class ProfileRule {
                 .apiPattern(PROFILE_API_PREFIX)
                 .build()
                 .condition()
-                .hasPermission(SecurityPermissions.READ_PROFIL)
-                .hasPermission(SecurityPermissions.ADD_PROFIL)
-                .hasPermission(SecurityPermissions.EDIT_PROFIL)
-                .hasPermission(SecurityPermissions.DELETE_PROFIL)
-                .hasPermission(SecurityPermissions.CONFIGURE_PROFIL)
+                .hasPermission(SecurityPermissions.READ_PROFILE)
+                .hasPermission(SecurityPermissions.ADD_PROFILE)
+                .hasPermission(SecurityPermissions.EDIT_PROFILE)
+                .hasPermission(SecurityPermissions.DELETE_PROFILE)
+                .hasPermission(SecurityPermissions.CONFIGURE_PROFILE)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 // TODO: a completer avec les permissions de l'utilisateur
                 .end();
@@ -67,7 +67,7 @@ public class ProfileRule {
                 .apiPattern(PROFILE_API_PREFIX + PROFILE_ID)
                 .build()
                 .condition()
-                .hasPermission(SecurityPermissions.EDIT_PROFIL)
+                .hasPermission(SecurityPermissions.EDIT_PROFILE)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
@@ -79,7 +79,7 @@ public class ProfileRule {
                 .apiPattern(PROFILE_API_PREFIX + PROFILE_ID)
                 .build()
                 .condition()
-                .hasPermission(SecurityPermissions.DELETE_PROFIL)
+                .hasPermission(SecurityPermissions.DELETE_PROFILE)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }

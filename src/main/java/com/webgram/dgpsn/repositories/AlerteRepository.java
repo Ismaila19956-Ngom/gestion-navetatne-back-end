@@ -1,17 +1,15 @@
 package com.webgram.dgpsn.repositories;
 
 import com.querydsl.core.BooleanBuilder;
-import com.webgram.dgpsn.entities.AlerteEntity;
-import com.webgram.dgpsn.entities.QAlerteEntity;
-import com.webgram.dgpsn.entities.enums.Priority;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.stereotype.Repository;
-
-import java.util.Date;
+import com.webgram.dgpsn.entities.AlerteEntity;
+import com.webgram.dgpsn.entities.QAlerteEntity;
+import com.webgram.dgpsn.entities.enums.Priority;;import java.util.Date;
 import java.util.Objects;
 
 

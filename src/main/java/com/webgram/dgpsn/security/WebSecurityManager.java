@@ -1,11 +1,11 @@
 package com.webgram.dgpsn.security;
 
-import com.webgram.dgpsn.security.rules.SecurityRule;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.stereotype.Component;
+import com.webgram.dgpsn.security.rules.SecurityRule;
 
 import java.util.List;
 

@@ -1,12 +1,12 @@
 package com.webgram.dgpsn.entities;
 
+import lombok.*;
 import com.webgram.dgpsn.entities.audits.Auditable;
 import com.webgram.dgpsn.entities.enums.CategorieAlerte;
 import com.webgram.dgpsn.entities.enums.Priority;
 import com.webgram.dgpsn.entities.enums.TypeAlerte;
-import jakarta.persistence.*;
-import lombok.*;
 
+import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -34,16 +34,16 @@ public class TemplateEntity extends Auditable<Long> implements Serializable {
     @Enumerated(EnumType.STRING)
     private TypeAlerte typeAlerte;
 
-    @Column(name = "temp_categorie_alerte", length = 50)
-    @Enumerated(EnumType.STRING)
-    private CategorieAlerte categorieAlerte;
-
     @Column(name = "temp_priorite")
     @Enumerated(EnumType.STRING)
     private Priority priority;
 
     @Column(name = "temp_delais")
     private Long deadlines;
+
+    @Column(name = "temp_categorie_alerte")
+    @Enumerated(EnumType.STRING)
+    private CategorieAlerte categorieAlerte;
 
     @Column(name = "temp_send_mail")
     private boolean sendMail;

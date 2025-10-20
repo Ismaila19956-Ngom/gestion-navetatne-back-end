@@ -8,10 +8,16 @@ import java.text.MessageFormat;
 import java.util.Map;
 
 public enum CategoryDocument {
-    DOCUMENT_GENERAL("Document general", "Paramétrage gestion documentaire"),
-    DOCUMENT_NORME("Document specifique ", "Paramétrage document specifique sur les normes"),
-    DOCUMENT_RATIO_BALE("Document specifique ", "Paramétrage document specifique sur les ratio"),
-    DOCUMENT_NORME_IFRS("Document specifique ", "Paramétrage document specifique sur les norme ifrs");
+//    PROGRAMME("Programmes", "Paramétrage des types de document pour les programmes"),
+//    PROJECT("Projets", "Paramétrage des types de document pour les projets"),
+//     ACTIVITY("Activités", "Paramétrage des types de document pour les activités"),
+    RH("Ressources Humaines", "Paramétrage des types de document pour les Ressources Humaines"),
+//    ENTREPRISE("Entreprises", "Paramétrage des types de document pour les entreprises"),
+    AVIS_PROJET("Avis de Projets", "Paramétrage des types de document pour les avis de projets"),
+    SUIVI_SURVEILLANCE("Suivi Surveillance", "Paramétrage des types de document pour les suivi surveillance"),
+    AGREMENT("Agréments", "Paramétrage des types de document pour les agréments"),
+    TDR("Termes de Référence (TDR)", "Paramétrage des types de document pour les TDR");
+
 
 
     @Getter

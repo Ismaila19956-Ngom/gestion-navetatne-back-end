@@ -4,20 +4,27 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public enum Module {
     DASHBOARD("Tableau de bord"),
-    ACTIF_PASSIF("ACTIF/PASSIF"),
-    DOCUMENT("Gestion Documentaire"),
-    RESULTAT_INDICATEUR("Résultat Indicateur"),
-    PARAMETRE("Paramétrage"),
-    ORGANIGRAMME("Organigramme"),
-    UTILISATEUR("Utilisateur"),
+    PROJECT_LIST("Liste projets"),
+    PROJECT_SETTINGS("Paramétrage"),
+    FORMULAIRE("Gestion des procédures"),
+    FINANCEMENT_SETTINGS("Financement"),
+    PROJECT_DETAILED_PROGRESS_TRACKING("Avancement détaillé"),
+    PROJECT_ACTIVITY_MONITORING("Suivi des activités"),
+    PROGRAMME("Programme"),
+    ACTIVITY_SETTINGS("Suivi des activités"),
+    SITE_STATION("Sites et stations"),
+    SETTINGS_ACTIVITE_MISSION("Suivi des mission"),
+    REFERENTIEL("Référentiel"),
+    ALERTE("Alerte"),
+    DOCUMENT("Document"),
+    ORGANIGRAMMER("Organigramme"),
     SECURITY("Sécurité");
+
 
     @Getter
     @Setter
@@ -34,9 +41,12 @@ public enum Module {
                 "description", description
         );
     }
-
-    public static Set<Module> readModules() {
-        return Arrays.stream(values())
-                .collect(Collectors.toSet());
-    }
+//    public static Set<Module> readModules() {
+//        return Arrays.stream(values())
+//                    .collect(Collectors.toSet());
+//    }
+public static Set<Module> readModules() {
+    return Arrays.stream(values())
+            .collect(Collectors.toCollection(LinkedHashSet::new));
+}
 }

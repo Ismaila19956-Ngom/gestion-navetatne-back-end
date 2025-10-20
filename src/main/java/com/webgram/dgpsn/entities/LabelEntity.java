@@ -1,10 +1,10 @@
 package com.webgram.dgpsn.entities;
 
+import lombok.*;
 import com.webgram.dgpsn.entities.audits.Auditable;
 import com.webgram.dgpsn.entities.enums.ReferentielType;
-import jakarta.persistence.*;
-import lombok.*;
 
+import jakarta.persistence.*;
 import java.io.Serializable;
 
 @Table(name = "label")
@@ -26,14 +26,9 @@ public class LabelEntity extends Auditable<Long> implements Serializable {
     @Enumerated(EnumType.STRING)
     private ReferentielType referentielType;
 
-    @Column(name = "lab_code", unique = true, nullable = false)
+    @Column(name = "lab_code")
     private String code;
 
     @Column(name = "lab_label")
     private String libelle;
-
-    @ManyToOne()
-    @JoinColumn(name = "lab_category")
-    private LabelEntity category;
-
 }

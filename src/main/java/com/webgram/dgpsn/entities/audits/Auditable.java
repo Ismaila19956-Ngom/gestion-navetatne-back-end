@@ -1,8 +1,9 @@
 package com.webgram.dgpsn.entities.audits;
 
+import com.querydsl.core.annotations.QueryExclude;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -10,18 +11,18 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.Column;
-import javax.persistence.EntityListeners;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.Temporal;
-import java.util.Date;
+import jakarta.persistence.Column;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.MappedSuperclass;
 
-import static javax.persistence.TemporalType.TIMESTAMP;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 @Getter
 @Setter
-@RequiredArgsConstructor
+@NoArgsConstructor
 @AllArgsConstructor
+@QueryExclude
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public abstract class Auditable<T> {
@@ -31,9 +32,8 @@ public abstract class Auditable<T> {
     protected T createdBy;
 
     @CreatedDate
-    @Temporal(TIMESTAMP)
     @Column(name = "created_date", updatable = false)
-    protected Date createdDate;
+    protected LocalDateTime createdDate;
 
     @LastModifiedBy
     @Column(name = "modified_by")
@@ -41,5 +41,5 @@ public abstract class Auditable<T> {
 
     @LastModifiedDate
     @Column(name = "modified_date")
-    protected Date lastModifiedDate;
+    protected LocalDateTime lastModifiedDate;
 }

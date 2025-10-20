@@ -1,10 +1,11 @@
 package com.webgram.dgpsn.security.jwt;
 
-import com.webgram.dgpsn.repositories.UserRepository;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import com.webgram.dgpsn.repositories.TemporaryAccessCodeRepository;
+import com.webgram.dgpsn.repositories.UserRepository;
 
 public class JWTConfigurer extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
     private final TokenProvider tokenProvider;

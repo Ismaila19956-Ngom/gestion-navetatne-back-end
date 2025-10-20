@@ -1,11 +1,11 @@
 server:
-  port: 2025
+  port: 2015
   servlet:
     context-path: /dgpsn-api
     error:
       include-message: always
       include-binding-errors: always
-      include-stacktrace:
+      include-stacktrace: never
       include-exception: false
 spring:
   profiles:
@@ -26,18 +26,17 @@ spring:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
       ddl-auto: update
     show-sql: false
+    properties:
+      hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
   application:
     name: DGPSN
 
 storage-document:
   file-storage-root-path: ${user.home}//Documents//upload//docs
-  # file-storage-root-path: /home/webgram/formation/docs
   template-name: template.vm
 
 security-jwt:
-  # This token must be encoded using Base64 and be at least 256 bits long (you can type `openssl rand -base64 64` on your command line to generate a 512 bits one)
   base64-secret: MmMzN2VlODJhN2U3NDk2NzQ2ZjE4Nzg3ZDkxYzg5ZDdkZDEwMTdjYWM3OWRiYjQwOWU4M2NiYTdmOThkYTU3OTI3Nzg2YTAwYTc2ODEyMzgwNjhiYTU2MTkyNDNmNWJiODc5Y2M4MWVhNjJhYTU3ZjRmNzEzZDhlZmYxNDlhYWM=
-  # Token is valid 24 hours
   token-validity-in-seconds: 86400
   token-validity-in-seconds-for-remember-me: 86400
 

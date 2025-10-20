@@ -12,144 +12,22 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+
 public enum TypeAlerte {
-
-    DES_EQUILIBRE_ACTIF_PASSIF(
-            "Déséquilibre actif/passif",
-            CategorieAlerte.ACTIF_PASSIF,
-            List.of(
-                    Tag.USER,
-                    Tag.ACTIF,
-                    Tag.PASSIF,
-                    Tag.DIFFERENCE,
-                    Tag.SEVERITE,
-                    Tag.DATE_DETECTION
-            )
-    ),
-    IMPORT_SOLDE_TRESORERIE(
-            "Nouvelle Importation Solde Tresorerie",
-            CategorieAlerte.ACTIF_PASSIF,
-            List.of(
-                    Tag.USER,
-                    Tag.TOTAL_ENTREE,
-                    Tag.TOTAL_SORTIE,
-                    Tag.LIBELLE,
-                    Tag.MOIS
-            )
-    ),
-    VALIDATION_SOLDE_TRESORERIE(
-            "Validation Solde Tresorerie",
-            CategorieAlerte.ACTIF_PASSIF,
-            List.of(
-                    Tag.USER,
-                    Tag.TOTAL_ENTREE,
-                    Tag.TOTAL_SORTIE,
-                    Tag.LIBELLE,
-                    Tag.MOIS
-            )
-    ),
-
-    IMPORT_BILAN(
-            "Nouvelle Importation Bilan",
-            CategorieAlerte.ACTIF_PASSIF,
-            List.of(
-                    Tag.USER,
-                    Tag.MONTANT_ACTIF,
-                    Tag.MONTANT_PASSIF,
-                    Tag.LIBELLE,
-                    Tag.DATE
-            )
-    ),
-
-    VALIDATION_BILAN(
-            "Validation  Bilan",
-            CategorieAlerte.ACTIF_PASSIF,
-            List.of(
-                    Tag.USER,
-                    Tag.MONTANT_ACTIF,
-                    Tag.MONTANT_PASSIF,
-                    Tag.LIBELLE,
-                    Tag.DATE
-            )
-    ),
-    IMPORT_COMPTE_RESULTAT(
-            "Nouvelle Importation compte resultat",
-            CategorieAlerte.ACTIF_PASSIF,
-            List.of(
-                    Tag.USER,
-                    Tag.RESULTAT_NET,
-                    Tag.RESULTAT_EXPLOITATION,
-                    Tag.LIBELLE,
-                    Tag.TOTAL_NET,
-                    Tag.CHARGE_EXPLOITATION,
-                    Tag.CHARGE_BRUTE_EXPLOITATION,
-                    Tag.RESULTAT_EXPLOITATION,
-                    Tag.RESULTAT_NET_EXPLOITATION
-
-            )
-    ),
-
-    VALIDATION_COMPTE_RESULTAT(
-            "Validation  compte resultat",
-            CategorieAlerte.ACTIF_PASSIF,
-            List.of(
-                    Tag.USER,
-                    Tag.RESULTAT_NET,
-                    Tag.RESULTAT_EXPLOITATION,
-                    Tag.LIBELLE,
-                    Tag.TOTAL_NET,
-                    Tag.CHARGE_EXPLOITATION,
-                    Tag.CHARGE_BRUTE_EXPLOITATION,
-                    Tag.RESULTAT_EXPLOITATION,
-                    Tag.RESULTAT_NET_EXPLOITATION
-            )
-    ),
-
-
-    VALIDATION_ETAPE_WORKFLOW_LCR(
-            "Validation  Etape Workflow LCR",
-            CategorieAlerte.RESULTAT_INDICATEUR,
-            List.of(
-                    Tag.USER,
-                    Tag.ETAPE,
-                    Tag.DATE_VALIDATION
-            )
-    ),
-
-    VALIDATION_ETAPE_WORKFLOW_NSFR(
-            "Validation  Etape Workflow NSFR",
-            CategorieAlerte.RESULTAT_INDICATEUR,
-            List.of(
-                    Tag.USER,
-                    Tag.ETAPE,
-                    Tag.DATE_VALIDATION
-            )
-    ),
-
-    NEGATIVE_LCR_THRESHOLD(
-    "Résultat LCR Inférieur au Seuil",
-    CategorieAlerte.RESULTAT_INDICATEUR,
-    List.of(
-    Tag.USER,
-    Tag.ETAPE,
-    Tag.DATE_VALIDATION,
-    Tag.RESULT_VALUE, // Valeur du résultat
-    Tag.ALERT_LEVEL,  // Niveau d’alerte
-    Tag.RECOMMENDED_ACTION // Action recommandée
-    )
-),
-    NEGATIVE_NSFR_THRESHOLD(
-    "Résultat NSFR Inférieur au Seuil",
-    CategorieAlerte.RESULTAT_INDICATEUR,
-    List.of(
-    Tag.USER,
-    Tag.ETAPE,
-    Tag.DATE_VALIDATION,
-    Tag.RESULT_VALUE,
-    Tag.ALERT_LEVEL,
-    Tag.RECOMMENDED_ACTION
-    )
-);
+    CREATION_EVALUATION_ENVIRONNEMENTAL("Création evaluation Environmental",CategorieAlerte.EVALUATION_ENVIRONNEMENTAL, List.of(Tag.TITRE_PROJET,Tag.TYPE_PROJET,Tag.DATE,Tag.REFERENCE)),
+//    FORMULAIRE_GENERAL("Creation  demande",CategorieAlerte.FORMULAIRE_GENERAL, List.of(Tag.TYPE_DEMANDE,Tag.LiBELLE,Tag.DATE)),
+    POLLUTION_REJET(" Creation Rejet d’Eau Usée ",CategorieAlerte.GESTION_POLLUTION,List.of(Tag.DATE_PRELEVEMENT,Tag.LiBELLE)),
+    GESTION_QUALITE(" Creation  qualite des Milieux",CategorieAlerte.GESTION_POLLUTION,List.of(Tag.DATE_PRELEVEMENT,Tag.LiBELLE)),
+    GESTION_PRODUIT(" Creation produit chimique ",CategorieAlerte.GESTION_POLLUTION,List.of(Tag.DATE_TRANSPORT,Tag.ORIGINE,Tag.DESTINATION,Tag.LiBELLE)),
+    GESTION_DECHET(" Creation  dechets dangereux ",CategorieAlerte.GESTION_POLLUTION,List.of(Tag.DATE_TRANSPORT,Tag.ORIGINE,Tag.DESTINATION,Tag.LiBELLE)),
+    GESTION_PLASTIQUE(" Creation  produit plastique ",CategorieAlerte.GESTION_POLLUTION,List.of(Tag.DATE_MOUVEMENT,Tag.ORIGINE,Tag.DESTINATION,Tag.LiBELLE));
+//    QUALITE_AIR(" Creation  mesure qualite air",CategorieAlerte.QUALITE_AIR,List.of(Tag.DATE_MESURE,Tag.LiBELLE,Tag.POLLUANT_PRINCIPAL)),
+//    INSPECTION_ICPE(" Creation inspection ",CategorieAlerte.INSPECTION_ICPE,List.of(Tag.DATE_INSPECTION,Tag.REFERENCE_INSPECTION)),
+//    URGENCE_ENVIRONNEMENTAL(" Creation declaration ",CategorieAlerte.URGENCE_ENVIRONNEMENTAL,List.of(Tag.REFERENCE,Tag.DATE_RECEPTION,Tag.AGENT)),
+//    DIRECTION_REGIONAL(" Creation  fiche declaration ",CategorieAlerte.DIRECTION_REGIONAL,List.of(Tag.LiBELLE,Tag.NUMERO_RCCM,Tag.DATE)),
+//    BUDGET_ACTIVITE("Creation  Budget ",CategorieAlerte.PROJET,List.of(Tag.LiBELLE,Tag.DATE_DEBUT,Tag.DATE_FIN,Tag.ANNEE)),
+//    DEPENSE_ACTIVITE("Creation  depense ",CategorieAlerte.PROJET,List.of(Tag.LiBELLE,Tag.DATE_DEBUT,Tag.DATE_FIN,Tag.ANNEE)),
+//    EVALUATION_STARTUP(" Nouvelle Evaluation ",CategorieAlerte. EVALUATION_STARTUP,List.of(Tag.LiBELLE,Tag.DATE_DEBUT,Tag.DATE_FIN,Tag.ANNEE));
 
 
     @Getter

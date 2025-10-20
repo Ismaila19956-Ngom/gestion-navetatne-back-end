@@ -8,7 +8,8 @@ import lombok.*;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Builder
@@ -16,17 +17,17 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-@JsonInclude(JsonInclude.Include.NON_NULL)
+//exclure les propriétés ayant des valeurs nulles / vides ou par défaut.
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FolderDto implements Serializable {
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -5387827484974552092L;
 
     @Schema(description = "L'id technique, généré au moment de persister l'objet", accessMode = Schema.AccessMode.READ_ONLY)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
     private String code;
-    private String libelle;
-    private Long parentId;
-    private List<FolderDto> children;
-
+    private String name;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private Set<FolderDto> subFolders = new HashSet<>();
 }

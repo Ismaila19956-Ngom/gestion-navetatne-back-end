@@ -1,11 +1,11 @@
 package com.webgram.dgpsn.security.rules;
 
-import com.webgram.dgpsn.security.SecurityPermissions;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
+import com.webgram.dgpsn.security.SecurityPermissions;
 
 @Component
 @FieldDefaults(level = AccessLevel.PRIVATE)

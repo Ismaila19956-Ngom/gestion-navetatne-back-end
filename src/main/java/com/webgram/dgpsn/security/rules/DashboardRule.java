@@ -1,0 +1,573 @@
+package com.webgram.dgpsn.security.rules;
+
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
+import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
+import org.springframework.stereotype.Component;
+import com.webgram.dgpsn.security.SecurityPermissions;
+
+@Component
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class DashboardRule {
+    static final String DASHBOARD_API_PREFIX = "/dashboard";
+    static final String PROJECTS_BY_STATUS_PREFIX = "/{projectsbyStatus}";
+    static final String PROJECTS_BY_FLAG_PREFIX = "/projectsbyFlag";
+    static final String STAT_FUNDING_PREFIX = "/statFunding";
+    static final String STAT_BUDGET_BY_ACTIVITY = "/total-budget-by-activity";
+    static final String STAT_EXPANSE_BY_ACTIVITY = "/total-expanse-by-activity";
+    static final String STAT_ISSUE_LOG_BY_SUPERVISOR = "/issue-log-count-by-supervisor";
+    static final String STAT_PROJECT_BY_PARTNER = "/projectPerPartner";
+    static final String STAT_PROJECT_BY_FINANCIAL = "/financialRisksByProject";
+    static final String STAT_ISSUELOG_PER_YEAR = "/storage/year";
+    static final String STAT_ISSUELOG_BY_NATURE = "/count-by-nature";
+    static final String STAT_PROJ_BY_REGION = "/projects-by-region";
+    static final String STAT_BUDGET_BY_REGION = "/budget-by-region";
+
+    static final String FILTER_ACTIVITY_BY_PROJECT = "/activities";
+    static final String FILTER_ACTIVITY_DEPENSE_BY_PROJECT = "/activitiesExpense";
+    static final String PROJECT_ID = "/{projectId}";
+  static final String GEO_PROJECT_ID = "/projects-by-geo";
+
+    static final String ISSUE_LOG_OPEN = "/open";
+    static final String ISSUE_LOG_CLOSE = "/closed";
+    static final String NEED_FUNDING_ACTIVITY = "/need";
+    static final String ENVIRONMENTAL_KPIS = "/environmental/kpis";
+    static final String ENVIRONMENTAL_IQA_TREND = "/environmental/iqa-trend";
+    static final String ENVIRONMENTAL_IQA_BY_REGION = "/environmental/iqa-by-region";
+    static final String ENVIRONMENTAL_POLLUTANT_DISTRIBUTION = "/environmental/pollutant-distribution";
+    static final String EVALUATION_KPIS = "/evaluation/kpis";
+    static final String EVALUATION_FLUX_DOSSIERS = "/evaluation/flux-dossiers";
+    static final String EVALUATION_STATUT_INSTRUCTIONS = "/evaluation/statut-instructions";
+    static final String EVALUATION_PROJECTS_PAR_REGION = "/evaluation/projets-par-region";
+    static final String POLLUTION_KPIS = "/pollution/kpis";
+    static final String POLLUTION_VOLUME_DECHETS = "/pollution/volume-dechets";
+    static final String POLLUTION_REPARTITION_TYPES = "/pollution/repartition-types";
+    static final String POLLUTION_TENDANCE_EAU = "/pollution/tendance-eau";
+    static final String ICPE_KPIS = "/icpe/kpis";
+    static final String ICPE_INSPECTIONS_MENSUELLES = "/icpe/inspections-mensuelles";
+    static final String ICPE_REPARTITION_CATEGORIE = "/icpe/repartition-categories";
+    static final String ICPE_REPARTITION_CONFORMITE = "/icpe/repartition-conformite";
+
+    @Bean
+    public SecurityRule getIcpeKpis() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(DASHBOARD_API_PREFIX + ICPE_KPIS)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
+                .hasPermission(SecurityPermissions.READ_TDB_ICPE)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+
+    @Bean
+    public SecurityRule getInspectionsMensuelles() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(DASHBOARD_API_PREFIX + ICPE_INSPECTIONS_MENSUELLES)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
+                .hasPermission(SecurityPermissions.READ_TDB_ICPE)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+
+    @Bean
+    public SecurityRule getIcpeParCategorie() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(DASHBOARD_API_PREFIX + ICPE_REPARTITION_CATEGORIE)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
+                .hasPermission(SecurityPermissions.READ_TDB_ICPE)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+
+    @Bean
+    public SecurityRule getRepartitionNiveauConformite() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(DASHBOARD_API_PREFIX + ICPE_REPARTITION_CONFORMITE)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
+                .hasPermission(SecurityPermissions.READ_TDB_ICPE)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+
+    @Bean
+    public SecurityRule getPollutionKpis() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(DASHBOARD_API_PREFIX + POLLUTION_KPIS)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
+                .hasPermission(SecurityPermissions.READ_TDB_POLLUTION)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+
+    @Bean
+    public SecurityRule getPollutionVolumeDechets() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(DASHBOARD_API_PREFIX + POLLUTION_VOLUME_DECHETS)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
+                .hasPermission(SecurityPermissions.READ_TDB_POLLUTION)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+
+    @Bean
+    public SecurityRule getPollutionRepartitionTypes() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(DASHBOARD_API_PREFIX + POLLUTION_REPARTITION_TYPES)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
+                .hasPermission(SecurityPermissions.READ_TDB_POLLUTION)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+
+    @Bean
+    public SecurityRule getPollutionTendanceEau() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(DASHBOARD_API_PREFIX + POLLUTION_TENDANCE_EAU)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
+                .hasPermission(SecurityPermissions.READ_TDB_POLLUTION)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+
+    @Bean
+    public SecurityRule getEvaluationKpis() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(DASHBOARD_API_PREFIX + EVALUATION_KPIS)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
+                .hasPermission(SecurityPermissions.READ_TDB_EVALUATION)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+        }
+
+    @Bean
+    public SecurityRule getEvaluationFluxDossiers() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(DASHBOARD_API_PREFIX + EVALUATION_FLUX_DOSSIERS)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
+                .hasPermission(SecurityPermissions.READ_TDB_EVALUATION)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+
+    @Bean
+    public SecurityRule getEvaluationStatutInstructions() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(DASHBOARD_API_PREFIX + EVALUATION_STATUT_INSTRUCTIONS)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
+                .hasPermission(SecurityPermissions.READ_TDB_EVALUATION)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+
+    @Bean
+    public SecurityRule getEvaluationProjectsParRegion() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(DASHBOARD_API_PREFIX + EVALUATION_PROJECTS_PAR_REGION)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
+                .hasPermission(SecurityPermissions.READ_TDB_EVALUATION)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+
+    @Bean
+    public SecurityRule getEnvironmentalKpis() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(DASHBOARD_API_PREFIX + ENVIRONMENTAL_KPIS)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
+                .hasPermission(SecurityPermissions.READ_TDB_QUALITE_AIR)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+
+    @Bean
+    public SecurityRule getEnvironmentalIqaTrend() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(DASHBOARD_API_PREFIX + ENVIRONMENTAL_IQA_TREND)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
+                .hasPermission(SecurityPermissions.READ_TDB_QUALITE_AIR)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+
+    @Bean
+    public SecurityRule getEnvironmentalIqaByRegion() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(DASHBOARD_API_PREFIX + ENVIRONMENTAL_IQA_BY_REGION)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
+                .hasPermission(SecurityPermissions.READ_TDB_QUALITE_AIR)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+
+    @Bean
+    public SecurityRule getEnvironmentalPollutantDistribution() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(DASHBOARD_API_PREFIX + ENVIRONMENTAL_POLLUTANT_DISTRIBUTION)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
+                .hasPermission(SecurityPermissions.READ_TDB_QUALITE_AIR)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+
+    @Bean
+    public SecurityRule getOpenIssues() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(DASHBOARD_API_PREFIX + ISSUE_LOG_OPEN)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
+                .hasPermission(SecurityPermissions.READ_TDB_PROJETS)
+                .hasPermission(SecurityPermissions.READ_TDB_FINANCMENTS)
+                .hasPermission(SecurityPermissions.READ_TDB_PROBLEMES)
+                .hasPermission(SecurityPermissions.READ_TDB_ENTREPRISE)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+
+    @Bean
+    public SecurityRule getClosedIssues() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(DASHBOARD_API_PREFIX + ISSUE_LOG_CLOSE)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
+                .hasPermission(SecurityPermissions.READ_TDB_PROJETS)
+                .hasPermission(SecurityPermissions.READ_TDB_FINANCMENTS)
+                .hasPermission(SecurityPermissions.READ_TDB_PROBLEMES)
+                .hasPermission(SecurityPermissions.READ_TDB_ENTREPRISE)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+
+    @Bean
+    public SecurityRule getFundingConfigs() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(DASHBOARD_API_PREFIX + NEED_FUNDING_ACTIVITY)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
+                .hasPermission(SecurityPermissions.READ_TDB_PROJETS)
+                .hasPermission(SecurityPermissions.READ_TDB_FINANCMENTS)
+                .hasPermission(SecurityPermissions.READ_TDB_PROBLEMES)
+                .hasPermission(SecurityPermissions.READ_TDB_ENTREPRISE)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+
+//    static final String EXPANSE_PROJECT_ID = "/{expanseprojectId}";
+    static final String STAT_RESUME = "/resume";
+    static final String FINANCEMENT = "/financement";
+
+    @Bean
+    public SecurityRule readStatProjectByStatus() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(DASHBOARD_API_PREFIX + PROJECTS_BY_STATUS_PREFIX)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
+                .hasPermission(SecurityPermissions.READ_TDB_PROJETS)
+                .hasPermission(SecurityPermissions.READ_TDB_FINANCMENTS)
+                .hasPermission(SecurityPermissions.READ_TDB_PROBLEMES)
+                .hasPermission(SecurityPermissions.READ_TDB_ENTREPRISE)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+    @Bean
+    public SecurityRule getProjectsByGeographicalLocation() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(DASHBOARD_API_PREFIX + GEO_PROJECT_ID)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
+                .hasPermission(SecurityPermissions.READ_TDB_PROJETS)
+                .hasPermission(SecurityPermissions.READ_TDB_FINANCMENTS)
+                .hasPermission(SecurityPermissions.READ_TDB_PROBLEMES)
+                .hasPermission(SecurityPermissions.READ_TDB_ENTREPRISE)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+
+    @Bean
+    public SecurityRule getActivitiesAndBudgetsByProject() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(DASHBOARD_API_PREFIX + FILTER_ACTIVITY_BY_PROJECT +PROJECT_ID)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
+                .hasPermission(SecurityPermissions.READ_TDB_PROJETS)
+                .hasPermission(SecurityPermissions.READ_TDB_FINANCMENTS)
+                .hasPermission(SecurityPermissions.READ_TDB_PROBLEMES)
+                .hasPermission(SecurityPermissions.READ_TDB_ENTREPRISE)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+    @Bean
+    public SecurityRule getActivitiesAndExpanseByProject() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(DASHBOARD_API_PREFIX + FILTER_ACTIVITY_DEPENSE_BY_PROJECT + PROJECT_ID  )
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
+                .hasPermission(SecurityPermissions.READ_TDB_PROJETS)
+                .hasPermission(SecurityPermissions.READ_TDB_FINANCMENTS)
+                .hasPermission(SecurityPermissions.READ_TDB_PROBLEMES)
+                .hasPermission(SecurityPermissions.READ_TDB_ENTREPRISE)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+
+    @Bean
+    public SecurityRule readStatisticalData() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(DASHBOARD_API_PREFIX + STAT_PROJECT_BY_PARTNER)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
+                .hasPermission(SecurityPermissions.READ_TDB_PROJETS)
+                .hasPermission(SecurityPermissions.READ_TDB_FINANCMENTS)
+                .hasPermission(SecurityPermissions.READ_TDB_PROBLEMES)
+                .hasPermission(SecurityPermissions.READ_TDB_ENTREPRISE)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+    @Bean
+    public SecurityRule readStatProjectByFlag() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(DASHBOARD_API_PREFIX + PROJECTS_BY_FLAG_PREFIX)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
+                .hasPermission(SecurityPermissions.READ_TDB_PROJETS)
+                .hasPermission(SecurityPermissions.READ_TDB_FINANCMENTS)
+                .hasPermission(SecurityPermissions.READ_TDB_PROBLEMES)
+                .hasPermission(SecurityPermissions.READ_TDB_ENTREPRISE)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+    @Bean
+    public SecurityRule getTotalBudgetByActivity() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(DASHBOARD_API_PREFIX + STAT_BUDGET_BY_ACTIVITY)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
+                .hasPermission(SecurityPermissions.READ_TDB_PROJETS)
+                .hasPermission(SecurityPermissions.READ_TDB_FINANCMENTS)
+                .hasPermission(SecurityPermissions.READ_TDB_PROBLEMES)
+                .hasPermission(SecurityPermissions.READ_TDB_ENTREPRISE)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+    @Bean
+    public SecurityRule getFinancialRisksByProject() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(DASHBOARD_API_PREFIX + STAT_PROJECT_BY_FINANCIAL)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
+                .hasPermission(SecurityPermissions.READ_TDB_PROJETS)
+                .hasPermission(SecurityPermissions.READ_TDB_FINANCMENTS)
+                .hasPermission(SecurityPermissions.READ_TDB_PROBLEMES)
+                .hasPermission(SecurityPermissions.READ_TDB_ENTREPRISE)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+
+    @Bean
+    public SecurityRule getTotalExpanseByActivity() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(DASHBOARD_API_PREFIX + STAT_EXPANSE_BY_ACTIVITY)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
+                .hasPermission(SecurityPermissions.READ_TDB_PROJETS)
+                .hasPermission(SecurityPermissions.READ_TDB_FINANCMENTS)
+                .hasPermission(SecurityPermissions.READ_TDB_PROBLEMES)
+                .hasPermission(SecurityPermissions.READ_TDB_ENTREPRISE)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+    @Bean
+    public SecurityRule readStatFunding() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(DASHBOARD_API_PREFIX + STAT_FUNDING_PREFIX)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
+                .hasPermission(SecurityPermissions.READ_TDB_PROJETS)
+                .hasPermission(SecurityPermissions.READ_TDB_FINANCMENTS)
+                .hasPermission(SecurityPermissions.READ_TDB_PROBLEMES)
+                .hasPermission(SecurityPermissions.READ_TDB_ENTREPRISE)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+    @Bean
+    public SecurityRule getIssueLogCountBySupervisor() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(DASHBOARD_API_PREFIX + STAT_ISSUE_LOG_BY_SUPERVISOR)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
+                .hasPermission(SecurityPermissions.READ_TDB_PROJETS)
+                .hasPermission(SecurityPermissions.READ_TDB_FINANCMENTS)
+                .hasPermission(SecurityPermissions.READ_TDB_PROBLEMES)
+                .hasPermission(SecurityPermissions.READ_TDB_ENTREPRISE)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+    @Bean
+    public SecurityRule getStatIssueLogByYear() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(DASHBOARD_API_PREFIX + STAT_ISSUELOG_PER_YEAR)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
+                .hasPermission(SecurityPermissions.READ_TDB_PROJETS)
+                .hasPermission(SecurityPermissions.READ_TDB_FINANCMENTS)
+                .hasPermission(SecurityPermissions.READ_TDB_PROBLEMES)
+                .hasPermission(SecurityPermissions.READ_TDB_ENTREPRISE)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+    @Bean
+    public SecurityRule getIssuesCountByNature() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(DASHBOARD_API_PREFIX + STAT_ISSUELOG_BY_NATURE)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
+                .hasPermission(SecurityPermissions.READ_TDB_PROJETS)
+                .hasPermission(SecurityPermissions.READ_TDB_FINANCMENTS)
+                .hasPermission(SecurityPermissions.READ_TDB_PROBLEMES)
+                .hasPermission(SecurityPermissions.READ_TDB_ENTREPRISE)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+    @Bean
+    public SecurityRule getProjectsByRegion() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(DASHBOARD_API_PREFIX + STAT_PROJ_BY_REGION)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
+                .hasPermission(SecurityPermissions.READ_TDB_PROJETS)
+                .hasPermission(SecurityPermissions.READ_TDB_FINANCMENTS)
+                .hasPermission(SecurityPermissions.READ_TDB_PROBLEMES)
+                .hasPermission(SecurityPermissions.READ_TDB_ENTREPRISE)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+    @Bean
+    public SecurityRule getBudgetsByRegion() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(DASHBOARD_API_PREFIX + STAT_BUDGET_BY_REGION)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
+                .hasPermission(SecurityPermissions.READ_TDB_PROJETS)
+                .hasPermission(SecurityPermissions.READ_TDB_FINANCMENTS)
+                .hasPermission(SecurityPermissions.READ_TDB_PROBLEMES)
+                .hasPermission(SecurityPermissions.READ_TDB_ENTREPRISE)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+
+    @Bean
+    public SecurityRule getStatResume() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(DASHBOARD_API_PREFIX + STAT_RESUME)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
+                .hasPermission(SecurityPermissions.READ_TDB_PROJETS)
+                .hasPermission(SecurityPermissions.READ_TDB_FINANCMENTS)
+                .hasPermission(SecurityPermissions.READ_TDB_PROBLEMES)
+                .hasPermission(SecurityPermissions.READ_TDB_ENTREPRISE)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+
+    @Bean
+    public SecurityRule getResumeFinancment() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(DASHBOARD_API_PREFIX + STAT_RESUME + FINANCEMENT)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
+                .hasPermission(SecurityPermissions.READ_TDB_PROJETS)
+                .hasPermission(SecurityPermissions.READ_TDB_FINANCMENTS)
+                .hasPermission(SecurityPermissions.READ_TDB_PROBLEMES)
+                .hasPermission(SecurityPermissions.READ_TDB_ENTREPRISE)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+
+}

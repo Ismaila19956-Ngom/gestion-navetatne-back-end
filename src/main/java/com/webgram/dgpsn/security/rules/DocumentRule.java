@@ -1,11 +1,11 @@
 package com.webgram.dgpsn.security.rules;
 
-import com.webgram.dgpsn.security.SecurityPermissions;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
+import com.webgram.dgpsn.security.SecurityPermissions;
 
 @Component
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -22,6 +22,8 @@ public class DocumentRule {
                 .build()
                 .condition()
                 .hasPermission(SecurityPermissions.ADD_DOCUMENT)
+                .hasPermission(SecurityPermissions.READ_PROJECT_PROGRESS_TRACKING)
+                .hasPermission(SecurityPermissions.READ_PROJECT_ACTIVITY_MONITORING)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
@@ -37,6 +39,8 @@ public class DocumentRule {
                 .hasPermission(SecurityPermissions.ADD_DOCUMENT)
                 .hasPermission(SecurityPermissions.EDIT_DOCUMENT)
                 .hasPermission(SecurityPermissions.DELETE_DOCUMENT)
+                .hasPermission(SecurityPermissions.READ_PROJECT_PROGRESS_TRACKING)
+                .hasPermission(SecurityPermissions.READ_PROJECT_ACTIVITY_MONITORING)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
@@ -52,6 +56,9 @@ public class DocumentRule {
                 .hasPermission(SecurityPermissions.ADD_DOCUMENT)
                 .hasPermission(SecurityPermissions.EDIT_DOCUMENT)
                 .hasPermission(SecurityPermissions.DELETE_DOCUMENT)
+                .hasPermission(SecurityPermissions.READ_PROJECT_PROGRESS_TRACKING)
+                .hasPermission(SecurityPermissions.READ_PROJECT_FINANCEMENT)
+                .hasPermission(SecurityPermissions.READ_PROJECT_ACTIVITY_MONITORING)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
@@ -64,6 +71,9 @@ public class DocumentRule {
                 .build()
                 .condition()
                 .hasPermission(SecurityPermissions.EDIT_DOCUMENT)
+                .hasPermission(SecurityPermissions.READ_PROJECT_PROGRESS_TRACKING)
+                .hasPermission(SecurityPermissions.READ_PROJECT_FINANCEMENT)
+                .hasPermission(SecurityPermissions.READ_PROJECT_ACTIVITY_MONITORING)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
@@ -75,6 +85,9 @@ public class DocumentRule {
                 .build()
                 .condition()
                 .hasPermission(SecurityPermissions.DELETE_DOCUMENT)
+                .hasPermission(SecurityPermissions.READ_PROJECT_PROGRESS_TRACKING)
+                .hasPermission(SecurityPermissions.READ_PROJECT_FINANCEMENT)
+                .hasPermission(SecurityPermissions.READ_PROJECT_ACTIVITY_MONITORING)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
@@ -85,9 +98,39 @@ public class DocumentRule {
                 .apiPattern(DOCUMENT_API_PREFIX + DOWNLOAD_PREFIX)
                 .build()
                 .condition()
-                .hasPermission(SecurityPermissions.READ_DOCUMENT)
+                .hasPermission(SecurityPermissions.READ_FILE_DOCUMENT)
+                .hasPermission(SecurityPermissions.READ_PROJECT_PROGRESS_TRACKING)
+                .hasPermission(SecurityPermissions.READ_PROJECT_FINANCEMENT)
+                .hasPermission(SecurityPermissions.READ_PROJECT_ACTIVITY_MONITORING)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
+
+    @Bean
+    public SecurityRule viewDocument() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.POST)
+                .apiPattern(DOCUMENT_API_PREFIX)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.READ_PROJECT_FINANCEMENT)
+                .hasPermission(SecurityPermissions.READ_PROJECT_ACTIVITY_MONITORING)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+
+    @Bean
+    public SecurityRule viewDocumentActivity() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.POST)
+                .apiPattern(DOCUMENT_API_PREFIX)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.READ_PROJECT_ACTIVITY_MONITORING)
+                .hasPermission(SecurityPermissions.READ_PROJECT_FINANCEMENT)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+
 
 }

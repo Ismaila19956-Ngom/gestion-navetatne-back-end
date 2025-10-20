@@ -1,15 +1,13 @@
 package com.webgram.dgpsn.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
 import com.webgram.dgpsn.entities.enums.CategorieAlerte;
 import com.webgram.dgpsn.entities.enums.Priority;
 import com.webgram.dgpsn.entities.enums.TypeAlerte;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import lombok.Data;
 
+import jakarta.validation.constraints.NotNull;
 import java.util.Set;
 
 @Data
@@ -20,13 +18,10 @@ public class TemplateDto {
 
     private String libelle;
 
-    @NotNull
     private TypeAlerte typeAlerte;
-
     @NotNull
     private CategorieAlerte categorieAlerte;
 
-    @NotNull
     private Priority priority;
 
     private Long deadlines;
@@ -35,12 +30,9 @@ public class TemplateDto {
 
     private boolean sendSms;
 
-    @NotBlank
     private String message;
 
     private Set<ProfileDTO> profiles;
 
-    @NotNull
-    @NotEmpty
     private Set<Long> profileIds;
 }

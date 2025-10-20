@@ -1,13 +1,13 @@
 package com.webgram.dgpsn.repositories;
 
 import com.querydsl.core.BooleanBuilder;
-import com.webgram.dgpsn.entities.JournalEntity;
-import com.webgram.dgpsn.entities.QJournalEntity;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import com.webgram.dgpsn.entities.JournalEntity;
+import com.webgram.dgpsn.entities.QJournalEntity;
 
 import java.time.LocalDateTime;
 import java.util.Objects;

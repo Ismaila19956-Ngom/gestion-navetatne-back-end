@@ -1,10 +1,11 @@
 package com.webgram.dgpsn.entities;
 
-import com.webgram.dgpsn.entities.audits.Auditable;
-import jakarta.persistence.*;
 import lombok.*;
+import com.webgram.dgpsn.entities.audits.Auditable;
 
+import jakarta.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Table(name = "users")
 @Entity
@@ -34,9 +35,19 @@ public class UserEntity extends Auditable<Long> implements Serializable {
     @Column(name = "usr_status")
     private Boolean status;
 
+    @Column(name = "usr_online")
+    private Boolean online;
+
+    @Column(name = "usr_lastConnexion")
+    private LocalDateTime lastConnexion;
+
     @ManyToOne()
     @JoinColumn(name = "usr_linked_agent")
     private AgentEntity agent;
+
+    @ManyToOne()
+    @JoinColumn(name = "usr_linked_structure")
+    private StructureEntity structure;
 
     @ManyToOne()
     @JoinColumn(name = "usr_linked_profile")

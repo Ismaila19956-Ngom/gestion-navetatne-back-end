@@ -1,12 +1,12 @@
 package com.webgram.dgpsn.entities;
 
-import com.webgram.dgpsn.entities.audits.Auditable;
-import jakarta.persistence.*;
 import lombok.*;
+import com.webgram.dgpsn.entities.audits.Auditable;
 
+import jakarta.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Table(name = "folder")
 @Entity
@@ -16,7 +16,6 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class FolderEntity extends Auditable<Long> implements Serializable {
-
     private static final long serialVersionUID = -5387827484974552092L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -26,13 +25,15 @@ public class FolderEntity extends Auditable<Long> implements Serializable {
     @Column(name = "fol_code")
     private String code;
 
-    @Column(name = "fol_libelle")
-    private String libelle;
+    @Column(name = "fol_name")
+    private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "fol_parent")
-    private FolderEntity parent;
+    @Column(name = "fol_parent")
+    private Long parentId;
 
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<FolderEntity> children = new ArrayList<>();
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "subFolder",
+            joinColumns = @JoinColumn(name="parent_Id", referencedColumnName="fol_id"),
+            inverseJoinColumns = @JoinColumn(name="child_id", referencedColumnName="fol_id", unique = true))
+    private Set<FolderEntity> subFolders = new HashSet<>();
 }

@@ -3,10 +3,10 @@ package com.webgram.dgpsn.models;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.webgram.dgpsn.entities.enums.Priority;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
+import com.webgram.dgpsn.entities.enums.Priority;
 
 import java.io.Serializable;
 import java.util.Date;
