@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.webgram.dgpsn.mappers.JournalMapper;
 import com.webgram.dgpsn.models.JournalDTO;
-import com.webgram.dgpsn.repositories.*;;
+import com.webgram.dgpsn.repositories.*;
 import com.webgram.dgpsn.services.JournalService;
 
 import java.time.LocalDateTime;
