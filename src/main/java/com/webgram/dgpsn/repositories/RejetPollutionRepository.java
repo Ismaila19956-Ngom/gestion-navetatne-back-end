@@ -6,7 +6,6 @@ import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.stereotype.Repository;
 import com.webgram.dgpsn.entities.RejetPollutiontEntity;
 
-;
 import java.util.Date;
 
 

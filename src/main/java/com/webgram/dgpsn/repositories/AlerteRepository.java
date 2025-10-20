@@ -9,7 +9,8 @@ import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.stereotype.Repository;
 import com.webgram.dgpsn.entities.AlerteEntity;
 import com.webgram.dgpsn.entities.QAlerteEntity;
-import com.webgram.dgpsn.entities.enums.Priority;;import java.util.Date;
+import com.webgram.dgpsn.entities.enums.Priority;
+import java.util.Date;
 import java.util.Objects;
 
 
