@@ -21,4 +21,9 @@ public interface EntityMapper<D, E> {
         List<D> dtoList = parse(content);
         return new PageImpl<>(dtoList, pageable, entityPage.getTotalElements());
     }
+    default Page<D> asPage(Page<E> entityPage) {
+        Pageable pageable = entityPage.getPageable();
+        List<D> dtoList = parse(entityPage.getContent());
+        return new PageImpl<>(dtoList, pageable, entityPage.getTotalElements());
+    }
 }

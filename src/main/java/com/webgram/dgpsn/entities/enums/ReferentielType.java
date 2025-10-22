@@ -38,7 +38,7 @@ public enum ReferentielType {
     TYPE_PASSATION("Type de passation", "Paramétrage type passation"),
     TYPE_MARCHE("Type de marche", "Paramétrage type de marché"),
     TYPE_DE_CRITERE_EVALUATION_MARCHE("Type de critere d'evaluation des marches", "Paramétrage type de critere d'evaluation des marches"),
-//    CIBLE("CIBLE", "Paramétrage cible"),
+    CIBLE("CIBLE", "Paramétrage cible"),
 
     STATUT_DE_LA_RECEPTION("Status de la réception", "Paramétrage des status de reception"),
 

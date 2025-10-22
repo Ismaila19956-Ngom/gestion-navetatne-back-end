@@ -7,9 +7,8 @@ server:
       include-binding-errors: always
       include-stacktrace: never
       include-exception: false
+
 spring:
-  profiles:
-    active: default
   datasource:
     name: ${DB_NAME:dgpsn-db}
     host: ${DB_HOST:185.166.39.101}

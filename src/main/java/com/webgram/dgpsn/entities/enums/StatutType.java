@@ -11,7 +11,11 @@ import java.util.Map;
 public enum StatutType {
     NON_CONFORME("Non conforme"),
     COMFORME("Conforme"),
-    EN_COURS("En cours");
+    EN_COURS("En cours"),
+    TRAITEMENT_ENCOUR("En cours..."),
+    ACCEPTER("Accepté"),
+    REFUSER("Rejeté"),
+    FERMER("Fermé");
 
     @Getter
     @Setter
