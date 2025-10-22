@@ -1,0 +1,64 @@
+ package com.webgram.dgpsn.services.Impl.modelExcelDTO;
+
+ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+ import com.fasterxml.jackson.annotation.JsonInclude;
+ import com.khoutech.openexcel.annotations.CellIndex;
+ import com.opencsv.bean.CsvBindByName;
+ import com.opencsv.bean.CsvBindByPosition;
+ import lombok.*;
+ import lombok.experimental.Accessors;
+
+ import java.util.Date;
+
+@Data
+@Builder
+@Accessors(chain = true)
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class AssemblegeneralExcelDTO {
+
+@CellIndex(index = 0)
+@CsvBindByPosition(position = 0)
+@CsvBindByName(column = "Code")
+private String code;
+@CellIndex(index = 1)
+@CsvBindByPosition(position = 1)
+@CsvBindByName(column = "Libelle")
+private String libelle;
+@CellIndex(index = 2)
+@CsvBindByPosition(position = 2)
+@CsvBindByName(column = "Date ")
+private Date dateassemble;
+@CellIndex(index = 3)
+@CsvBindByPosition(position = 3)
+@CsvBindByName(column = "Ville")
+private String ville;
+@CellIndex(index = 4)
+@CsvBindByPosition(position = 4)
+@CsvBindByName(column = "Lieu")
+private String lieu;
+@CellIndex(index = 5)
+@CsvBindByPosition(position = 5)
+@CsvBindByName(column = "Quorum")
+private Integer Quorum;
+@CellIndex(index = 6)
+@CsvBindByPosition(position = 6)
+@CsvBindByName(column = "Quorum en")
+private String quorumEn;
+@CellIndex(index = 7)
+@CsvBindByPosition(position = 7)
+@CsvBindByName(column = "Description / objectifs du ag")
+private String description;
+@CellIndex(index = 8)
+@CsvBindByPosition(position = 8)
+@CsvBindByName(column = "Conseiladministratif_Conseil d'administration ")
+private String nomcaConseiladministratif;
+@CellIndex(index = 9)
+@CsvBindByPosition(position = 9)
+@CsvBindByName(column = "Typeag_Type d'assemblée générale ")
+private String libelleTypeag;
+
+}

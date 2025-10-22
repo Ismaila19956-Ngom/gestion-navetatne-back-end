@@ -9,8 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import sn.webg.gestionrisque.models.WorkflowValidationHistoriqueDTO;
-import sn.webg.gestionrisque.services.WorkflowValidationHistoriqueService;
+import com.webgram.dgpsn.models.WorkflowValidationHistoriqueDTO;
+import com.webgram.dgpsn.services.WorkflowValidationHistoriqueService;
 
 import java.util.Map;
 

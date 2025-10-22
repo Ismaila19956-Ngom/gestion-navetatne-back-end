@@ -1,8 +1,8 @@
 package com.webgram.dgpsn.services;
 
 import org.springframework.data.domain.Page;
-import sn.webg.gestionrisque.entities.WorkflowStepEntity;
-import sn.webg.gestionrisque.models.WorkflowValidationHistoriqueDTO;
+import com.webgram.dgpsn.entities.WorkflowStepEntity;
+import com.webgram.dgpsn.models.WorkflowValidationHistoriqueDTO;
 
 import java.util.Map;
 import java.util.Optional;
