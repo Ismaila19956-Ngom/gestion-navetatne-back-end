@@ -1,17 +1,17 @@
 package com.webgram.dgpsn.services.Impl;
 
 import com.querydsl.core.BooleanBuilder;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 import com.webgram.dgpsn.entities.QInformationDeclarationEntity;
 import com.webgram.dgpsn.exceptions.ResourceNotFoundException;
 import com.webgram.dgpsn.mappers.InformationDeclarationMapper;
 import com.webgram.dgpsn.models.InformationDeclarationDTO;
 import com.webgram.dgpsn.repositories.InformationDeclarationRepository;
 import com.webgram.dgpsn.services.InformationDeclarationService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 import java.util.Map;
 import java.util.Objects;

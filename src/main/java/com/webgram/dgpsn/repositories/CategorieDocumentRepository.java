@@ -10,6 +10,7 @@ import com.webgram.dgpsn.entities.CategorieDocumentEntity;
 import com.webgram.dgpsn.entities.QCategorieDocumentEntity;
 import com.webgram.dgpsn.entities.enums.CategoryDocument;
 
+import java.util.List;
 import java.util.Objects;
 
 @Repository
@@ -25,7 +26,7 @@ public interface CategorieDocumentRepository extends JpaRepository<CategorieDocu
         return findAll(booleanBuilder, pageable);
     }
 
-//    List<CategorieDocumentEntity> findByCategoryDocumentAndObligatoireTrue(CategoryDocument categoryDocument);
+   List<CategorieDocumentEntity> findByCategoryDocumentAndObligatoireTrue(CategoryDocument categoryDocument);
 
 
 }

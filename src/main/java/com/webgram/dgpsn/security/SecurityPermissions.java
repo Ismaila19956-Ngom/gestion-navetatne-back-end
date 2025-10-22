@@ -103,6 +103,12 @@ public enum SecurityPermissions {
     EDIT_PASSATION("modifier plan passation", Feature.BUREAU_AFFAIRES),
     DELETE_PASSATION("supprimer plan passation", Feature.BUREAU_AFFAIRES),
 
+    ADD_PLAN_DE_PASSATION("ajouter plan passation", Feature.PLAN_DE_PASSATION),
+    READ_PLAN_DE_PASSATION("consulter plan passation", Feature.PLAN_DE_PASSATION),
+    EDIT_PLAN_DE_PASSATION("modifier plan passation", Feature.PLAN_DE_PASSATION),
+    DELETE_PLAN_DE_PASSATION("supprimer plan passation", Feature.PLAN_DE_PASSATION),
+
+
     ADD_ENGAGEMENT("ajouter engagement", Feature.BUREAU_AFFAIRES),
     READ_ENGAGEMENT("consulter engagement", Feature.BUREAU_AFFAIRES),
     EDIT_ENGAGEMENT("modifier engagement", Feature.BUREAU_AFFAIRES),
@@ -259,6 +265,22 @@ public enum SecurityPermissions {
     DELETE_PARTNER("Supprimer partenaire", Feature.PARTNER),
     EXPORT_PARTNER("Exporter partenaire", Feature.PARTNER),
     IMPORT_PARTNER("Importer partenaire", Feature.PARTNER),
+
+    ADD_CONGE("Ajouter congé", Feature.DEMANDE_CONGE),
+    EDIT_CONGE("Modifier congé", Feature.DEMANDE_CONGE),
+    DELETE_CONGE("Supprimer congé", Feature.DEMANDE_CONGE),
+    READ_CONGE("Consulter congé", Feature.DEMANDE_CONGE),
+    VALIDATION_CONGE("Valider congé", Feature.DEMANDE_CONGE),
+    GENERATE_FICHE_CONGE("Générer fiche de renseignement  congé", Feature.DEMANDE_CONGE),
+    GENERATE_DEMANDE_CONGE("Générer demande  congé", Feature.DEMANDE_CONGE),
+    GENERATE_DECISION_CONGE("Générer décision  congé", Feature.DEMANDE_CONGE),
+    GENERATE_BE_CONGE("Générer BE congé", Feature.DEMANDE_CONGE),
+    READ_DOCUMENT_CONGE("Consulter document congé", Feature.DEMANDE_CONGE),
+
+    READ_CESSATION_CONGE("Consulter Cessation Service", Feature.DEMANDE_CONGE),
+    ADD_CESSATION("Ajouter Cessation Service", Feature.DEMANDE_CONGE),
+    EDIT_CESSATION("Modifier Cessation Service", Feature.DEMANDE_CONGE),
+    DELETE_CESSATION("Supprimer Cessation Service", Feature.DEMANDE_CONGE),
 
 
     READ_INDICATOR("Consulter indicateur", Feature.INDICATOR),
@@ -758,6 +780,10 @@ public enum SecurityPermissions {
     EDIT_WORKFLOW_HISTORIQUE("Modifier historique de validation", Feature.WORKFLOW),
     DELETE_WORKFLOW_HISTORIQUE("Supprimer historique de validation", Feature.WORKFLOW),
 
+    ADD_ORDRE_MISSION_AGENT("Ajouter ordre de mission", Feature.ORDRE_MISSION),
+    EDIT_ORDRE_MISSION_AGENT("Modifier ordre de mission", Feature.ORDRE_MISSION),
+    DELETE_ORDRE_MISSION_AGENT("Supprimer ordre de mission", Feature.ORDRE_MISSION),
+    READ_ORDRE_MISSION_AGENT("Consulter ordre de mission", Feature.ORDRE_MISSION),
 
     READ_JOURNAL("Consulter journal", Feature.JOURNAL),
     ADD_ORGANIGRAMME("Ajouter organigramme", Feature.ORGANIGRAMME),

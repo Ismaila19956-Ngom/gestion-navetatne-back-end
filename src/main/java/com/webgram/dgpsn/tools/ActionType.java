@@ -79,6 +79,11 @@ public class ActionType {
      public static final String EXPORT_DATES_IMPORTANTE_TO_EXCEL = "Exportation en excel des dates importantes : GESTION PROJET / Liste projets / Paramétrage / Onglet Dates importantes / Exporter / Excel";
      public static final String EXPORT_DATES_IMPORTANTE_TO_PDF = "Exportation PDF des dates importantes : GESTION PROJET / Liste projets / Paramétrage / Onglet Dates importantes / Exporter / PDF";
 
+     // Workflow Historique
+    public static final String READ_WORKFLOW_HISTORIQUE = "Consultation de l'historique de validation : SÉCURITÉ / Workflow";
+    public static final String ADD_WORKFLOW_HISTORIQUE = "Ajout à l'historique de validation : SÉCURITÉ / Workflow / Ajouter";
+    public static final String EDIT_WORKFLOW_HISTORIQUE = "Modification de l'historique de validation : SÉCURITÉ / Workflow / Modifier";
+    public static final String DELETE_WORKFLOW_HISTORIQUE = "Suppression de l'historique de validation : SÉCURITÉ / Workflow / Supprimer";
 
 
      public static final String READ_COMPOSANTE_TO_AVANCEMENT = "Consultation des composantes : GESTION PROJET / Liste projets / avancement detaille / Onglet Composantes";

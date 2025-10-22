@@ -1,5 +1,9 @@
 package com.webgram.dgpsn.services.Impl;
 
+import com.webgram.dgpsn.models.responses.SignInAuthentication;
+import com.webgram.dgpsn.repositories.UserRepository;
+import com.webgram.dgpsn.security.jwt.TokenProvider;
+import com.webgram.dgpsn.services.AuthenticationService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -9,10 +13,6 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import com.webgram.dgpsn.models.responses.SignInAuthentication;
-import com.webgram.dgpsn.repositories.UserRepository;
-import com.webgram.dgpsn.security.jwt.TokenProvider;
-import com.webgram.dgpsn.services.AuthenticationService;
 
 import java.time.LocalDateTime;
 

@@ -1,11 +1,5 @@
 package com.webgram.dgpsn.services.Impl;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import com.webgram.dgpsn.entities.enums.StatusType;
 import com.webgram.dgpsn.exceptions.NotValidPeriodException;
 import com.webgram.dgpsn.exceptions.ResourceNotFoundException;
@@ -15,6 +9,12 @@ import com.webgram.dgpsn.models.responses.StatisticalDTO;
 import com.webgram.dgpsn.repositories.HistoryStatusRepository;
 import com.webgram.dgpsn.repositories.ManagementUnitRepository;
 import com.webgram.dgpsn.services.HistoryStatusService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.util.List;

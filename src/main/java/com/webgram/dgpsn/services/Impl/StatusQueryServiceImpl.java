@@ -1,5 +1,11 @@
 package com.webgram.dgpsn.services.Impl;
 
+import com.webgram.dgpsn.annotations.Journal;
+import com.webgram.dgpsn.exceptions.ResourceNotFoundException;
+import com.webgram.dgpsn.mappers.StatusQueryMapper;
+import com.webgram.dgpsn.models.StatusQueryDTO;
+import com.webgram.dgpsn.repositories.StatusQueryRepository;
+import com.webgram.dgpsn.services.StatusQueryService;
 import com.webgram.dgpsn.tools.ActionType;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -8,12 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import com.webgram.dgpsn.annotations.Journal;
-import com.webgram.dgpsn.exceptions.ResourceNotFoundException;
-import com.webgram.dgpsn.mappers.StatusQueryMapper;
-import com.webgram.dgpsn.models.StatusQueryDTO;
-import com.webgram.dgpsn.repositories.StatusQueryRepository;
-import com.webgram.dgpsn.services.StatusQueryService;
 
 import java.text.MessageFormat;
 import java.util.Date;

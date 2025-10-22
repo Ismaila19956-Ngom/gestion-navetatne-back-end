@@ -1,39 +1,33 @@
 package com.webgram.dgpsn.services.Impl;
 
-import com.querydsl.core.BooleanBuilder;
-import com.webgram.dgpsn.entities.QConseiladministratifEntity;
-import com.webgram.dgpsn.services.Impl.modelExcelDTO.ConseiladministratifExcelDTO;
 import com.opencsv.CSVWriter;
 import com.opencsv.bean.CsvBindByName;
-import java.io.PrintWriter;
-import java.util.*;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Map;
-import java.util.Objects;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-
 import com.opencsv.bean.CsvBindByPosition;
 import com.opencsv.bean.StatefulBeanToCsv;
 import com.opencsv.bean.StatefulBeanToCsvBuilder;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
+import com.querydsl.core.BooleanBuilder;
+import com.webgram.dgpsn.entities.ConseiladministratifEntity;
+import com.webgram.dgpsn.entities.QConseiladministratifEntity;
+import com.webgram.dgpsn.exceptions.ResourceNotFoundException;
+import com.webgram.dgpsn.mappers.ConseiladministratifMapper;
+import com.webgram.dgpsn.models.ConseiladministratifDto;
+import com.webgram.dgpsn.repositories.ConseiladministratifRepository;
+import com.webgram.dgpsn.services.ConseiladministratifService;
+import com.webgram.dgpsn.services.Impl.modelExcelDTO.ConseiladministratifExcelDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import com.webgram.dgpsn.mappers.ConseiladministratifMapper;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.webgram.dgpsn.models.ConseiladministratifDto;
-import com.webgram.dgpsn.entities.ConseiladministratifEntity;
-import com.webgram.dgpsn.repositories.ConseiladministratifRepository;
-import com.webgram.dgpsn.exceptions.ResourceNotFoundException;
-import com.webgram.dgpsn.services.ConseiladministratifService;
+import java.io.PrintWriter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional

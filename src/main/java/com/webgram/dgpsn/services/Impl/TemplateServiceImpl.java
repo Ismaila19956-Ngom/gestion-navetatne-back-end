@@ -1,12 +1,5 @@
 package com.webgram.dgpsn.services.Impl;
 
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 import com.webgram.dgpsn.entities.QTemplateEntity;
 import com.webgram.dgpsn.entities.TemplateEntity;
 import com.webgram.dgpsn.entities.enums.CategorieAlerte;
@@ -17,6 +10,13 @@ import com.webgram.dgpsn.mappers.TemplateMapper;
 import com.webgram.dgpsn.models.TemplateDto;
 import com.webgram.dgpsn.repositories.TemplateRepository;
 import com.webgram.dgpsn.services.TemplateService;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 import java.text.MessageFormat;
 import java.util.List;

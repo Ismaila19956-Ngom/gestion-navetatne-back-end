@@ -1,15 +1,7 @@
 package com.webgram.dgpsn.services.Impl;
 
-import com.webgram.dgpsn.tools.ActionType;
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import com.webgram.dgpsn.entities.GeographicalLocationEntity;
 import com.webgram.dgpsn.annotations.Journal;
+import com.webgram.dgpsn.entities.GeographicalLocationEntity;
 import com.webgram.dgpsn.entities.enums.CadreLogiqueType;
 import com.webgram.dgpsn.exceptions.ResourceNotFoundException;
 import com.webgram.dgpsn.mappers.GeographicalLocationMapper;
@@ -21,6 +13,14 @@ import com.webgram.dgpsn.repositories.HistoryStatusRepository;
 import com.webgram.dgpsn.repositories.ManagementUnitRepository;
 import com.webgram.dgpsn.services.CompletionRateService;
 import com.webgram.dgpsn.services.GeographicalLocationService;
+import com.webgram.dgpsn.tools.ActionType;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 import java.text.MessageFormat;
 import java.time.LocalDate;

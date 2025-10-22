@@ -1,11 +1,5 @@
 package com.webgram.dgpsn.services.Impl;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import com.webgram.dgpsn.exceptions.NotValidPeriodException;
 import com.webgram.dgpsn.exceptions.ResourceNotFoundException;
 import com.webgram.dgpsn.mappers.HistoryFlagMapper;
@@ -14,9 +8,18 @@ import com.webgram.dgpsn.models.responses.StatisticalDTO;
 import com.webgram.dgpsn.repositories.HistoryFlagRepository;
 import com.webgram.dgpsn.repositories.ManagementUnitRepository;
 import com.webgram.dgpsn.services.HistoryFlagService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @Service
 @Transactional

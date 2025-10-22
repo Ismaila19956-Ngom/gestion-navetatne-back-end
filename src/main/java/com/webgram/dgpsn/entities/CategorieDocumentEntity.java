@@ -22,6 +22,9 @@ public class CategorieDocumentEntity extends Auditable<Long> implements Serializ
     @Column(name = "cat_doc_id")
     private Long id;
 
+    @Column(name = "obligatoire")
+    private Boolean obligatoire;
+
     @Column(name = "doc_categorie_type")
     @Enumerated(EnumType.STRING)
     private CategoryDocument categoryDocument;
