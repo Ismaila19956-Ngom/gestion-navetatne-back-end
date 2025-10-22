@@ -1,5 +1,6 @@
 package com.webgram.dgpsn.controllers;
 
+import com.webgram.dgpsn.models.WorkflowValidationHistoriqueDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -143,5 +144,15 @@ public class CongeController {
             Logger.getLogger(CongeController.class.getName()).log(Level.SEVERE, null, ex);
             return Response.badRequest().setMessage(ex.getMessage());
         }
+    }
+    @Operation(summary = "Validate  Conge", description = "this endpoint take input historique, validate Conge and save a historique")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Success"),
+            @ApiResponse(responseCode = "400", description = "Request sent by the historique was syntactically incorrect"),
+            @ApiResponse(responseCode = "500", description = "Internal server error during request processing")})
+    @PostMapping("/validate")
+    @ResponseStatus(HttpStatus.OK)
+    public void validateFluxtresorerie(@RequestBody WorkflowValidationHistoriqueDTO historique) {
+        congeService.validateStepWorkflow(historique);
     }
 }

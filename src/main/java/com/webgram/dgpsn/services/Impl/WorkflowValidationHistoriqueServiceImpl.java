@@ -176,6 +176,7 @@ public class WorkflowValidationHistoriqueServiceImpl implements WorkflowValidati
                         WorkflowType.DEMANDE_CONGE, year, month)
                 .map(WorkflowValidationHistoriqueEntity::getEtape);
     }
+
     @Override
     public Optional<WorkflowStepEntity> findLastValidatedStepForNsfr(int year, int month) {
         return workflowHistoriqueRepository.findTopByWorkflowTypeAndYearAndMonthOrderByDateDesc(

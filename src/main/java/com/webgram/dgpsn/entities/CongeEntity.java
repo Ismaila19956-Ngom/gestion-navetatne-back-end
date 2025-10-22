@@ -71,6 +71,9 @@ public class CongeEntity extends Auditable<Long> implements Serializable {
     @Column(name = "cong_description", columnDefinition = "TEXT")
     private String description;
 
+    @Column(name = "final_step")
+    private Boolean finalStep;
+
     @JoinColumn(name = "cong_linked_agent")
     @ManyToOne
     private AgentEntity agent;
@@ -80,5 +83,9 @@ public class CongeEntity extends Auditable<Long> implements Serializable {
             joinColumns = {@JoinColumn(name = "cong_id")},
             inverseJoinColumns = {@JoinColumn(name = "document_id")})
     private List<DocumentEntity> document;
+
+    @ManyToOne
+    @JoinColumn(name = "workflow_step")
+    private WorkflowStepEntity workflowStep;
 
 }

@@ -18,6 +18,7 @@ public enum CategoryDocument {
     AGREMENT("Agréments", "Paramétrage des types de document pour les agréments"),
     TDR("Termes de Référence (TDR)", "Paramétrage des types de document pour les TDR"),
     ORDRE_DE_MISSION_DOCUMENT("Document Ordre de mission", "Paramétrage des types de documents pour les ordres de mission"),
+    TYPE_DOCUMENT("Type Document", "Paramétrage des types de documents"),
 
     ADMINISTRATIF("Document Conge administratif", "Paramétrage des types de documents pour les congés administratif"),
     MATERNITE("Document Conge maternite", "Paramétrage des types de documents pour les congés de maternite"),

@@ -20,6 +20,7 @@ public class CongeRule {
     static final String CONGE_DELETE_DOCUMENT_ID = "/doc";
     static final String CONGE_PAGE = "/page";
     static final String CONGE_NUMERO_DECISION = "/numero-decision";
+    static final String  CONGE_VALIDATE = "/validate";
 
     @Bean
     public SecurityRule createConge() {
@@ -158,4 +159,15 @@ public class CongeRule {
                 .end();
     }
 
+    @Bean
+    public SecurityRule validateFluxtresorie() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.POST)
+                .apiPattern(CONGE_API_PREFIX + CONGE_VALIDATE)
+                .build()
+                .condition()
+//                .hasPermission(SecurityPermissions.VALIDATE_FLUX_TRESORERIE)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
 }

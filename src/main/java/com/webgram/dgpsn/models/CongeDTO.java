@@ -41,7 +41,7 @@ public class CongeDTO implements Serializable {
     private StatutType statutType;
     private String description;
     private String numeroDecision;
-
+    private Boolean finalStep;
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private AgentDTO agent;
@@ -49,6 +49,9 @@ public class CongeDTO implements Serializable {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private List<DocumentDto> document;
     private List<Long> documentIds;
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private WorkflowStepDTO workflowStep;
 
 
 }

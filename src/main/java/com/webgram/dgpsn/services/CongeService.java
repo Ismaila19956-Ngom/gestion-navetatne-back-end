@@ -1,5 +1,6 @@
 package com.webgram.dgpsn.services;
 
+import com.webgram.dgpsn.models.WorkflowValidationHistoriqueDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 import com.webgram.dgpsn.entities.enums.StatutType;
@@ -30,4 +31,5 @@ public interface CongeService {
     void validConge(Long CongeId, StatutType statut);
 
     CongeDTO updateNumeroDecision(Long congeId, String numeroDecision);
+    void validateStepWorkflow(WorkflowValidationHistoriqueDTO historiqueDTO);
 }
