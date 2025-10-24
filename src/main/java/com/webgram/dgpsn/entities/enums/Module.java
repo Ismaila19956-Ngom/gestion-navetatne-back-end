@@ -25,7 +25,8 @@ public enum Module {
     ALERTE("Alerte"),
     DOCUMENT("Document"),
     ORGANIGRAMMER("Organigramme"),
-    SECURITY("Sécurité");
+    SECURITY("Sécurité"),
+    COURRIER("Courrier");
 
 
     @Getter
@@ -43,12 +44,13 @@ public enum Module {
                 "description", description
         );
     }
-//    public static Set<Module> readModules() {
+
+    //    public static Set<Module> readModules() {
 //        return Arrays.stream(values())
 //                    .collect(Collectors.toSet());
 //    }
-public static Set<Module> readModules() {
-    return Arrays.stream(values())
-            .collect(Collectors.toCollection(LinkedHashSet::new));
-}
+    public static Set<Module> readModules() {
+        return Arrays.stream(values())
+                .collect(Collectors.toCollection(LinkedHashSet::new));
+    }
 }
