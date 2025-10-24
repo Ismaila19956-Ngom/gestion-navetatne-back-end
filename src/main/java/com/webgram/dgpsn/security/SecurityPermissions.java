@@ -439,6 +439,11 @@ public enum SecurityPermissions {
     DELETE_ETAPE_MISSION_ACTIVITY("Supprimer etape", Feature.ETAPE_MISSION_ACTIVITY),
     READ_ETAPE_MISSION_ACTIVITY("Lire etape", Feature.ETAPE_MISSION_ACTIVITY),
 
+    ADD_FORMATION_EXTERIEUR("Ajouter formation externe", Feature.FORMATION),
+    READ_FORMATION_EXTERIEUR("Consulter formation externe", Feature.FORMATION),
+    EDIT_FORMATION_EXTERIEUR("Modifier formation externe", Feature.FORMATION),
+    DELETE_FORMATION_EXTERIEUR("Supprimer formation externe", Feature.FORMATION),
+
     ADD_EXPENSE_ACTIVITY("Ajouter expense", Feature.EXPENSE_ACTIVITY),
     EDIT_EXPENSE_ACTIVITY("Modifier expense", Feature.EXPENSE_ACTIVITY),
     DELETE_EXPENSE_ACTIVITY("Supprimer expense", Feature.EXPENSE_ACTIVITY),
