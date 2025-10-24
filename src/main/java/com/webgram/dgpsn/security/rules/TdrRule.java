@@ -20,7 +20,7 @@ public class TdrRule {
                 .apiPattern(API_PREFIX)
                 .build()
                 .condition()
-                 .hasPermission(SecurityPermissions.ADD_TDR)
+//                 .hasPermission(SecurityPermissions.ADD_TDR)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
@@ -32,10 +32,10 @@ public class TdrRule {
                 .apiPattern(API_PREFIX + "/**")
                 .build()
                 .condition()
-                .hasPermission(SecurityPermissions.READ_TDR)
-                .hasPermission(SecurityPermissions.ADD_TDR)
-                .hasPermission(SecurityPermissions.EDIT_TDR)
-                .hasPermission(SecurityPermissions.DELETE_TDR)
+//                .hasPermission(SecurityPermissions.READ_TDR)
+//                .hasPermission(SecurityPermissions.ADD_TDR)
+//                .hasPermission(SecurityPermissions.EDIT_TDR)
+//                .hasPermission(SecurityPermissions.DELETE_TDR)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
@@ -47,7 +47,7 @@ public class TdrRule {
                 .apiPattern(API_PREFIX + API_ID)
                 .build()
                 .condition()
-                 .hasPermission(SecurityPermissions.EDIT_TDR)
+//                 .hasPermission(SecurityPermissions.EDIT_TDR)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
@@ -59,7 +59,7 @@ public class TdrRule {
                 .apiPattern(API_PREFIX + API_ID)
                 .build()
                 .condition()
-                 .hasPermission(SecurityPermissions.DELETE_TDR)
+//                 .hasPermission(SecurityPermissions.DELETE_TDR)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }

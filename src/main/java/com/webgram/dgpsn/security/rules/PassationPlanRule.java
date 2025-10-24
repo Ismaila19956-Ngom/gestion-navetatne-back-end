@@ -22,7 +22,7 @@ public class PassationPlanRule {
                 .apiPattern(PASSATION_PLAN_PREFIX)
                 .build()
                 .condition()
-//                .hasPermission(SecurityPermissions.ADD_PLAN_DE_PASSATION)
+               .hasPermission(SecurityPermissions.ADD_PLAN_DE_PASSATION)
                 .hasPermission(SecurityPermissions.READ_PROJECT_APPEL_OFFRE)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
