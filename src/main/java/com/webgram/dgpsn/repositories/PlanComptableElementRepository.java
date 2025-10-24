@@ -1,5 +1,6 @@
 package com.webgram.dgpsn.repositories;
 import com.querydsl.core.BooleanBuilder;
+import com.webgram.dgpsn.entities.QPlanComptableElementEntity;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -28,13 +29,13 @@ public interface PlanComptableElementRepository extends JpaRepository<PlanCompta
     ) {
         var booleanBuider = new BooleanBuilder();
         Sort sort = Sort.unsorted();
-        // QPlanComptableElementEntity qPlanComptableElementEntity = QPlanComptableElementEntity.planComptableElementEntity;
+        QPlanComptableElementEntity qPlanComptableElementEntity = QPlanComptableElementEntity.planComptableElementEntity;
 
         if(Objects.nonNull(idsToIgnore)) {
             // booleanBuider.and(qPlanComptableElementEntity.id.notIn(idsToIgnore)); [12]
         }
         if(Objects.nonNull(type)) {
-            // booleanBuider.and(qPlanComptableElementEntity.type.eq(type));
+             booleanBuider.and(qPlanComptableElementEntity.type.eq(type));
         }
         if(StringUtils.isNotEmpty(code)) {
             // booleanBuider.and(qPlanComptableElementEntity.code.containsIgnoreCase(code)); [12]
