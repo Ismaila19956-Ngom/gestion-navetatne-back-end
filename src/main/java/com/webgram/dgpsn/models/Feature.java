@@ -143,8 +143,11 @@ public enum Feature {
     //    MESSAGERIE("Messagerie", Module.COMMUNICATION),
 //    CHAT("Chat", Module.COMMUNICATION),
     LABEL("Label", Module.REFERENTIEL),
-    PROMOTEUR("Promoteur", Module.REFERENTIEL);
+    PROMOTEUR("Promoteur", Module.REFERENTIEL),
 //    PASSATION ("Promoteur", Module.BAF),
+
+    PLAN_COMPTABLE("Plan comptable", Module.PROJECT_SETTINGS    );
+
 
 
     @Getter

@@ -46,6 +46,4 @@ public interface StatusRepository extends JpaRepository<StatusEntity, Long>, Que
         return findAll(booleanBuilder, pageRequest);
     }
 
-
-
 }
