@@ -10,6 +10,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public enum Feature {
+    COURRIER("Courrier", Module.COURRIER),
     TDB_POLLUTION("Pollution", Module.DASHBOARD),
     TDB_ICPE("ICPE", Module.DASHBOARD),
     TDB_QUALITE_AIR("Qualité de l'air", Module.DASHBOARD),
@@ -38,10 +39,11 @@ public enum Feature {
 //    STATIONS("Stations", Module.SITE_STATION),
 //    STARTUP("Startup", Module.SITE_STATION),
     ORGANIGRAMME("Organigramme",Module.ORGANIGRAMMER),
+
     ORDRE_MISSION("Ordre de mission", Module.ORDRE_MISSION),
-//    PASSATION_PLAN("Liste plan de passation",Module.PROJECT_CALL_FOR_TENDER),
+    //    PASSATION_PLAN("Liste plan de passation",Module.PROJECT_CALL_FOR_TENDER),
     UGP("UGP", Module.PROJECT_SETTINGS),
-//    DATE_IMPORTANT("date_important",Module.PROJECT_SETTINGS),
+    //    DATE_IMPORTANT("date_important",Module.PROJECT_SETTINGS),
 //    COMPONENT("Composantes", Module.PROJECT_SETTINGS),
     INTERVENTION_AREA("Zones d'intervention", Module.PROJECT_SETTINGS),
     SUPERVISION_EXECUTION_STRUCTURE("Structure tutelle/exécution", Module.PROJECT_SETTINGS),
@@ -49,9 +51,9 @@ public enum Feature {
     INDICATOR("Indicateurs", Module.PROJECT_SETTINGS),
     DEMANDE_CONGE("Demandes de congés", Module.ACTES_GESTION),
     ACTOR("Acteurs", Module.PROJECT_SETTINGS),
-//    PROJET_ENTREPRISE("Acteurs", Module.PROJET_ENTREPRISE),
+    //    PROJET_ENTREPRISE("Acteurs", Module.PROJET_ENTREPRISE),
     MILESTONE("Jalons", Module.PROJECT_SETTINGS),
-//    PROGRESS_TRACKING_COMPONENT("Composantes", Module.PROJECT_DETAILED_PROGRESS_TRACKING),
+    //    PROGRESS_TRACKING_COMPONENT("Composantes", Module.PROJECT_DETAILED_PROGRESS_TRACKING),
     PROGRESS_TRACKING_INDICATOR("Indicateurs", Module.PROJECT_DETAILED_PROGRESS_TRACKING),
     RISK("Risques", Module.PROJECT_DETAILED_PROGRESS_TRACKING),
     ISSUE_LOG("Problèmes", Module.PROJECT_DETAILED_PROGRESS_TRACKING),
@@ -82,7 +84,7 @@ public enum Feature {
     STRUCTURE("Structures", Module.REFERENTIEL),
     COMPLETION_RATE("Taux avancement", Module.PROJECT_DETAILED_PROGRESS_TRACKING),
     EVALUATION("evaluation", Module.PROJECT_DETAILED_PROGRESS_TRACKING),
-//    FICHE_RENSEIGNEMENT("renseignement", Module.RENSEIGNEMENT_REGIONAL),
+    //    FICHE_RENSEIGNEMENT("renseignement", Module.RENSEIGNEMENT_REGIONAL),
     MEETINGTYPE("Réunions", Module.REFERENTIEL),
     PHASE("Phases", Module.REFERENTIEL),
     FUNCTION("Fonctions", Module.REFERENTIEL),
@@ -136,14 +138,17 @@ public enum Feature {
 //    SOCIAL("Social", Module.ESG),
 //    GOUVERNANCE("Gouvernance", Module.ESG),
 
-     ALL_ACCESS("Toutes les permissions", Module.SECURITY),
-     WORKFLOW("Workflow", Module.SECURITY),
-     JOURNAL("Journal", Module.SECURITY),
-//    MESSAGERIE("Messagerie", Module.COMMUNICATION),
+    ALL_ACCESS("Toutes les permissions", Module.SECURITY),
+    WORKFLOW("Workflow", Module.SECURITY),
+    JOURNAL("Journal", Module.SECURITY),
+    //    MESSAGERIE("Messagerie", Module.COMMUNICATION),
 //    CHAT("Chat", Module.COMMUNICATION),
     LABEL("Label", Module.REFERENTIEL),
-    PROMOTEUR("Promoteur", Module.REFERENTIEL);
+    PROMOTEUR("Promoteur", Module.REFERENTIEL),
 //    PASSATION ("Promoteur", Module.BAF),
+
+    PLAN_COMPTABLE("Plan comptable", Module.PROJECT_SETTINGS    );
+
 
 
     @Getter
@@ -180,22 +185,22 @@ public enum Feature {
         );
     }
 
-public static Set<Feature> readFeatureByModule(String module) {
-    if (Objects.isNull(module)) {
+    public static Set<Feature> readFeatureByModule(String module) {
+        if (Objects.isNull(module)) {
+            return Arrays.stream(values())
+                    .filter(securityPermissions -> !securityPermissions.equals(Feature.ALL_ACCESS))
+//                .collect(Collectors.toSet());
+                    .collect(Collectors.toCollection(LinkedHashSet::new));
+        }
         return Arrays.stream(values())
                 .filter(securityPermissions -> !securityPermissions.equals(Feature.ALL_ACCESS))
-//                .collect(Collectors.toSet());
+                .filter(securityPermissions -> securityPermissions.module.name().equals(module))
+//            .collect(Collectors.toSet());
                 .collect(Collectors.toCollection(LinkedHashSet::new));
     }
-    return Arrays.stream(values())
-            .filter(securityPermissions -> !securityPermissions.equals(Feature.ALL_ACCESS))
-            .filter(securityPermissions -> securityPermissions.module.name().equals(module))
-//            .collect(Collectors.toSet());
-            .collect(Collectors.toCollection(LinkedHashSet::new));
-}
 
     public static Set<Feature> getAllByModule(String name) {
-        return  Arrays
+        return Arrays
                 .stream(values())
                 .filter(securityPermissions -> securityPermissions.module.name().equals(name))
                 .collect(Collectors.toSet());

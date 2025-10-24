@@ -41,25 +41,26 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers(
-                                "/v2/api-docs",
-                                "/configuration/ui",
-                                "/swagger-resources/**",
-                                "/swagger-ui/**",
-                                "/v3/api-docs",
-                                "/v3/api-docs/**",
-                                "/configuration/security",
-                                "/swagger-ui.html",
-                                "/manage/**",
-                                "/api/*/v3/api-docs",
-                                "/api/v3/api-docs/**",
-                                "/api/*/v3/api-docs/**",
-                                "/webjars/springfox-swagger-ui/**",
-                                "/api/*/v2/api-docs",
+                                .requestMatchers(
+                                        "/v2/api-docs",
+                                        "/configuration/ui",
+                                        "/swagger-resources/**",
+                                        "/swagger-ui/**",
+                                        "/v3/api-docs",
+                                        "/v3/api-docs/**",
+                                        "/configuration/security",
+                                        "/swagger-ui.html",
+                                        "/manage/**",
+                                        "/api/*/v3/api-docs",
+                                        "/api/v3/api-docs/**",
+                                        "/api/*/v3/api-docs/**",
+                                        "/webjars/springfox-swagger-ui/**",
+                                        "/api/*/v2/api-docs",
 //                                "/dgpsn-api/mediatheques/**",
 //                                "/dgpsn-api/management-unit/**",
-                                "/auth/**"
-                        ).permitAll()
+                                        "/auth/**",
+                                        "/courriers/**"
+                                ).permitAll()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class);
@@ -78,7 +79,7 @@ public class SecurityConfiguration {
     }
 
     private JWTFilter jwtFilter() {
-       return new JWTFilter(tokenProvider, userRepository);
+        return new JWTFilter(tokenProvider, userRepository);
     }
 
     private JWTConfigurer securityConfigurerAdapter() {
