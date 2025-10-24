@@ -537,6 +537,15 @@ public enum SecurityPermissions {
     EXPORT_AGENT("Export agent", Feature.AGENT),
     READ_FILE_AGENT("Read file agent", Feature.AGENT),
 
+    /*parametrage plant comptable*/
+    READ_PLAN_COMPTABLE("Consulter parametrage plant comptable", Feature.PLAN_COMPTABLE),
+    ADD_PLAN_COMPTABLE("Ajouter parametrage plant comptable", Feature.PLAN_COMPTABLE),
+    EDIT_PLAN_COMPTABLE("Modifier parametrage plant comptable", Feature.PLAN_COMPTABLE),
+    DELETE_PLAN_COMPTABLE("Supprimer parametrage plant comptable", Feature.PLAN_COMPTABLE),
+    IMPORT_PLAN_COMPTABLE("Import parametrage plant comptable", Feature.PLAN_COMPTABLE),
+    EXPORT_PLAN_COMPTABLE("Export parametrage plant comptable", Feature.PLAN_COMPTABLE),
+    READ_FILE_PLAN_COMPTABLE("Read file parametrage plant comptable", Feature.PLAN_COMPTABLE),
+
     READ_MEETINGTYPE("Consulter Type reunion", Feature.MEETINGTYPE),
     ADD_MEETINGTYPE("Ajouter Type reunion", Feature.MEETINGTYPE),
     EDIT_MEETINGTYPE("Modifier Type reunion", Feature.MEETINGTYPE),
