@@ -88,7 +88,8 @@ public enum ReferentielType {
     DIPLOME("Diplome", "Diplome Agent Rh"),
     FRAIS("Frais", "Frais"),
     PRISE_EN_CHARGE("Prise en charge", "Prise en charge"),
-    POSTE("Poste", "Poste Agent Rh");
+    POSTE("Poste", "Poste Agent Rh"),
+    TYPE_COURRIER("Type courrier", "Parametrage type courrier");
 //    STARTUP("Startup", "Paramétrage startup"),;
 
 
