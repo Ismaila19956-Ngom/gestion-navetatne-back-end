@@ -48,7 +48,7 @@ public enum SecurityPermissions {
     ADD_CONTACT_REQUEST("Ajouter un formulaire général", Feature.FORMULAIRE_GENERALE),
     EDIT_CONTACT_REQUEST("Modifier un formulaire général", Feature.FORMULAIRE_GENERALE),
     DELETE_CONTACT_REQUEST("Supprimer un formulaire général", Feature.FORMULAIRE_GENERALE),
-    READ_FILE_CONTACT_REQUEST("consulter document",Feature.FORMULAIRE_GENERALE),
+    READ_FILE_CONTACT_REQUEST("consulter document", Feature.FORMULAIRE_GENERALE),
 
     READ_INSPECTION_ICPE("Consulter les inspections des installations classées", Feature.INSPECTION_ICPE),
     ADD_INSPECTION_ICPE("Ajouter une nouvelle inspection d'installation classée", Feature.INSPECTION_ICPE),
@@ -338,8 +338,8 @@ public enum SecurityPermissions {
     DELETE_RISK("Supprimer risque", Feature.RISK),
     IMPORT_RISK("Importer risque", Feature.RISK),
     EXPORT_RISK("Exporter risque", Feature.RISK),
-    PROBLEME_RISK ("Probleme risque", Feature.RISK),
-    RECOMMENDATION_RISK ("Recommendation risque", Feature.RISK),
+    PROBLEME_RISK("Probleme risque", Feature.RISK),
+    RECOMMENDATION_RISK("Recommendation risque", Feature.RISK),
 
     READ_ISSUE_LOG("Consulter problème", Feature.ISSUE_LOG),
     ADD_ISSUE_LOG("Ajouter problème", Feature.ISSUE_LOG),
@@ -355,14 +355,14 @@ public enum SecurityPermissions {
     DELETE_COMPLETED_ACTIVITY("Supprimer Action realiser des problème", Feature.ISSUE_LOG),
 
 
-    /////
+    /// //
     READ_DATES_IMPORTANTES("Consulter les dates importantes", Feature.MILESTONE),
     ADD_DATES_IMPORTANTES("Ajouter les dates importantes", Feature.MILESTONE),
     EDIT_DATES_IMPORTANTES("Modifier les dates importantes", Feature.MILESTONE),
     DELETE_DATES_IMPORTANTES("Supprimer les dates importantes", Feature.MILESTONE),
     EXPORT_DATES_IMPORTANTES("Supprimer les dates importantes", Feature.MILESTONE),
     IMPORT_DATES_IMPORTANTES("Supprimer les dates importantes", Feature.MILESTONE),
-    //////////////////
+    /// ///////////////
 
     READ_RECOMMENDATION("Consulter recommandation", Feature.ISSUE_LOG),
     ADD_RECOMMENDATION("Ajouter recommandation", Feature.ISSUE_LOG),
@@ -380,7 +380,6 @@ public enum SecurityPermissions {
     ADD_STATUS("Ajouter statut", Feature.STATUS),
     EDIT_STATUS("Modifier statut", Feature.STATUS),
     DELETE_STATUS("Supprimer statut", Feature.STATUS),
-
 
 
     READ_FLAG("Consulter flag", Feature.FLAG),
@@ -449,7 +448,6 @@ public enum SecurityPermissions {
     EDIT_FUNDING_MOBILISATION("Modifier Mobilisation", Feature.FUNDING_MOBILISATION),
     DELETE_FUNDING_MOBILISATION("Supprimer Mobilisation", Feature.FUNDING_MOBILISATION),
     READ_FUNDING_MOBILISATION("Lire Mobilisation ", Feature.FUNDING_MOBILISATION),
-
 
 
     ADD_BUDGET_ACTIVITY("Ajouter budget", Feature.BUDGET_ACTIVITY),
@@ -632,12 +630,12 @@ public enum SecurityPermissions {
     DELETE_REF_INDICATOR("Supprimer indicateur", Feature.REF_INDICATOR),
     READ_REF_TYPE_EXPENSE("Supprimer Type expense", Feature.EXPENSE_TYPE),
     ADD_REF_TYPE_EXPENSE("Ajouter Type expense", Feature.EXPENSE_TYPE),
-    EDIT_REF_TYPE_EXPENSE("Modifier Type expense", Feature. EXPENSE_TYPE),
+    EDIT_REF_TYPE_EXPENSE("Modifier Type expense", Feature.EXPENSE_TYPE),
     DELETE_REF_TYPE_EXPENSE("Supprimer Type expense", Feature.EXPENSE_TYPE),
 
     READ_REF_TYPE_REQUETE("Supprimer Type requete", Feature.REQUETE_TYPE),
     ADD_REF_TYPE_REQUETE("Ajouter Type requete", Feature.REQUETE_TYPE),
-    EDIT_REF_TYPE_REQUETE("Modifier Type requete", Feature. REQUETE_TYPE),
+    EDIT_REF_TYPE_REQUETE("Modifier Type requete", Feature.REQUETE_TYPE),
     DELETE_REF_TYPE_REQUETE("Supprimer Type requete", Feature.REQUETE_TYPE),
 
     READ_INDICATOR_TYPE("Consulter type indicateur", Feature.INDICATOR_TYPE),
@@ -921,9 +919,26 @@ public enum SecurityPermissions {
 //    DELETE_GOUV_CONFORMITES("Supprimer conformites reglementaire gouvernance", Feature.GOUVERNANCE),
 //    /* fin Conformites gouvernance */
 
+
+    /* Début security courriers */
+    ADD_COURRIER("Ajouter courrier", Feature.COURRIER),
+    READ_COURRIER("Consulter courrier", Feature.COURRIER),
+    EDIT_COURRIER("Modifier courrier", Feature.COURRIER),
+    DELETE_COURRIER("Supprimer courrier", Feature.COURRIER),
+    ARCHIVER_COURRIER("Archiver courrier", Feature.COURRIER),
+    CHANGER_STATUT_COURRIER("Changer statut courrier", Feature.COURRIER),
+    READ_STATISTIQUES("Consulter statistiques", Feature.COURRIER),
+    IMPORT_COURRIER("Importer courrier", Feature.COURRIER),
+    EXPORT_COURRIER("Exporter courrier", Feature.COURRIER),
+    /* Fin security courriers */
+
+
     READ_COMPLETIONRATE("Consulter taux avancement", Feature.COMPLETION_RATE),
+
     ADD_COMPLETIONRATE("Ajouter taux avancement", Feature.COMPLETION_RATE),
+
     EDIT_COMPLETIONRATE("Modifier taux avancement", Feature.COMPLETION_RATE),
+
     DELETE_COMPLETIONRATE("Supprimer taux avancement", Feature.COMPLETION_RATE),
 
     /* début Cessions acquisition */
@@ -975,7 +990,6 @@ public enum SecurityPermissions {
 //    EXPORT_DEPENSE("Exporter Depense", Feature.ENTREPRISE_LIST),
 
 
-
 //    READ_DECISION_AG("Decision Decision", Feature.ENTREPRISE_LIST),
 //    ADD_DECISION_AG("Ajouter Decision", Feature.ENTREPRISE_LIST),
 //    EDIT_DECISION_AG("Modifier Decision", Feature.ENTREPRISE_LIST),
@@ -990,19 +1004,22 @@ public enum SecurityPermissions {
 //    EXPORT_PARTICIPATION_AG("Exporter paricipation", Feature.ENTREPRISE_LIST),
 
     READ_PROGRAMME("Consulter programme", Feature.LIST_PROGRAMME),
+
     ADD_PROGRAMME("Ajouter programme", Feature.LIST_PROGRAMME),
+
     EDIT_PROGRAMME("Modifier programme", Feature.LIST_PROGRAMME),
+
     DELETE_PROGRAMME("Supprimer programme", Feature.LIST_PROGRAMME),
+
     CONFIG_PROGRAMME("Configurer programme", Feature.LIST_PROGRAMME),
 
     ADD_PROMOTEUR("Ajouter promoteur", Feature.PROMOTEUR),
+
     EDIT_PROMOTEUR("Modifier promoteur", Feature.PROMOTEUR),
+
     DELETE_PROMOTEUR("Supprimer promoteur", Feature.PROMOTEUR),
+
     READ_PROMOTEUR("Consulter promoteur", Feature.PROMOTEUR),
-
-
-
-
 
 
     //
