@@ -1,5 +1,6 @@
 package com.webgram.dgpsn.controllers;
 import com.webgram.dgpsn.annotations.Journal;
+import com.webgram.dgpsn.exceptions.ResourceNotFoundException;
 import com.webgram.dgpsn.models.PlanComptableElementDTO;
 import com.webgram.dgpsn.services.PlanComptableElementService;
 import com.webgram.dgpsn.entities.enums.TypePlanComptable;
@@ -9,8 +10,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import lombok.extern.slf4j.Slf4j;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/plancomptableelements")
 @RequiredArgsConstructor
@@ -38,10 +41,21 @@ public class PlanComptableElementController {
     }
 
     @DeleteMapping("/{id}")
-   /* @Journal(actionType = "DELETE")*/
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        service.delete(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    /* @Journal(actionType = "DELETE") */
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        try {
+            log.info("Tentative de suppression de l'élément avec l'ID: {}", id);
+            service.delete(id);
+            log.info("Élément avec l'ID {} supprimé avec succès", id);
+            return ResponseEntity.noContent().build();
+        } catch (ResourceNotFoundException ex) {
+            log.error("Élément non trouvé pour la suppression - ID: {}", id, ex);
+            return ResponseEntity.notFound().build();
+        } catch (Exception ex) {
+            log.error("Erreur lors de la suppression de l'élément avec l'ID: " + id, ex);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Une erreur est survenue lors de la suppression: " + ex.getMessage());
+        }
     }
 
     @GetMapping
