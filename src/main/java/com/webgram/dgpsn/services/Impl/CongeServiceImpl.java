@@ -359,8 +359,9 @@ public void validConge(Long congeId, StatutType statut) {
     @Transactional
     @Override
     public void validateStepWorkflow(WorkflowValidationHistoriqueDTO historiqueDTO) {
+        log.info("historiqueDTO: {}",historiqueDTO);
         var fluxtresorerieToValidate = congeRepository.findById(historiqueDTO.getEntityId())
-                .orElseThrow(() -> new ResourceNotFoundException(String.format("Flux de trésorerie id '%d' n'existe pas", historiqueDTO.getEntityId())));
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("Conge id '%d' n'existe pas", historiqueDTO.getEntityId())));
 
         var stepToValid =  workflowStepRepository.findById(historiqueDTO.getEtapeId())
                 .orElseThrow(() -> new ResourceNotFoundException(String.format("L'etape avec l'id '%d' n'existe pas!", historiqueDTO.getEtapeId())));
