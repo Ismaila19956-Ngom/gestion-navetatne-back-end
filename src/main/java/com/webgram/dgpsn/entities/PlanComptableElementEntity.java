@@ -4,6 +4,8 @@ import com.webgram.dgpsn.entities.audits.Auditable;
 import com.webgram.dgpsn.entities.enums.TypePlanComptable;
 import jakarta.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Table(name = "plan_comptable_element")
 @Entity
@@ -23,4 +25,11 @@ public class PlanComptableElementEntity extends Auditable<Long> implements Seria
     @Enumerated(EnumType.STRING)
     @Column(name = "pce_type")
     private TypePlanComptable type;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "plan_id", referencedColumnName = "pce_id")
+    private PlanComptableElementEntity plan;
+    
+    @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<PlanComptableElementEntity> children = new ArrayList<>();
 }
