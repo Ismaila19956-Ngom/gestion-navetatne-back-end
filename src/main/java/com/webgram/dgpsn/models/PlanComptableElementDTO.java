@@ -32,16 +32,11 @@ public class PlanComptableElementDTO implements Serializable {
     /**
      * ID du plan parent (CLASSE)
      * Accepte "plan": 1 en INPUT
-     * Retourne l'ID en OUTPUT si planDetails est null
-     */
-    @JsonProperty("plan")
-    private Long planId;
-
-    /**
-     * Objet plan parent complet pour l'affichage
-     * Retourné en OUTPUT uniquement
+     * Retourne l'ID en OUTPUT
      */
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    @JsonProperty(value = "planDetails", access = JsonProperty.Access.READ_ONLY)
-    private PlanComptableElementDTO planDetails;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private PlanComptableElementDTO parent;
+
+    private Long parentId;
 }
