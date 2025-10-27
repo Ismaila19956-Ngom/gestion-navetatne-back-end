@@ -2,7 +2,6 @@ package com.webgram.dgpsn.services.Impl;
 
 import com.webgram.dgpsn.entities.PlanComptableElementEntity;
 import com.webgram.dgpsn.exceptions.PlanComptableException;
-import com.webgram.dgpsn.exceptions.PlanComptableException;
 import com.webgram.dgpsn.exceptions.ResourceNotFoundException;
 import com.webgram.dgpsn.mappers.PlanComptableElementMapper;
 import com.webgram.dgpsn.models.PlanComptableElementDTO;
@@ -29,81 +28,67 @@ public class PlanComptableElementServiceImpl implements PlanComptableElementServ
 
     @Override
     public PlanComptableElementDTO create(PlanComptableElementDTO dto) {
-        log.info("Creating PlanComptableElement with type: {} and code: {}", dto.getType(), dto.getCode());
+        log.info("Creating PlanComptableElement - type: {}, code: {}", dto.getType(), dto.getCode());
 
-        // Validation du code unique
         if (repository.existsByCode(dto.getCode())) {
             throw new PlanComptableException("Un élément avec le code '" + dto.getCode() + "' existe déjà");
         }
 
-        // Validation et normalisation selon la logique métier
-        validateAndNormalizePlanLogic(dto, null);
+        validateAndNormalizePlanHierarchy(dto, null);
 
-        // Conversion et sauvegarde
         var entity = mapper.asEntity(dto);
         var savedEntity = repository.save(entity);
 
-        log.info("PlanComptableElement successfully created with id: {}", savedEntity.getId());
+        log.info("PlanComptableElement created - id: {}, code: {}", savedEntity.getId(), savedEntity.getCode());
         return mapper.asDto(savedEntity);
     }
 
     @Override
     public PlanComptableElementDTO update(PlanComptableElementDTO dto) {
-        log.info("Updating PlanComptableElement with id: {}", dto.getId());
+        log.info("Updating PlanComptableElement - id: {}", dto.getId());
 
-        // Vérification de l'existence
         var existingEntity = repository.findById(dto.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("PlanComptableElement", dto.getId()));
 
-        // Validation du code unique (en excluant l'élément actuel)
         if (repository.existsByCodeAndIdNot(dto.getCode(), dto.getId())) {
             throw new PlanComptableException("Un autre élément avec le code '" + dto.getCode() + "' existe déjà");
         }
 
-        // Validation et normalisation selon la logique métier
-        validateAndNormalizePlanLogic(dto, dto.getId());
+        validateAndNormalizePlanHierarchy(dto, dto.getId());
 
-        // Mise à jour des propriétés simples
         existingEntity.setCode(dto.getCode());
         existingEntity.setLibelle(dto.getLibelle());
         existingEntity.setCommentaire(dto.getCommentaire());
         existingEntity.setType(dto.getType());
 
-        // Mise à jour de la relation plan
-        if (dto.getPlanId() != null) {
-            var planEntity = repository.findById(dto.getPlanId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Plan comptable parent", dto.getPlanId()));
-            existingEntity.setPlan(planEntity);
+        if (dto.getParentId() != null) {
+            var planEntity = repository.findById(dto.getParentId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Plan parent", dto.getParentId()));
+            existingEntity.setParent(planEntity);
         } else {
-            existingEntity.setPlan(null);
+            existingEntity.setParent(null);
         }
 
         var updatedEntity = repository.save(existingEntity);
-        log.info("PlanComptableElement successfully updated with id: {}", updatedEntity.getId());
+        log.info("PlanComptableElement updated - id: {}", updatedEntity.getId());
 
         return mapper.asDto(updatedEntity);
     }
 
     @Override
     public PlanComptableElementDTO read(Long elementId) {
-        log.info("Reading PlanComptableElement with id: {}", elementId);
-
         var entity = repository.findById(elementId)
                 .orElseThrow(() -> new ResourceNotFoundException("PlanComptableElement", elementId));
-
         return mapper.asDto(entity);
     }
 
     @Override
     public void delete(Long elementId) {
-        log.info("Deleting PlanComptableElement with id: {}", elementId);
-
         if (!repository.existsById(elementId)) {
             throw new ResourceNotFoundException("PlanComptableElement", elementId);
         }
-
         repository.deleteById(elementId);
-        log.info("PlanComptableElement with id {} successfully deleted", elementId);
+        log.info("PlanComptableElement deleted - id: {}", elementId);
     }
 
     @Override
@@ -113,69 +98,125 @@ public class PlanComptableElementServiceImpl implements PlanComptableElementServ
             String code,
             String libelle,
             TypePlanComptable type,
+            Long plan,
             String sortBy,
             Boolean ascending
     ) {
-        log.info("Reading all PlanComptableElements with filters - type: {}, code: {}", type, code);
-
         return repository
-                .readAllByFiltering(pageable, idsToIgnore, code, libelle, type, sortBy, ascending)
+                .readAllByFiltering(pageable, idsToIgnore, code, libelle, type, plan, sortBy, ascending)
                 .map(mapper::asDto);
     }
 
     /**
-     * Valide et normalise le plan parent selon la logique métier :
-     * - Si type = CLASSE : planId doit être null
-     * - Si type != CLASSE : planId doit référencer une CLASSE existante
-     *
-     * @param dto Le DTO à valider
-     * @param currentId L'ID de l'élément en cours de modification (null pour une création)
-     * @throws PlanComptableException si les règles métier ne sont pas respectées
+     * Valide et normalise la hiérarchie du plan comptable :
+     * - CLASSE : plan = null
+     * - COMPTE : plan = ID de la CLASSE
+     * - SOUS_COMPTE : plan = ID du COMPTE
+     * - RUBRIQUE : plan = ID du SOUS_COMPTE
      */
-    private void validateAndNormalizePlanLogic(PlanComptableElementDTO dto, Long currentId) {
-        // Validation du type
+    private void validateAndNormalizePlanHierarchy(PlanComptableElementDTO dto, Long currentId) {
         if (dto.getType() == null) {
             throw new PlanComptableException("Le type du plan comptable est obligatoire");
         }
 
-        if (TypePlanComptable.CLASSE.equals(dto.getType())) {
-            // Règle 1 : Pour une CLASSE, le plan parent doit être null
-            if (dto.getPlanId() != null) {
-                log.warn("Plan parent {} ignoré pour un élément de type CLASSE", dto.getPlanId());
-                dto.setPlanId(null); // Force à null
-            }
-            log.debug("Element de type CLASSE - aucun plan parent requis");
+        switch (dto.getType()) {
+            case CLASSE:
+                validateClasse(dto);
+                break;
+            case COMPTE:
+                validateCompte(dto, currentId);
+                break;
+            case SOUS_COMPTE:
+                validateSousCompte(dto, currentId);
+                break;
+            case RUBRIQUE:
+                validateRubrique(dto, currentId);
+                break;
+            case REALISATIONS:
+                validateRealisations(dto, currentId);
+                break;
+            default:
+                throw new PlanComptableException("Type de plan comptable non supporté: " + dto.getType());
+        }
+    }
 
-        } else {
-            // Règle 2 : Pour les autres types, un plan parent CLASSE est OBLIGATOIRE
-            if (dto.getPlanId() == null) {
-                throw new PlanComptableException(
-                        String.format("Un plan parent de type CLASSE est requis pour un élément de type %s",
-                                dto.getType())
-                );
-            }
+    private void validateClasse(PlanComptableElementDTO dto) {
+        if (dto.getParentId() != null) {
+            log.warn("Plan parent ignoré pour CLASSE - code: {}", dto.getCode());
+            dto.setParentId(null);
+        }
+    }
 
-            // Vérification que le plan parent existe
-            var planParent = repository.findById(dto.getPlanId())
-                    .orElseThrow(() -> new ResourceNotFoundException(
-                            "Plan comptable parent", dto.getPlanId()
-                    ));
+    private void validateCompte(PlanComptableElementDTO dto, Long currentId) {
+        if (dto.getParentId() == null) {
+            throw new PlanComptableException("Un COMPTE doit avoir une CLASSE comme parent");
+        }
 
-            // Vérification que le plan parent est bien de type CLASSE
-            if (!TypePlanComptable.CLASSE.equals(planParent.getType())) {
-                throw new PlanComptableException(
-                        String.format("Le plan parent (id: %d) doit être de type CLASSE. Type actuel : %s",
-                                dto.getPlanId(), planParent.getType())
-                );
-            }
+        var parent = repository.findById(dto.getParentId())
+                .orElseThrow(() -> new ResourceNotFoundException("CLASSE parent", dto.getParentId()));
 
-            // Vérification qu'un élément ne se référence pas lui-même (lors d'une modification)
-            if (Objects.equals(dto.getPlanId(), currentId)) {
-                throw new PlanComptableException("Un élément ne peut pas être son propre parent");
-            }
+        if (!TypePlanComptable.CLASSE.equals(parent.getType())) {
+            throw new PlanComptableException(
+                    "Le parent d'un COMPTE doit être une CLASSE (parent actuel: " + parent.getType() + ")"
+            );
+        }
 
-            log.debug("Element de type {} correctement lié à la CLASSE {} ({})",
-                    dto.getType(), planParent.getCode(), dto.getPlanId());
+        validateNoSelfReference(dto.getParentId(), currentId);
+    }
+
+    private void validateSousCompte(PlanComptableElementDTO dto, Long currentId) {
+        if (dto.getParentId() == null) {
+            throw new PlanComptableException("Un SOUS_COMPTE doit avoir un COMPTE comme parent");
+        }
+
+        var parent = repository.findById(dto.getParentId())
+                .orElseThrow(() -> new ResourceNotFoundException("COMPTE parent", dto.getParentId()));
+
+        if (!TypePlanComptable.COMPTE.equals(parent.getType())) {
+            throw new PlanComptableException(
+                    "Le parent d'un SOUS_COMPTE doit être un COMPTE (parent actuel: " + parent.getType() + ")"
+            );
+        }
+
+        validateNoSelfReference(dto.getParentId(), currentId);
+    }
+
+    private void validateRubrique(PlanComptableElementDTO dto, Long currentId) {
+        if (dto.getParentId() == null) {
+            throw new PlanComptableException("Une RUBRIQUE doit avoir un SOUS_COMPTE comme parent");
+        }
+
+        var parent = repository.findById(dto.getParentId())
+                .orElseThrow(() -> new ResourceNotFoundException("SOUS_COMPTE parent", dto.getParentId()));
+
+        if (!TypePlanComptable.SOUS_COMPTE.equals(parent.getType())) {
+            throw new PlanComptableException(
+                    "Le parent d'une RUBRIQUE doit être un SOUS_COMPTE (parent actuel: " + parent.getType() + ")"
+            );
+        }
+
+        validateNoSelfReference(dto.getParentId(), currentId);
+    }
+    private void validateRealisations(PlanComptableElementDTO dto, Long currentId) {
+        if (dto.getParentId() == null) {
+            throw new PlanComptableException("Une REALISATIONS doit avoir un RUBRIQUE comme parent");
+        }
+
+        var parent = repository.findById(dto.getParentId())
+                .orElseThrow(() -> new ResourceNotFoundException("RUBRIQUE parent", dto.getParentId()));
+
+        if (!TypePlanComptable.RUBRIQUE.equals(parent.getType())) {
+            throw new PlanComptableException(
+                    "Le parent d'une REALISATIONS doit être une RUBRIQUE (parent actuel: " + parent.getType() + ")"
+            );
+        }
+
+        validateNoSelfReference(dto.getParentId(), currentId);
+    }
+
+    private void validateNoSelfReference(Long planId, Long currentId) {
+        if (Objects.equals(planId, currentId)) {
+            throw new PlanComptableException("Un élément ne peut pas être son propre parent");
         }
     }
 }

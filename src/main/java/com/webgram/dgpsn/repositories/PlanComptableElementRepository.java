@@ -20,14 +20,8 @@ import java.util.Objects;
 public interface PlanComptableElementRepository extends JpaRepository<PlanComptableElementEntity, Long>,
         QuerydslPredicateExecutor<PlanComptableElementEntity> {
 
-    /**
-     * Vérifie si un code existe déjà
-     */
     boolean existsByCode(String code);
 
-    /**
-     * Vérifie si un code existe déjà en excluant un ID spécifique
-     */
     @Query("SELECT CASE WHEN COUNT(p) > 0 THEN true ELSE false END " +
             "FROM PlanComptableElementEntity p " +
             "WHERE p.code = :code AND p.id <> :id")
@@ -39,32 +33,38 @@ public interface PlanComptableElementRepository extends JpaRepository<PlanCompta
             String code,
             String libelle,
             TypePlanComptable type,
+            Long parentId,
             String sortBy,
             Boolean ascending
     ) {
         var booleanBuilder = new BooleanBuilder();
         Sort sort = Sort.unsorted();
-        QPlanComptableElementEntity qPlanComptableElementEntity =
-                QPlanComptableElementEntity.planComptableElementEntity;
+        QPlanComptableElementEntity qEntity = QPlanComptableElementEntity.planComptableElementEntity;
 
-        // Application des filtres
         if (Objects.nonNull(idsToIgnore) && !idsToIgnore.isEmpty()) {
-            booleanBuilder.and(qPlanComptableElementEntity.id.notIn(idsToIgnore));
-        }
-        if (Objects.nonNull(type)) {
-            booleanBuilder.and(qPlanComptableElementEntity.type.eq(type));
-        }
-        if (StringUtils.isNotEmpty(code)) {
-            booleanBuilder.and(qPlanComptableElementEntity.code.containsIgnoreCase(code));
-        }
-        if (StringUtils.isNotEmpty(libelle)) {
-            booleanBuilder.and(qPlanComptableElementEntity.libelle.containsIgnoreCase(libelle));
+            booleanBuilder.and(qEntity.id.notIn(idsToIgnore));
         }
 
-        // Configuration du tri
+        if (Objects.nonNull(type)) {
+            booleanBuilder.and(qEntity.type.eq(type));
+        }
+
+        if (Objects.nonNull(parentId)) {
+            booleanBuilder.and(qEntity.parent.id.eq(parentId));
+        }
+
+        if (StringUtils.isNotEmpty(code)) {
+            booleanBuilder.and(qEntity.code.containsIgnoreCase(code));
+        }
+
+        if (StringUtils.isNotEmpty(libelle)) {
+            booleanBuilder.and(qEntity.libelle.containsIgnoreCase(libelle));
+        }
+
         if (StringUtils.isNotEmpty(sortBy)) {
             sort = Sort.by(sortBy);
         }
+
         if (Objects.nonNull(ascending)) {
             sort = Boolean.TRUE.equals(ascending) ? sort.ascending() : sort.descending();
         }
