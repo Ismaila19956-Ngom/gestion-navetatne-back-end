@@ -11,6 +11,7 @@ import com.webgram.dgpsn.security.SecurityPermissions;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PlanComptableRule {
     static final String PLAN_COMPTABLE_API_PREFIX = "/plancomptableelements";
+    static final String REALISION_SOUS_COMPTE = "/realisation";
     static final String PLAN_COMPTABLE_ID = "/{id}";
 
     @Bean
@@ -31,6 +32,21 @@ public class PlanComptableRule {
         return SecurityRule.builder()
                 .httpMethod(HttpMethod.GET)
                 .apiPattern(PLAN_COMPTABLE_API_PREFIX + PLAN_COMPTABLE_ID)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.READ_PLAN_COMPTABLE)
+                .hasPermission(SecurityPermissions.ADD_PLAN_COMPTABLE)
+                .hasPermission(SecurityPermissions.EDIT_PLAN_COMPTABLE)
+                .hasPermission(SecurityPermissions.DELETE_PLAN_COMPTABLE)
+                .hasPermission(SecurityPermissions.READ_PROJECT_SETTINGS)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+    @Bean
+    public SecurityRule getRealisationsBySousAltaCompteId() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(PLAN_COMPTABLE_API_PREFIX + REALISION_SOUS_COMPTE + PLAN_COMPTABLE_ID)
                 .build()
                 .condition()
                 .hasPermission(SecurityPermissions.READ_PLAN_COMPTABLE)

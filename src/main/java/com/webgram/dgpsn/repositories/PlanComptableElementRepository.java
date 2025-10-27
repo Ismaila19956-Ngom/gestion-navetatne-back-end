@@ -1,5 +1,6 @@
 package com.webgram.dgpsn.repositories;
 import com.querydsl.core.BooleanBuilder;
+import com.webgram.dgpsn.entities.QPlanComptableElementEntity;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,6 +14,7 @@ import com.webgram.dgpsn.entities.enums.TypePlanComptable;
 // import com.webgram.dgpsn.entities.QPlanComptableElementEntity; // Import QueryDSL simulé
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Repository
 public interface PlanComptableElementRepository extends JpaRepository<PlanComptableElementEntity, Long>, QuerydslPredicateExecutor<PlanComptableElementEntity> {
@@ -28,19 +30,19 @@ public interface PlanComptableElementRepository extends JpaRepository<PlanCompta
     ) {
         var booleanBuider = new BooleanBuilder();
         Sort sort = Sort.unsorted();
-        // QPlanComptableElementEntity qPlanComptableElementEntity = QPlanComptableElementEntity.planComptableElementEntity;
+         QPlanComptableElementEntity qPlanComptableElementEntity = QPlanComptableElementEntity.planComptableElementEntity;
 
         if(Objects.nonNull(idsToIgnore)) {
-            // booleanBuider.and(qPlanComptableElementEntity.id.notIn(idsToIgnore)); [12]
+            booleanBuider.and(qPlanComptableElementEntity.id.notIn(idsToIgnore));
         }
         if(Objects.nonNull(type)) {
-            // booleanBuider.and(qPlanComptableElementEntity.type.eq(type));
+             booleanBuider.and(qPlanComptableElementEntity.type.eq(type));
         }
         if(StringUtils.isNotEmpty(code)) {
-            // booleanBuider.and(qPlanComptableElementEntity.code.containsIgnoreCase(code)); [12]
+         booleanBuider.and(qPlanComptableElementEntity.code.containsIgnoreCase(code));
         }
         if(StringUtils.isNotEmpty(libelle)) {
-            // booleanBuider.and(qPlanComptableElementEntity.libelle.containsIgnoreCase(libelle)); [12]
+             booleanBuider.and(qPlanComptableElementEntity.libelle.containsIgnoreCase(libelle));
         }
 
         if(StringUtils.isNotEmpty(sortBy)) {
@@ -52,7 +54,13 @@ public interface PlanComptableElementRepository extends JpaRepository<PlanCompta
         }
 
         var pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
-        // return findAll(booleanBuider, pageRequest);
-        return findAll(pageRequest);
+         return findAll(booleanBuider, pageRequest);
+
     }
+
+    //Vérifie que l'élément existe et est de type SOUS_COMPTE
+    Optional<PlanComptableElementEntity> findByIdAndType(Long id, TypePlanComptable type);
+
+    // Récupère les réalisations enfants d'un parent donné
+    List<PlanComptableElementEntity> findByParentIdAndType(Long parentId, TypePlanComptable type);
 }

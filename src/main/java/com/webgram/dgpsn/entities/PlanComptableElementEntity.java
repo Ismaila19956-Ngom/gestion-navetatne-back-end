@@ -23,4 +23,7 @@ public class PlanComptableElementEntity extends Auditable<Long> implements Seria
     @Enumerated(EnumType.STRING)
     @Column(name = "pce_type")
     private TypePlanComptable type;
+    @ManyToOne
+    @JoinColumn(name = "pce_parent_id")
+    private PlanComptableElementEntity parent;
 }

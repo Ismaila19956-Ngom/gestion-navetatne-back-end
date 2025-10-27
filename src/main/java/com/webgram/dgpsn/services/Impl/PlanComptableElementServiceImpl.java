@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service @Transactional @RequiredArgsConstructor @Slf4j
 public class PlanComptableElementServiceImpl implements PlanComptableElementService {
@@ -67,5 +68,19 @@ public class PlanComptableElementServiceImpl implements PlanComptableElementServ
         return repository
                 .readAllByFiltering(pageable, idsToIgnore, code, libelle, type, sortBy, ascending)
                 .map(mapper::asDto);
+    }
+
+    @Override
+    public List<PlanComptableElementDTO> getRealisationsBySousCompteId(Long sousCompteId) {
+        // Vérifier que l'élément existe et est de type SOUS_COMPTE
+        repository.findByIdAndType(sousCompteId, TypePlanComptable.SOUS_COMPTE)
+                .orElseThrow(() -> new ResourceNotFoundException("Sous-compte", sousCompteId));
+        log.info("Récupération des réalisations pour le sous-compte id {}", sousCompteId);
+        // Récupérer les enfants de type REALISATION
+        var realisationsEntities = repository.findByParentIdAndType(sousCompteId, TypePlanComptable.REALISATION);
+        // Mapper en DTO
+        return realisationsEntities.stream()
+                .map(mapper::asDto)
+                .collect(Collectors.toList());
     }
 }

@@ -19,4 +19,5 @@ public interface PlanComptableElementService {
             String sortBy,
             Boolean ascending
     );
+    List<PlanComptableElementDTO> getRealisationsBySousCompteId(Long sousCompteId);
 }
