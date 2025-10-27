@@ -1,25 +1,33 @@
 package com.webgram.dgpsn.services;
 
 import com.webgram.dgpsn.entities.CourrierEntity;
+import com.webgram.dgpsn.entities.LabelEntity;
 import com.webgram.dgpsn.entities.enums.CourrierType;
-import com.webgram.dgpsn.entities.enums.NatureCourrier;
-import com.webgram.dgpsn.entities.enums.StatutCourrier;
+import com.webgram.dgpsn.entities.enums.ReferentielType;
 import com.webgram.dgpsn.repositories.CourrierRepository;
+import com.webgram.dgpsn.repositories.LabelRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import jakarta.persistence.criteria.Predicate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional
 public class CourrierService {
 
     private final CourrierRepository courrierRepository;
+    private final LabelRepository labelRepository;
 
     public CourrierEntity create(CourrierEntity courrier) {
         log.info("Création d'un nouveau courrier {} : {}", courrier.getType(), courrier.getReference());
@@ -31,10 +39,7 @@ public class CourrierService {
 
         // Définir les valeurs par défaut selon le TYPE
         if (courrier.getType() == CourrierType.ARRIVER) {
-            courrier.setStatut(StatutCourrier.NON_TRAITE);
             courrier.setDateReception(LocalDateTime.now());
-        } else if (courrier.getType() == CourrierType.DEPART) {
-            courrier.setStatut(StatutCourrier.BROUILLON);
         }
 
         return courrierRepository.save(courrier);
@@ -60,35 +65,49 @@ public class CourrierService {
         courrierRepository.deleteById(id);
     }
 
+    @Transactional(readOnly = true)
     public Page<CourrierEntity> readAll(Pageable pageable, String keyword,
-                                        CourrierType type, NatureCourrier nature,
-                                        StatutCourrier statut) {
+                                        CourrierType type, ReferentielType nature,
+                                        ReferentielType statut) {
         log.info("Lecture des courriers avec filtres");
 
-        if (keyword != null && !keyword.trim().isEmpty()) {
-            return courrierRepository.search(keyword.trim(), type, nature, statut, pageable);
-        }
+        // Utiliser Specification pour des filtres dynamiques
+        Specification<CourrierEntity> spec = (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
 
-        // Filtres combinés
-        if (type != null && nature != null && statut != null) {
-            return courrierRepository.findByTypeAndNatureAndStatut(type, nature, statut, pageable);
-        } else if (type != null && nature != null) {
-            return courrierRepository.findByTypeAndNature(type, nature, pageable);
-        } else if (type != null && statut != null) {
-            return courrierRepository.findByTypeAndStatut(type, statut, pageable);
-        } else if (nature != null && statut != null) {
-            return courrierRepository.findByNatureAndStatut(nature, statut, pageable);
-        } else if (type != null) {
-            return courrierRepository.findByType(type, pageable);
-        } else if (nature != null) {
-            return courrierRepository.findByNature(nature, pageable);
-        } else if (statut != null) {
-            return courrierRepository.findByStatut(statut, pageable);
-        } else {
-            return courrierRepository.findAll(pageable);
-        }
+            // Filtre par mot-clé
+            if (keyword != null && !keyword.trim().isEmpty()) {
+                String likePattern = "%" + keyword.toLowerCase() + "%";
+                Predicate keywordPredicate = cb.or(
+                        cb.like(cb.lower(root.get("reference")), likePattern),
+                        cb.like(cb.lower(root.get("correspondant")), likePattern),
+                        cb.like(cb.lower(root.get("objet")), likePattern)
+                );
+                predicates.add(keywordPredicate);
+            }
+
+            // Filtre par type
+            if (type != null) {
+                predicates.add(cb.equal(root.get("type"), type));
+            }
+
+            // Filtre par nature (via LabelEntity)
+            if (nature != null) {
+                predicates.add(cb.equal(root.get("nature").get("referentielType"), nature));
+            }
+
+            // Filtre par statut (via LabelEntity)
+            if (statut != null) {
+                predicates.add(cb.equal(root.get("statut").get("referentielType"), statut));
+            }
+
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
+
+        return courrierRepository.findAll(spec, pageable);
     }
 
+    @Transactional(readOnly = true)
     public Optional<CourrierEntity> read(Long id) {
         log.info("Lecture du courrier : {}", id);
         return courrierRepository.findById(id);
@@ -100,46 +119,100 @@ public class CourrierService {
         CourrierEntity courrier = courrierRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Courrier non trouvé avec l'ID: " + id));
 
-        courrier.setStatut(StatutCourrier.ARCHIVE);
+        // Récupérer le label ARCHIVE
+        LabelEntity statutArchive = (LabelEntity) labelRepository
+                .findByTypeAndCode(ReferentielType.STATUT_COURRIER, "ARCHIVE")
+                .orElseThrow(() -> new RuntimeException("Statut ARCHIVE introuvable"));
+
+        courrier.setStatut(statutArchive);
         return courrierRepository.save(courrier);
     }
 
-    public CourrierEntity changerStatut(Long id, StatutCourrier nouveauStatut) {
+    public CourrierEntity changerStatut(Long id, ReferentielType nouveauStatut) {
         log.info("Changement de statut du courrier {} vers {}", id, nouveauStatut);
 
         CourrierEntity courrier = courrierRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Courrier non trouvé avec l'ID: " + id));
 
-        courrier.setStatut(nouveauStatut);
+        // Récupérer le label correspondant au nouveau statut
+        List<LabelEntity> labels = labelRepository.findByReferentielType(nouveauStatut);
+        if (labels.isEmpty()) {
+            throw new RuntimeException("Aucun label trouvé pour le type: " + nouveauStatut);
+        }
 
-        // Mettre à jour les dates selon le TYPE
-        if (courrier.getType() == CourrierType.ARRIVER && nouveauStatut == StatutCourrier.TRAITE) {
+        LabelEntity nouveauLabel = labels.get(0);
+        courrier.setStatut(nouveauLabel);
+
+        // Mettre à jour les dates selon le TYPE et le code du statut
+        if (courrier.getType() == CourrierType.ARRIVER && "TRAITE".equals(nouveauLabel.getCode())) {
             courrier.setDateTraitement(LocalDateTime.now());
-        } else if (courrier.getType() == CourrierType.DEPART && nouveauStatut == StatutCourrier.ENVOYE) {
+        } else if (courrier.getType() == CourrierType.DEPART && "ENVOYE".equals(nouveauLabel.getCode())) {
             courrier.setDateEnvoi(LocalDateTime.now());
         }
 
         return courrierRepository.save(courrier);
     }
 
-    public long countByTypeAndNatureAndStatut(CourrierType type, NatureCourrier nature, StatutCourrier statut) {
-        return courrierRepository.countByTypeAndNatureAndStatut(type, nature, statut);
+    @Transactional(readOnly = true)
+    public long countByTypeAndNatureAndStatut(CourrierType type, ReferentielType nature,
+                                              ReferentielType statut) {
+        Specification<CourrierEntity> spec = (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+
+            if (type != null) {
+                predicates.add(cb.equal(root.get("type"), type));
+            }
+
+            if (nature != null) {
+                predicates.add(cb.equal(root.get("nature").get("referentielType"), nature));
+            }
+
+            if (statut != null) {
+                predicates.add(cb.equal(root.get("statut").get("referentielType"), statut));
+            }
+
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
+
+        return courrierRepository.count(spec);
     }
 
+    @Transactional(readOnly = true)
     public long countCourriersActifs(CourrierType type) {
-        return courrierRepository.countCourriersActifsByType(type);
+        Specification<CourrierEntity> spec = (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+
+            if (type != null) {
+                predicates.add(cb.equal(root.get("type"), type));
+            }
+
+            // Exclure les courriers archivés
+            predicates.add(cb.notEqual(root.get("statut").get("code"), "ARCHIVE"));
+
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
+
+        return courrierRepository.count(spec);
     }
 
+    @Transactional(readOnly = true)
     public Page<CourrierEntity> findByType(CourrierType type, Pageable pageable) {
         return courrierRepository.findByType(type, pageable);
     }
 
-    public Page<CourrierEntity> findByNature(NatureCourrier nature, Pageable pageable) {
-        return courrierRepository.findByNature(nature, pageable);
+    @Transactional(readOnly = true)
+    public Page<CourrierEntity> findByNature(ReferentielType nature, Pageable pageable) {
+        Specification<CourrierEntity> spec = (root, query, cb) ->
+                cb.equal(root.get("nature").get("referentielType"), nature);
+
+        return courrierRepository.findAll(spec, pageable);
     }
 
-    // Méthode pour compter par nature uniquement (si nécessaire)
-    public long countByNature(NatureCourrier nature) {
-        return courrierRepository.countByNature(nature);
+    @Transactional(readOnly = true)
+    public long countByNature(ReferentielType nature) {
+        Specification<CourrierEntity> spec = (root, query, cb) ->
+                cb.equal(root.get("nature").get("referentielType"), nature);
+
+        return courrierRepository.count(spec);
     }
 }
