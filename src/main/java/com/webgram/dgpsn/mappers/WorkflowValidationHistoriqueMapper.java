@@ -9,6 +9,9 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.mapstruct.ReportingPolicy;
 
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Objects;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = "spring")
@@ -40,5 +43,20 @@ public abstract class WorkflowValidationHistoriqueMapper implements EntityMapper
         else {
             return WorkflowStepEntity.builder().id(etapeId).build();
         }
+    }
+
+    @Named("getYear")
+    public Integer getYear(Date date) {
+        if (date == null) return null;
+        LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        return localDate.getMonthValue();
+    }
+
+    @Named("getMonth")
+    public Integer getMonth(Date date) {
+        if (date == null) return null;
+        LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        return localDate.getMonthValue();
+
     }
 }

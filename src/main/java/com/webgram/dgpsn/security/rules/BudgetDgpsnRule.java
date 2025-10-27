@@ -9,57 +9,57 @@ import com.webgram.dgpsn.security.SecurityPermissions;
 
 @Component
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class SuiviSurveillanceRule {
-    static final String API_PREFIX = "/suivi-surveillance";
-    static final String API_ID = "/{id}";
+public class BudgetDgpsnRule {
+    static final String BUDGET_DGPSN_API_PREFIX = "/budgetGlobal";
+    static final String BUDGET_DGPSN_ID = "/{budgetId}";
 
     @Bean
-    public SecurityRule createSuiviSurveillanceRule() {
+    public SecurityRule addBudgetDgpsn() {
         return SecurityRule.builder()
                 .httpMethod(HttpMethod.POST)
-                .apiPattern(API_PREFIX)
+                .apiPattern(BUDGET_DGPSN_API_PREFIX)
                 .build()
                 .condition()
-                 .hasPermission(SecurityPermissions.ADD_SUIVI_SURVEILLANCE)
+                .hasPermission(SecurityPermissions.ADD_BUDGET)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
-    
+
     @Bean
-    public SecurityRule readSuiviSurveillanceRule() {
+    public SecurityRule readAllBudgetDgpsn() {
         return SecurityRule.builder()
                 .httpMethod(HttpMethod.GET)
-                .apiPattern(API_PREFIX + "/**")
+                .apiPattern(BUDGET_DGPSN_API_PREFIX)
                 .build()
                 .condition()
-                .hasPermission(SecurityPermissions.READ_SUIVI_SURVEILLANCE)
-                .hasPermission(SecurityPermissions.ADD_SUIVI_SURVEILLANCE)
-                .hasPermission(SecurityPermissions.EDIT_SUIVI_SURVEILLANCE)
-                .hasPermission(SecurityPermissions.DELETE_SUIVI_SURVEILLANCE)
+                .hasPermission(SecurityPermissions.READ_BUDGET)
+                .hasPermission(SecurityPermissions.ADD_BUDGET)
+                .hasPermission(SecurityPermissions.EDIT_BUDGET)
+                .hasPermission(SecurityPermissions.DELETE_BUDGET)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
-    
+
     @Bean
-    public SecurityRule updateSuiviSurveillanceRule() {
+    public SecurityRule updateBudgetDgpsn() {
         return SecurityRule.builder()
                 .httpMethod(HttpMethod.PUT)
-                .apiPattern(API_PREFIX + API_ID)
+                .apiPattern(BUDGET_DGPSN_API_PREFIX + BUDGET_DGPSN_ID)
                 .build()
                 .condition()
-                 .hasPermission(SecurityPermissions.EDIT_SUIVI_SURVEILLANCE)
+                .hasPermission(SecurityPermissions.EDIT_BUDGET)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
-    
+
     @Bean
-    public SecurityRule deleteSuiviSurveillanceRule() {
+    public SecurityRule deleteBudgetDgpsn() {
         return SecurityRule.builder()
                 .httpMethod(HttpMethod.DELETE)
-                .apiPattern(API_PREFIX + API_ID)
+                .apiPattern(BUDGET_DGPSN_API_PREFIX + BUDGET_DGPSN_ID)
                 .build()
                 .condition()
-                 .hasPermission(SecurityPermissions.DELETE_SUIVI_SURVEILLANCE)
+                .hasPermission(SecurityPermissions.DELETE_BUDGET)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
