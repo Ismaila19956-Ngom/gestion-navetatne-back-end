@@ -11,8 +11,10 @@ public enum Module {
     DASHBOARD("Tableau de bord"),
     PROJECT_LIST("Liste projets"),
     PROJECT_SETTINGS("Paramétrage"),
-    FORMULAIRE("Gestion des procédures"),
+    ORDRE_MISSION("Ordre de mission"),
+//    FORMULAIRE("Gestion des courriers"),
     FINANCEMENT_SETTINGS("Financement"),
+    ACTES_GESTION("Gestion Administrative"),
     PROJECT_DETAILED_PROGRESS_TRACKING("Avancement détaillé"),
 
     Gestion_Administrative("Gestion Administrative des Missions, Formations et Ateliers"),
@@ -22,13 +24,14 @@ public enum Module {
     PROJECT_ACTIVITY_MONITORING("Suivi des activités"),
     PROGRAMME("Programme"),
     ACTIVITY_SETTINGS("Suivi des activités"),
-    SITE_STATION("Sites et stations"),
+//    SITE_STATION("Sites et stations"),
     SETTINGS_ACTIVITE_MISSION("Suivi des mission"),
     REFERENTIEL("Référentiel"),
     ALERTE("Alerte"),
     DOCUMENT("Document"),
     ORGANIGRAMMER("Organigramme"),
-    SECURITY("Sécurité");
+    SECURITY("Sécurité"),
+    COURRIER("Courrier");
 
 
     @Getter
@@ -46,12 +49,13 @@ public enum Module {
                 "description", description
         );
     }
-//    public static Set<Module> readModules() {
+
+    //    public static Set<Module> readModules() {
 //        return Arrays.stream(values())
 //                    .collect(Collectors.toSet());
 //    }
-public static Set<Module> readModules() {
-    return Arrays.stream(values())
-            .collect(Collectors.toCollection(LinkedHashSet::new));
-}
+    public static Set<Module> readModules() {
+        return Arrays.stream(values())
+                .collect(Collectors.toCollection(LinkedHashSet::new));
+    }
 }

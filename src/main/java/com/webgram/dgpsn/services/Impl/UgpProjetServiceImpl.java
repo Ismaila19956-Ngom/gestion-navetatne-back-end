@@ -1,12 +1,5 @@
 package com.webgram.dgpsn.services.Impl;
 
-import com.webgram.dgpsn.tools.ActionType;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import com.webgram.dgpsn.annotations.Journal;
 import com.webgram.dgpsn.entities.ManagementUnitEntity;
 import com.webgram.dgpsn.exceptions.ResourceAlreadyExistException;
@@ -16,6 +9,13 @@ import com.webgram.dgpsn.models.UgpProjetDTO;
 import com.webgram.dgpsn.repositories.UgpProjetRepository;
 import com.webgram.dgpsn.services.RoleService;
 import com.webgram.dgpsn.services.UgpProjetService;
+import com.webgram.dgpsn.tools.ActionType;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.stream.Collectors;
 

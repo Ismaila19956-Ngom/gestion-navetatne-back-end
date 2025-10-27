@@ -1,12 +1,5 @@
 package com.webgram.dgpsn.services.Impl;
 
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 import com.webgram.dgpsn.entities.ManagementUnitEntity;
 import com.webgram.dgpsn.exceptions.ResourceNotFoundException;
 import com.webgram.dgpsn.mappers.RoleMapper;
@@ -14,7 +7,13 @@ import com.webgram.dgpsn.models.RoleDTO;
 import com.webgram.dgpsn.repositories.RoleRepository;
 import com.webgram.dgpsn.repositories.UgpProjetRepository;
 import com.webgram.dgpsn.services.RoleService;
-
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 import java.text.MessageFormat;
 import java.util.Set;

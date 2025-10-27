@@ -1,17 +1,17 @@
 package com.webgram.dgpsn.services.Impl;
 
 import com.querydsl.core.BooleanBuilder;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 import com.webgram.dgpsn.entities.QRapportEntity;
 import com.webgram.dgpsn.exceptions.ResourceNotFoundException;
 import com.webgram.dgpsn.mappers.RapportMapper;
 import com.webgram.dgpsn.models.RapportDTO;
 import com.webgram.dgpsn.repositories.RapportRepository;
 import com.webgram.dgpsn.services.RapportDeclarationService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.Map;

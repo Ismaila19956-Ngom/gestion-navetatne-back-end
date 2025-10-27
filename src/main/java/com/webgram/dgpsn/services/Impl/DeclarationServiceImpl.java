@@ -1,11 +1,6 @@
 package com.webgram.dgpsn.services.Impl;
 
 import com.querydsl.core.BooleanBuilder;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 import com.webgram.dgpsn.entities.QDeclarationEntity;
 import com.webgram.dgpsn.entities.enums.Sexe;
 import com.webgram.dgpsn.entities.enums.StatutDeclaration;
@@ -14,6 +9,11 @@ import com.webgram.dgpsn.mappers.DeclarationMapper;
 import com.webgram.dgpsn.models.DeclarationDTO;
 import com.webgram.dgpsn.repositories.DeclarationRepository;
 import com.webgram.dgpsn.services.DeclarationService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.Map;

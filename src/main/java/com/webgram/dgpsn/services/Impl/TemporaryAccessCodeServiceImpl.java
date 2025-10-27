@@ -1,9 +1,19 @@
 package com.webgram.dgpsn.services.Impl;// package sn.webg.suivievaluation.services.Impl;
 
+import com.webgram.dgpsn.annotations.Journal;
+import com.webgram.dgpsn.entities.TemporaryAccessCodeEntity;
+import com.webgram.dgpsn.entities.UserEntity;
+import com.webgram.dgpsn.exceptions.UserDisabledException;
+import com.webgram.dgpsn.models.TemporaryAccessCodeDTO;
+import com.webgram.dgpsn.models.responses.SignInAuthentication;
+import com.webgram.dgpsn.repositories.TemporaryAccessCodeRepository;
+import com.webgram.dgpsn.repositories.UserRepository;
+import com.webgram.dgpsn.security.jwt.TokenProvider;
+import com.webgram.dgpsn.services.TemporaryAccessCodeService;
 import com.webgram.dgpsn.tools.ActionType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.RandomStringUtils; // Pour la génération de code aléatoire
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -12,22 +22,12 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.webgram.dgpsn.annotations.Journal;
-import com.webgram.dgpsn.entities.TemporaryAccessCodeEntity;
-import com.webgram.dgpsn.entities.UserEntity;
-import com.webgram.dgpsn.exceptions.UserDisabledException; // Vous l'avez déjà
-import com.webgram.dgpsn.models.TemporaryAccessCodeDTO;
-import com.webgram.dgpsn.models.responses.SignInAuthentication;
-import com.webgram.dgpsn.repositories.TemporaryAccessCodeRepository;
-import com.webgram.dgpsn.repositories.UserRepository;
-import com.webgram.dgpsn.security.jwt.TokenProvider;
-import com.webgram.dgpsn.services.TemporaryAccessCodeService;
 
+import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.text.MessageFormat;
 
 @Service
 @RequiredArgsConstructor

@@ -1,14 +1,5 @@
 package com.webgram.dgpsn.services.Impl;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FilenameUtils;
-import org.springframework.core.io.Resource;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 import com.webgram.dgpsn.entities.ContactRequestEntity;
 import com.webgram.dgpsn.entities.enums.Statut;
 import com.webgram.dgpsn.entities.enums.TypeDemande;
@@ -19,6 +10,15 @@ import com.webgram.dgpsn.properties.DocumentProperties;
 import com.webgram.dgpsn.repositories.ContactRequestRepository;
 import com.webgram.dgpsn.services.ContactRequestService;
 import com.webgram.dgpsn.services.DataStorageService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FilenameUtils;
+import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.security.InvalidParameterException;

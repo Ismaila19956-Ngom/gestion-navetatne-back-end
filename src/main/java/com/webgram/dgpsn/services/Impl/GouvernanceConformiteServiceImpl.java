@@ -1,12 +1,5 @@
 package com.webgram.dgpsn.services.Impl;
 
-import com.webgram.dgpsn.tools.ActionType;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import com.webgram.dgpsn.annotations.Journal;
 import com.webgram.dgpsn.entities.GouvernanceConformiteEntity;
 import com.webgram.dgpsn.exceptions.ResourceNotFoundException;
@@ -14,6 +7,13 @@ import com.webgram.dgpsn.mappers.GouvernanceConformiteMapper;
 import com.webgram.dgpsn.models.GouvernanceConformiteDTO;
 import com.webgram.dgpsn.repositories.GouvernanceConformiteRepository;
 import com.webgram.dgpsn.services.GouvernanceConformiteService;
+import com.webgram.dgpsn.tools.ActionType;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional

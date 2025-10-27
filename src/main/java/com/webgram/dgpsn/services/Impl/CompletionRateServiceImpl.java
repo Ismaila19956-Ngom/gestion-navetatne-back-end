@@ -1,11 +1,5 @@
 package com.webgram.dgpsn.services.Impl;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import com.webgram.dgpsn.entities.CompletionRateEntity;
 import com.webgram.dgpsn.entities.ManagementUnitEntity;
 import com.webgram.dgpsn.entities.enums.Period;
@@ -18,6 +12,12 @@ import com.webgram.dgpsn.models.responses.CompletionRateResponse;
 import com.webgram.dgpsn.repositories.CompletionRateRepository;
 import com.webgram.dgpsn.repositories.ManagementUnitRepository;
 import com.webgram.dgpsn.services.CompletionRateService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;

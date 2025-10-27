@@ -1,15 +1,5 @@
 package com.webgram.dgpsn.services.Impl;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import com.webgram.dgpsn.entities.AlerteEntity;
 import com.webgram.dgpsn.entities.UserEntity;
 import com.webgram.dgpsn.entities.enums.Priority;
@@ -20,10 +10,20 @@ import com.webgram.dgpsn.mappers.AlerteMapper;
 import com.webgram.dgpsn.models.*;
 import com.webgram.dgpsn.repositories.*;
 import com.webgram.dgpsn.services.AlerteService;
-
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.Objects;
 
 
 @Service

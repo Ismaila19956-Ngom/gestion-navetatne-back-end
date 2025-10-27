@@ -22,7 +22,7 @@ public class QualiteAirRule {
                 .apiPattern(QUALITE_AIR_API_PREFIX)
                 .build()
                 .condition()
-                .hasPermission(SecurityPermissions.ADD_QUALITE_AIR)
+//                .hasPermission(SecurityPermissions.ADD_QUALITE_AIR)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
@@ -34,11 +34,11 @@ public class QualiteAirRule {
                 .apiPattern(QUALITE_AIR_API_PREFIX + QUALITE_AIR_ID)
                 .build()
                 .condition()
-                .hasPermission(SecurityPermissions.READ_QUALITE_AIR)
-                .hasPermission(SecurityPermissions.ADD_QUALITE_AIR)
-                .hasPermission(SecurityPermissions.EDIT_QUALITE_AIR)
-                .hasPermission(SecurityPermissions.DELETE_QUALITE_AIR)
-                .hasPermission(SecurityPermissions.CONSULTE_QUALITE_AIR)
+//                .hasPermission(SecurityPermissions.READ_QUALITE_AIR)
+//                .hasPermission(SecurityPermissions.ADD_QUALITE_AIR)
+//                .hasPermission(SecurityPermissions.EDIT_QUALITE_AIR)
+//                .hasPermission(SecurityPermissions.DELETE_QUALITE_AIR)
+//                .hasPermission(SecurityPermissions.CONSULTE_QUALITE_AIR)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
@@ -50,11 +50,11 @@ public class QualiteAirRule {
                 .apiPattern(QUALITE_AIR_API_PREFIX)
                 .build()
                 .condition()
-                .hasPermission(SecurityPermissions.READ_QUALITE_AIR)
-                .hasPermission(SecurityPermissions.ADD_QUALITE_AIR)
-                .hasPermission(SecurityPermissions.EDIT_QUALITE_AIR)
-                .hasPermission(SecurityPermissions.DELETE_QUALITE_AIR)
-                .hasPermission(SecurityPermissions.CONSULTE_QUALITE_AIR)
+//                .hasPermission(SecurityPermissions.READ_QUALITE_AIR)
+//                .hasPermission(SecurityPermissions.ADD_QUALITE_AIR)
+//                .hasPermission(SecurityPermissions.EDIT_QUALITE_AIR)
+//                .hasPermission(SecurityPermissions.DELETE_QUALITE_AIR)
+//                .hasPermission(SecurityPermissions.CONSULTE_QUALITE_AIR)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
@@ -66,7 +66,7 @@ public class QualiteAirRule {
                 .apiPattern(QUALITE_AIR_API_PREFIX + QUALITE_AIR_ID)
                 .build()
                 .condition()
-                .hasPermission(SecurityPermissions.EDIT_QUALITE_AIR)
+//                .hasPermission(SecurityPermissions.EDIT_QUALITE_AIR)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
@@ -78,7 +78,7 @@ public class QualiteAirRule {
                 .apiPattern(QUALITE_AIR_API_PREFIX + QUALITE_AIR_ID)
                 .build()
                 .condition()
-                .hasPermission(SecurityPermissions.DELETE_QUALITE_AIR)
+//                .hasPermission(SecurityPermissions.DELETE_QUALITE_AIR)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
@@ -90,7 +90,7 @@ public class QualiteAirRule {
                 .apiPattern(QUALITE_AIR_API_PREFIX + QUALITE_AIR_FILE)
                 .build()
                 .condition()
-                .hasPermission(SecurityPermissions.TELECHARGER_QUALITE_AIR)
+//                .hasPermission(SecurityPermissions.TELECHARGER_QUALITE_AIR)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }

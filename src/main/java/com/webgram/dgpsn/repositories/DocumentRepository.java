@@ -1,6 +1,7 @@
 package com.webgram.dgpsn.repositories;
 
 import com.querydsl.core.BooleanBuilder;
+import com.webgram.dgpsn.entities.enums.CategoryDocument;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,6 +14,7 @@ import com.webgram.dgpsn.entities.QDocumentEntity;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.Objects;
 
 @Repository
@@ -43,4 +45,5 @@ public interface DocumentRepository extends JpaRepository<DocumentEntity, Long>,
         }
         return findAll(booleanBuilder, pageable);
     }
+    List<DocumentEntity> findByCategoryAndCategoryId(CategoryDocument categoryDocument, Long categoryId);
 }

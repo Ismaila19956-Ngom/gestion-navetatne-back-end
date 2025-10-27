@@ -44,120 +44,127 @@ public enum SecurityPermissions {
     EDIT_ALERTE("Modifier alerte", Feature.ALERTE),
     DELETE_ALERTE("Supprimer alerte", Feature.ALERTE),
     /// direc
-    READ_CONTACT_REQUEST("Consulter  formulaire général", Feature.FORMULAIRE_GENERALE),
-    ADD_CONTACT_REQUEST("Ajouter un formulaire général", Feature.FORMULAIRE_GENERALE),
-    EDIT_CONTACT_REQUEST("Modifier un formulaire général", Feature.FORMULAIRE_GENERALE),
-    DELETE_CONTACT_REQUEST("Supprimer un formulaire général", Feature.FORMULAIRE_GENERALE),
-    READ_FILE_CONTACT_REQUEST("consulter document",Feature.FORMULAIRE_GENERALE),
-
-    READ_INSPECTION_ICPE("Consulter les inspections des installations classées", Feature.INSPECTION_ICPE),
-    ADD_INSPECTION_ICPE("Ajouter une nouvelle inspection d'installation classée", Feature.INSPECTION_ICPE),
-    EDIT_INSPECTION_ICPE("Modifier une inspection d'installation classée existante", Feature.INSPECTION_ICPE),
-    DELETE_INSPECTION_ICPE("Supprimer une inspection d'installation classée", Feature.INSPECTION_ICPE),
-    CONSULTER_INSPECTION_ICPE("Consulter inspection d'installation classée", Feature.INSPECTION_ICPE),
-
-    READ_EVALUATION_ENVIRO("Consulter les évaluations environnementales", Feature.EVALUATION_ENVIRONNEMENTAL),
-    ADD_EVALUATION_ENVIRO("Ajouter une nouvelle évaluation environnementale", Feature.EVALUATION_ENVIRONNEMENTAL),
-    EDIT_EVALUATION_ENVIRO("Modifier une évaluation environnementale existante", Feature.EVALUATION_ENVIRONNEMENTAL),
-    DELETE_EVALUATION_ENVIRO("Supprimer une évaluation environnementale", Feature.EVALUATION_ENVIRONNEMENTAL),
-    CONSULTE_EVALUATION_ENVIRO("Consulter une évaluation environnementale", Feature.EVALUATION_ENVIRONNEMENTAL),
-
-    READ_QUALITE_AIR("Consulter les rapports sur la qualité de l'air", Feature.QUALITE_AIR),
-    ADD_QUALITE_AIR("Ajouter un nouveau rapport sur la qualité de l'air", Feature.QUALITE_AIR),
-    EDIT_QUALITE_AIR("Modifier un rapport sur la qualité de l'air existant", Feature.QUALITE_AIR),
-    DELETE_QUALITE_AIR("Supprimer un rapport sur la qualité de l'air", Feature.QUALITE_AIR),
-    CONSULTE_QUALITE_AIR("consulter un rapport sur la qualité de l'air", Feature.QUALITE_AIR),
-    TELECHARGER_QUALITE_AIR("Telecharger un rapport sur la qualité de l'air", Feature.QUALITE_AIR),
-    READ_POLLUTION("Consulter pollution", Feature.GESTION_POLLUTION),
-    ADD_POLLUTION("Ajouter pollution", Feature.GESTION_POLLUTION),
-    EDIT_POLLUTION("Modifier pollution", Feature.GESTION_POLLUTION),
-    DELETE_POLLUTION("Supprimer pollution", Feature.GESTION_POLLUTION),
-    EXPORT_POLLUTION("Exporter pollution", Feature.GESTION_POLLUTION),
-    VALIDATION_POLLUTION("Valider  pollution", Feature.GESTION_POLLUTION),
-
-    READ_FICHE_RENSEIGNEMENT("Consulter Renseignement", Feature.DIRECTION_REGIONALE),
-    ADD_FICHE_RENSEIGNEMENT("Ajouter  Renseignement", Feature.DIRECTION_REGIONALE),
-    EDIT_FICHE_RENSEIGNEMENT("Modifier  Renseignement", Feature.DIRECTION_REGIONALE),
-    DELETE_FICHE_RENSEIGNEMENT("Supprimer  Renseignement", Feature.DIRECTION_REGIONALE),
-
-    READ_FICHE_VISITE("Consulter fiche visite", Feature.DIRECTION_REGIONALE),
-    ADD_FICHE_VISITE("Ajouter visite", Feature.DIRECTION_REGIONALE),
-    EDIT_FICHE_VISITE("Modifier visite", Feature.DIRECTION_REGIONALE),
-    DELETE_FICHE_VISITE("Supprimer visite", Feature.DIRECTION_REGIONALE),
-
-    READ_URGENCE_ENVIRO("Consulter les plans d'urgence environnementale", Feature.URGENCE_ENVIRO),
-    ADD_URGENCE_ENVIRO("Ajouter un nouveau plan d'urgence environnementale", Feature.URGENCE_ENVIRO),
-    EDIT_URGENCE_ENVIRO("Modifier un plan d'urgence environnementale existant", Feature.URGENCE_ENVIRO),
-    DELETE_URGENCE_ENVIRO("Supprimer un plan d'urgence environnementale", Feature.URGENCE_ENVIRO),
-    EXPORT_URGENCE_ENVIRO("Exporter un plan d'urgence environnementale existant", Feature.URGENCE_ENVIRO),
-    IMPORT_URGENCE_ENVIRO("Importer un plan d'urgence environnementale", Feature.URGENCE_ENVIRO),
+//    READ_CONTACT_REQUEST("Consulter  formulaire général", Feature.FORMULAIRE_GENERALE),
+//    ADD_CONTACT_REQUEST("Ajouter un formulaire général", Feature.FORMULAIRE_GENERALE),
+//    EDIT_CONTACT_REQUEST("Modifier un formulaire général", Feature.FORMULAIRE_GENERALE),
+//    DELETE_CONTACT_REQUEST("Supprimer un formulaire général", Feature.FORMULAIRE_GENERALE),
+//    READ_FILE_CONTACT_REQUEST("consulter document",Feature.FORMULAIRE_GENERALE),
 
 
-    READ_EVALUATION_STARTUP("Consulter les évaluations des startups", Feature.EVALUATION_STARTUP),
-    ADD_EVALUATION_STARTUP("Ajouter une nouvelle évaluation de startup", Feature.EVALUATION_STARTUP),
-    EDIT_EVALUATION_STARTUP("Modifier une évaluation de startup existante", Feature.EVALUATION_STARTUP),
-    DELETE_EVALUATION_STARTUP("Supprimer une évaluation de startup", Feature.EVALUATION_STARTUP),
+//    READ_INSPECTION_ICPE("Consulter les inspections des installations classées", Feature.INSPECTION_ICPE),
+//    ADD_INSPECTION_ICPE("Ajouter une nouvelle inspection d'installation classée", Feature.INSPECTION_ICPE),
+//    EDIT_INSPECTION_ICPE("Modifier une inspection d'installation classée existante", Feature.INSPECTION_ICPE),
+//    DELETE_INSPECTION_ICPE("Supprimer une inspection d'installation classée", Feature.INSPECTION_ICPE),
+//    CONSULTER_INSPECTION_ICPE("Consulter inspection d'installation classée", Feature.INSPECTION_ICPE),
+//
+//    READ_EVALUATION_ENVIRO("Consulter les évaluations environnementales", Feature.EVALUATION_ENVIRONNEMENTAL),
+//    ADD_EVALUATION_ENVIRO("Ajouter une nouvelle évaluation environnementale", Feature.EVALUATION_ENVIRONNEMENTAL),
+//    EDIT_EVALUATION_ENVIRO("Modifier une évaluation environnementale existante", Feature.EVALUATION_ENVIRONNEMENTAL),
+//    DELETE_EVALUATION_ENVIRO("Supprimer une évaluation environnementale", Feature.EVALUATION_ENVIRONNEMENTAL),
+//    CONSULTE_EVALUATION_ENVIRO("Consulter une évaluation environnementale", Feature.EVALUATION_ENVIRONNEMENTAL),
+//
+//    READ_QUALITE_AIR("Consulter les rapports sur la qualité de l'air", Feature.QUALITE_AIR),
+//    ADD_QUALITE_AIR("Ajouter un nouveau rapport sur la qualité de l'air", Feature.QUALITE_AIR),
+//    EDIT_QUALITE_AIR("Modifier un rapport sur la qualité de l'air existant", Feature.QUALITE_AIR),
+//    DELETE_QUALITE_AIR("Supprimer un rapport sur la qualité de l'air", Feature.QUALITE_AIR),
+//    CONSULTE_QUALITE_AIR("consulter un rapport sur la qualité de l'air", Feature.QUALITE_AIR),
+//    TELECHARGER_QUALITE_AIR("Telecharger un rapport sur la qualité de l'air", Feature.QUALITE_AIR),
+//    READ_POLLUTION("Consulter pollution", Feature.GESTION_POLLUTION),
+//    ADD_POLLUTION("Ajouter pollution", Feature.GESTION_POLLUTION),
+//    EDIT_POLLUTION("Modifier pollution", Feature.GESTION_POLLUTION),
+//    DELETE_POLLUTION("Supprimer pollution", Feature.GESTION_POLLUTION),
+//    EXPORT_POLLUTION("Exporter pollution", Feature.GESTION_POLLUTION),
+//    VALIDATION_POLLUTION("Valider  pollution", Feature.GESTION_POLLUTION),
+//
+//    READ_FICHE_RENSEIGNEMENT("Consulter Renseignement", Feature.DIRECTION_REGIONALE),
+//    ADD_FICHE_RENSEIGNEMENT("Ajouter  Renseignement", Feature.DIRECTION_REGIONALE),
+//    EDIT_FICHE_RENSEIGNEMENT("Modifier  Renseignement", Feature.DIRECTION_REGIONALE),
+//    DELETE_FICHE_RENSEIGNEMENT("Supprimer  Renseignement", Feature.DIRECTION_REGIONALE),
 
-    ADD_PASSATION("ajouter plan passation", Feature.BUREAU_AFFAIRES),
-    READ_PASSATION("consulter plan passation", Feature.BUREAU_AFFAIRES),
-    EDIT_PASSATION("modifier plan passation", Feature.BUREAU_AFFAIRES),
-    DELETE_PASSATION("supprimer plan passation", Feature.BUREAU_AFFAIRES),
+//    READ_FICHE_VISITE("Consulter fiche visite", Feature.DIRECTION_REGIONALE),
+//    ADD_FICHE_VISITE("Ajouter visite", Feature.DIRECTION_REGIONALE),
+//    EDIT_FICHE_VISITE("Modifier visite", Feature.DIRECTION_REGIONALE),
+//    DELETE_FICHE_VISITE("Supprimer visite", Feature.DIRECTION_REGIONALE),
 
-    ADD_ENGAGEMENT("ajouter engagement", Feature.BUREAU_AFFAIRES),
-    READ_ENGAGEMENT("consulter engagement", Feature.BUREAU_AFFAIRES),
-    EDIT_ENGAGEMENT("modifier engagement", Feature.BUREAU_AFFAIRES),
-    DELETE_ENGAGEMENT("supprimer engagement", Feature.BUREAU_AFFAIRES),
+//    READ_URGENCE_ENVIRO("Consulter les plans d'urgence environnementale", Feature.URGENCE_ENVIRO),
+//    ADD_URGENCE_ENVIRO("Ajouter un nouveau plan d'urgence environnementale", Feature.URGENCE_ENVIRO),
+//    EDIT_URGENCE_ENVIRO("Modifier un plan d'urgence environnementale existant", Feature.URGENCE_ENVIRO),
+//    DELETE_URGENCE_ENVIRO("Supprimer un plan d'urgence environnementale", Feature.URGENCE_ENVIRO),
+//    EXPORT_URGENCE_ENVIRO("Exporter un plan d'urgence environnementale existant", Feature.URGENCE_ENVIRO),
+//    IMPORT_URGENCE_ENVIRO("Importer un plan d'urgence environnementale", Feature.URGENCE_ENVIRO),
+//
 
-    ADD_BUDGET_PASSATION("ajouter budget passation", Feature.BUREAU_AFFAIRES),
-    READ_BUDGET_PASSATION("consulter budget passation", Feature.BUREAU_AFFAIRES),
-    EDIT_BUDGET_PASSATION("modifier budget passation", Feature.BUREAU_AFFAIRES),
-    DELETE_BUDGET_PASSATION("supprimer budget passation", Feature.BUREAU_AFFAIRES),
+//    READ_EVALUATION_STARTUP("Consulter les évaluations des startups", Feature.EVALUATION_STARTUP),
+//    ADD_EVALUATION_STARTUP("Ajouter une nouvelle évaluation de startup", Feature.EVALUATION_STARTUP),
+//    EDIT_EVALUATION_STARTUP("Modifier une évaluation de startup existante", Feature.EVALUATION_STARTUP),
+//    DELETE_EVALUATION_STARTUP("Supprimer une évaluation de startup", Feature.EVALUATION_STARTUP),
 
-    ADD_ORDONNANCEMENT("ajouter ordenancement", Feature.BUREAU_AFFAIRES),
-    READ_ORDONNANCEMENT("consulter ordenancement", Feature.BUREAU_AFFAIRES),
-    EDIT_ORDONNANCEMENT("modifier ordenancement", Feature.BUREAU_AFFAIRES),
-    DELETE_ORDONNANCEMENT("supprimer ordenancement", Feature.BUREAU_AFFAIRES),
+//    ADD_PASSATION("ajouter plan passation", Feature.BUREAU_AFFAIRES),
+//    READ_PASSATION("consulter plan passation", Feature.BUREAU_AFFAIRES),
+//    EDIT_PASSATION("modifier plan passation", Feature.BUREAU_AFFAIRES),
+//    DELETE_PASSATION("supprimer plan passation", Feature.BUREAU_AFFAIRES),
 
-    ADD_DECAISSEMENT("ajouter decaissement", Feature.BUREAU_AFFAIRES),
-    READ_DECAISSEMENT("consulter decaissement", Feature.BUREAU_AFFAIRES),
-    EDIT_DECAISSEMENT("modifier decaissement", Feature.BUREAU_AFFAIRES),
-    DELETE_DECAISSEMENT("supprimer decaissement", Feature.BUREAU_AFFAIRES),
-
-    ADD_PARC_ROULANT("ajouter parc roulant", Feature.BUREAU_AFFAIRES),
-    READ_PARC_ROULANT("consulter  parc roulant", Feature.BUREAU_AFFAIRES),
-    EDIT_PARC_ROULANT("modifier  parc roulant", Feature.BUREAU_AFFAIRES),
-    DELETE_PARC_ROULANT("supprimer  parc roulant", Feature.BUREAU_AFFAIRES),
-
-    ADD_INVENTAIRE("ajouter inventaire", Feature.BUREAU_AFFAIRES),
-    READ_INVENTAIRE("consulter  inventaire", Feature.BUREAU_AFFAIRES),
-    EDIT_INVENTAIRE("modifier inventaire", Feature.BUREAU_AFFAIRES),
-    DELETE_INVENTAIRE("supprimer  inventaire", Feature.BUREAU_AFFAIRES),
+    ADD_PLAN_DE_PASSATION("ajouter plan passation", Feature.PLAN_DE_PASSATION),
+    READ_PLAN_DE_PASSATION("consulter plan passation", Feature.PLAN_DE_PASSATION),
+    EDIT_PLAN_DE_PASSATION("modifier plan passation", Feature.PLAN_DE_PASSATION),
+    DELETE_PLAN_DE_PASSATION("supprimer plan passation", Feature.PLAN_DE_PASSATION),
 
 
-    ADD_SUIVI_INVENTAIRE("ajouter suivi inventaire", Feature.BUREAU_AFFAIRES),
-    READ_SUIVI_INVENTAIRE("consulter suivi  inventaire", Feature.BUREAU_AFFAIRES),
-    EDIT_SUIVI_INVENTAIRE("modifier suivi inventaire", Feature.BUREAU_AFFAIRES),
-    DELETE_SUIVI_INVENTAIRE("supprimer suivi  inventaire", Feature.BUREAU_AFFAIRES),
+//    ADD_ENGAGEMENT("ajouter engagement", Feature.BUREAU_AFFAIRES),
+//    READ_ENGAGEMENT("consulter engagement", Feature.BUREAU_AFFAIRES),
+//    EDIT_ENGAGEMENT("modifier engagement", Feature.BUREAU_AFFAIRES),
+//    DELETE_ENGAGEMENT("supprimer engagement", Feature.BUREAU_AFFAIRES),
 
-    ADD_AGENT_BAF("ajouter agent baf", Feature.BUREAU_AFFAIRES),
-    READ_AGENT_BAF("consulter agent baf", Feature.BUREAU_AFFAIRES),
-    EDIT_AGENT_BAF("modifier agent baf", Feature.BUREAU_AFFAIRES),
-    DELETE_AGENT_BAF("supprimer agent baf", Feature.BUREAU_AFFAIRES),
+//    ADD_BUDGET_PASSATION("ajouter budget passation", Feature.BUREAU_AFFAIRES),
+//    READ_BUDGET_PASSATION("consulter budget passation", Feature.BUREAU_AFFAIRES),
+//    EDIT_BUDGET_PASSATION("modifier budget passation", Feature.BUREAU_AFFAIRES),
+//    DELETE_BUDGET_PASSATION("supprimer budget passation", Feature.BUREAU_AFFAIRES),
+//
+//    ADD_ORDONNANCEMENT("ajouter ordenancement", Feature.BUREAU_AFFAIRES),
+//    READ_ORDONNANCEMENT("consulter ordenancement", Feature.BUREAU_AFFAIRES),
+//    EDIT_ORDONNANCEMENT("modifier ordenancement", Feature.BUREAU_AFFAIRES),
+//    DELETE_ORDONNANCEMENT("supprimer ordenancement", Feature.BUREAU_AFFAIRES),
+//
+//    ADD_DECAISSEMENT("ajouter decaissement", Feature.BUREAU_AFFAIRES),
+//    READ_DECAISSEMENT("consulter decaissement", Feature.BUREAU_AFFAIRES),
+//    EDIT_DECAISSEMENT("modifier decaissement", Feature.BUREAU_AFFAIRES),
+//    DELETE_DECAISSEMENT("supprimer decaissement", Feature.BUREAU_AFFAIRES),
+//
+//    ADD_PARC_ROULANT("ajouter parc roulant", Feature.BUREAU_AFFAIRES),
+//    READ_PARC_ROULANT("consulter  parc roulant", Feature.BUREAU_AFFAIRES),
+//    EDIT_PARC_ROULANT("modifier  parc roulant", Feature.BUREAU_AFFAIRES),
+//    DELETE_PARC_ROULANT("supprimer  parc roulant", Feature.BUREAU_AFFAIRES),
+//
+//    ADD_INVENTAIRE("ajouter inventaire", Feature.BUREAU_AFFAIRES),
+//    READ_INVENTAIRE("consulter  inventaire", Feature.BUREAU_AFFAIRES),
+//    EDIT_INVENTAIRE("modifier inventaire", Feature.BUREAU_AFFAIRES),
+//    DELETE_INVENTAIRE("supprimer  inventaire", Feature.BUREAU_AFFAIRES),
+//
+//
+//    ADD_SUIVI_INVENTAIRE("ajouter suivi inventaire", Feature.BUREAU_AFFAIRES),
+//    READ_SUIVI_INVENTAIRE("consulter suivi  inventaire", Feature.BUREAU_AFFAIRES),
+//    EDIT_SUIVI_INVENTAIRE("modifier suivi inventaire", Feature.BUREAU_AFFAIRES),
+//    DELETE_SUIVI_INVENTAIRE("supprimer suivi  inventaire", Feature.BUREAU_AFFAIRES),
+//
+//    ADD_AGENT_BAF("ajouter agent baf", Feature.BUREAU_AFFAIRES),
+//    READ_AGENT_BAF("consulter agent baf", Feature.BUREAU_AFFAIRES),
+//    EDIT_AGENT_BAF("modifier agent baf", Feature.BUREAU_AFFAIRES),
+//    DELETE_AGENT_BAF("supprimer agent baf", Feature.BUREAU_AFFAIRES),
 
-    READ_ETABLISSEMENTS_CLASSES("Consulter les données des établissements classés", Feature.ETABLISSEMENTS_CLASSES),
-    ADD_ETABLISSEMENTS_CLASSES("Ajouter de nouvelles données pour les établissements classés", Feature.ETABLISSEMENTS_CLASSES),
-    EDIT_ETABLISSEMENTS_CLASSES("Modifier les données des établissements classés", Feature.ETABLISSEMENTS_CLASSES),
-    DELETE_ETABLISSEMENTS_CLASSES("Supprimer les données des établissements classés", Feature.ETABLISSEMENTS_CLASSES),
+//    READ_ETABLISSEMENTS_CLASSES("Consulter les données des établissements classés", Feature.ETABLISSEMENTS_CLASSES),
+//    ADD_ETABLISSEMENTS_CLASSES("Ajouter de nouvelles données pour les établissements classés", Feature.ETABLISSEMENTS_CLASSES),
+//    EDIT_ETABLISSEMENTS_CLASSES("Modifier les données des établissements classés", Feature.ETABLISSEMENTS_CLASSES),
+//    DELETE_ETABLISSEMENTS_CLASSES("Supprimer les données des établissements classés", Feature.ETABLISSEMENTS_CLASSES),
 
-    READ_STATIONS("Consulter les données des stations", Feature.STATIONS),
-    ADD_STATIONS("Ajouter de nouvelles données pour les stations", Feature.STATIONS),
-    EDIT_STATIONS("Modifier les données des stations", Feature.STATIONS),
-    DELETE_STATIONS("Supprimer les données des stations", Feature.STATIONS),
-
-    READ_STARTUP("Consulter les données des startups", Feature.STARTUP),
-    ADD_STARTUP("Ajouter de nouvelles données pour les startups", Feature.STARTUP),
-    EDIT_STARTUP("Modifier les données des startups", Feature.STARTUP),
-    DELETE_STARTUP("Supprimer les données des startups", Feature.STARTUP),
+//    READ_STATIONS("Consulter les données des stations", Feature.STATIONS),
+//    ADD_STATIONS("Ajouter de nouvelles données pour les stations", Feature.STATIONS),
+//    EDIT_STATIONS("Modifier les données des stations", Feature.STATIONS),
+//    DELETE_STATIONS("Supprimer les données des stations", Feature.STATIONS),
+//
+//    READ_STARTUP("Consulter les données des startups", Feature.STARTUP),
+//    ADD_STARTUP("Ajouter de nouvelles données pour les startups", Feature.STARTUP),
+//    EDIT_STARTUP("Modifier les données des startups", Feature.STARTUP),
+//    DELETE_STARTUP("Supprimer les données des startups", Feature.STARTUP),
 
     READ_DIRECTION("Consulter les données direction", Feature.ORGANIGRAMME),
     ADD_DIRECTION("Ajouter de nouvelles  direction", Feature.ORGANIGRAMME),
@@ -260,6 +267,22 @@ public enum SecurityPermissions {
     EXPORT_PARTNER("Exporter partenaire", Feature.PARTNER),
     IMPORT_PARTNER("Importer partenaire", Feature.PARTNER),
 
+    ADD_CONGE("Ajouter congé", Feature.DEMANDE_CONGE),
+    EDIT_CONGE("Modifier congé", Feature.DEMANDE_CONGE),
+    DELETE_CONGE("Supprimer congé", Feature.DEMANDE_CONGE),
+    READ_CONGE("Consulter congé", Feature.DEMANDE_CONGE),
+    VALIDATION_CONGE("Valider congé", Feature.DEMANDE_CONGE),
+    GENERATE_FICHE_CONGE("Générer fiche de renseignement  congé", Feature.DEMANDE_CONGE),
+    GENERATE_DEMANDE_CONGE("Générer demande  congé", Feature.DEMANDE_CONGE),
+    GENERATE_DECISION_CONGE("Générer décision  congé", Feature.DEMANDE_CONGE),
+    GENERATE_BE_CONGE("Générer BE congé", Feature.DEMANDE_CONGE),
+    READ_DOCUMENT_CONGE("Consulter document congé", Feature.DEMANDE_CONGE),
+
+    READ_CESSATION_CONGE("Consulter Cessation Service", Feature.DEMANDE_CONGE),
+    ADD_CESSATION("Ajouter Cessation Service", Feature.DEMANDE_CONGE),
+    EDIT_CESSATION("Modifier Cessation Service", Feature.DEMANDE_CONGE),
+    DELETE_CESSATION("Supprimer Cessation Service", Feature.DEMANDE_CONGE),
+
 
     READ_INDICATOR("Consulter indicateur", Feature.INDICATOR),
     ADD_INDICATOR("Ajouter indicateur", Feature.INDICATOR),
@@ -316,8 +339,8 @@ public enum SecurityPermissions {
     DELETE_RISK("Supprimer risque", Feature.RISK),
     IMPORT_RISK("Importer risque", Feature.RISK),
     EXPORT_RISK("Exporter risque", Feature.RISK),
-    PROBLEME_RISK ("Probleme risque", Feature.RISK),
-    RECOMMENDATION_RISK ("Recommendation risque", Feature.RISK),
+    PROBLEME_RISK("Probleme risque", Feature.RISK),
+    RECOMMENDATION_RISK("Recommendation risque", Feature.RISK),
 
     READ_ISSUE_LOG("Consulter problème", Feature.ISSUE_LOG),
     ADD_ISSUE_LOG("Ajouter problème", Feature.ISSUE_LOG),
@@ -333,14 +356,14 @@ public enum SecurityPermissions {
     DELETE_COMPLETED_ACTIVITY("Supprimer Action realiser des problème", Feature.ISSUE_LOG),
 
 
-    /////
+    /// //
     READ_DATES_IMPORTANTES("Consulter les dates importantes", Feature.MILESTONE),
     ADD_DATES_IMPORTANTES("Ajouter les dates importantes", Feature.MILESTONE),
     EDIT_DATES_IMPORTANTES("Modifier les dates importantes", Feature.MILESTONE),
     DELETE_DATES_IMPORTANTES("Supprimer les dates importantes", Feature.MILESTONE),
     EXPORT_DATES_IMPORTANTES("Supprimer les dates importantes", Feature.MILESTONE),
     IMPORT_DATES_IMPORTANTES("Supprimer les dates importantes", Feature.MILESTONE),
-    //////////////////
+    /// ///////////////
 
     READ_RECOMMENDATION("Consulter recommandation", Feature.ISSUE_LOG),
     ADD_RECOMMENDATION("Ajouter recommandation", Feature.ISSUE_LOG),
@@ -358,7 +381,6 @@ public enum SecurityPermissions {
     ADD_STATUS("Ajouter statut", Feature.STATUS),
     EDIT_STATUS("Modifier statut", Feature.STATUS),
     DELETE_STATUS("Supprimer statut", Feature.STATUS),
-
 
 
     READ_FLAG("Consulter flag", Feature.FLAG),
@@ -427,7 +449,6 @@ public enum SecurityPermissions {
     EDIT_FUNDING_MOBILISATION("Modifier Mobilisation", Feature.FUNDING_MOBILISATION),
     DELETE_FUNDING_MOBILISATION("Supprimer Mobilisation", Feature.FUNDING_MOBILISATION),
     READ_FUNDING_MOBILISATION("Lire Mobilisation ", Feature.FUNDING_MOBILISATION),
-
 
 
     ADD_BUDGET_ACTIVITY("Ajouter budget", Feature.BUDGET_ACTIVITY),
@@ -536,6 +557,15 @@ public enum SecurityPermissions {
     EXPORT_AGENT("Export agent", Feature.AGENT),
     READ_FILE_AGENT("Read file agent", Feature.AGENT),
 
+    /*parametrage plant comptable*/
+    READ_PLAN_COMPTABLE("Consulter parametrage plant comptable", Feature.PLAN_COMPTABLE),
+    ADD_PLAN_COMPTABLE("Ajouter parametrage plant comptable", Feature.PLAN_COMPTABLE),
+    EDIT_PLAN_COMPTABLE("Modifier parametrage plant comptable", Feature.PLAN_COMPTABLE),
+    DELETE_PLAN_COMPTABLE("Supprimer parametrage plant comptable", Feature.PLAN_COMPTABLE),
+    IMPORT_PLAN_COMPTABLE("Import parametrage plant comptable", Feature.PLAN_COMPTABLE),
+    EXPORT_PLAN_COMPTABLE("Export parametrage plant comptable", Feature.PLAN_COMPTABLE),
+    READ_FILE_PLAN_COMPTABLE("Read file parametrage plant comptable", Feature.PLAN_COMPTABLE),
+
     READ_MEETINGTYPE("Consulter Type reunion", Feature.MEETINGTYPE),
     ADD_MEETINGTYPE("Ajouter Type reunion", Feature.MEETINGTYPE),
     EDIT_MEETINGTYPE("Modifier Type reunion", Feature.MEETINGTYPE),
@@ -631,12 +661,12 @@ public enum SecurityPermissions {
     DELETE_REF_INDICATOR("Supprimer indicateur", Feature.REF_INDICATOR),
     READ_REF_TYPE_EXPENSE("Supprimer Type expense", Feature.EXPENSE_TYPE),
     ADD_REF_TYPE_EXPENSE("Ajouter Type expense", Feature.EXPENSE_TYPE),
-    EDIT_REF_TYPE_EXPENSE("Modifier Type expense", Feature. EXPENSE_TYPE),
+    EDIT_REF_TYPE_EXPENSE("Modifier Type expense", Feature.EXPENSE_TYPE),
     DELETE_REF_TYPE_EXPENSE("Supprimer Type expense", Feature.EXPENSE_TYPE),
 
     READ_REF_TYPE_REQUETE("Supprimer Type requete", Feature.REQUETE_TYPE),
     ADD_REF_TYPE_REQUETE("Ajouter Type requete", Feature.REQUETE_TYPE),
-    EDIT_REF_TYPE_REQUETE("Modifier Type requete", Feature. REQUETE_TYPE),
+    EDIT_REF_TYPE_REQUETE("Modifier Type requete", Feature.REQUETE_TYPE),
     DELETE_REF_TYPE_REQUETE("Supprimer Type requete", Feature.REQUETE_TYPE),
 
     READ_INDICATOR_TYPE("Consulter type indicateur", Feature.INDICATOR_TYPE),
@@ -779,6 +809,10 @@ public enum SecurityPermissions {
     EDIT_WORKFLOW_HISTORIQUE("Modifier historique de validation", Feature.WORKFLOW),
     DELETE_WORKFLOW_HISTORIQUE("Supprimer historique de validation", Feature.WORKFLOW),
 
+    ADD_ORDRE_MISSION_AGENT("Ajouter ordre de mission", Feature.ORDRE_MISSION),
+    EDIT_ORDRE_MISSION_AGENT("Modifier ordre de mission", Feature.ORDRE_MISSION),
+    DELETE_ORDRE_MISSION_AGENT("Supprimer ordre de mission", Feature.ORDRE_MISSION),
+    READ_ORDRE_MISSION_AGENT("Consulter ordre de mission", Feature.ORDRE_MISSION),
 
     READ_JOURNAL("Consulter journal", Feature.JOURNAL),
     ADD_ORGANIGRAMME("Ajouter organigramme", Feature.ORGANIGRAMME),
@@ -794,32 +828,32 @@ public enum SecurityPermissions {
 
 
     /* début instruction */
-    READ_INSTRUCTION("Consulter instruction", Feature.EVALUATION_ENVIRONNEMENTAL),
-    ADD_INSTRUCTION("Ajouter instruction", Feature.EVALUATION_ENVIRONNEMENTAL),
-    EDIT_INSTRUCTION("Modifier instruction", Feature.EVALUATION_ENVIRONNEMENTAL),
-    DELETE_INSTRUCTION("Supprimer instruction", Feature.EVALUATION_ENVIRONNEMENTAL),
-    /* fin instruction */
-
-    /* début tdr */
-    READ_TDR("Consulter tdr", Feature.EVALUATION_ENVIRONNEMENTAL),
-    ADD_TDR("Ajouter tdr", Feature.EVALUATION_ENVIRONNEMENTAL),
-    EDIT_TDR("Modifier tdr", Feature.EVALUATION_ENVIRONNEMENTAL),
-    DELETE_TDR("Supprimer tdr", Feature.EVALUATION_ENVIRONNEMENTAL),
-    /* fin tdr */
-
-    /* suivi surveillance */
-    READ_SUIVI_SURVEILLANCE("Consulter suivi surveillance", Feature.EVALUATION_ENVIRONNEMENTAL),
-    ADD_SUIVI_SURVEILLANCE("Ajouter suivi surveillance", Feature.EVALUATION_ENVIRONNEMENTAL),
-    EDIT_SUIVI_SURVEILLANCE("Modifier suivi surveillance", Feature.EVALUATION_ENVIRONNEMENTAL),
-    DELETE_SUIVI_SURVEILLANCE("Supprimer suivi surveillance", Feature.EVALUATION_ENVIRONNEMENTAL),
-    /* fin suivi surveillance */
-
-    /* début agrement */
-    READ_AGREMENT("Consulter agrement", Feature.EVALUATION_ENVIRONNEMENTAL),
-    ADD_AGREMENT("Ajouter agrement", Feature.EVALUATION_ENVIRONNEMENTAL),
-    EDIT_AGREMENT("Modifier agrement", Feature.EVALUATION_ENVIRONNEMENTAL),
-    DELETE_AGREMENT("Supprimer agrement", Feature.EVALUATION_ENVIRONNEMENTAL),
-    /* fin agrement */
+//    READ_INSTRUCTION("Consulter instruction", Feature.EVALUATION_ENVIRONNEMENTAL),
+//    ADD_INSTRUCTION("Ajouter instruction", Feature.EVALUATION_ENVIRONNEMENTAL),
+//    EDIT_INSTRUCTION("Modifier instruction", Feature.EVALUATION_ENVIRONNEMENTAL),
+//    DELETE_INSTRUCTION("Supprimer instruction", Feature.EVALUATION_ENVIRONNEMENTAL),
+//    /* fin instruction */
+//
+//    /* début tdr */
+//    READ_TDR("Consulter tdr", Feature.EVALUATION_ENVIRONNEMENTAL),
+//    ADD_TDR("Ajouter tdr", Feature.EVALUATION_ENVIRONNEMENTAL),
+//    EDIT_TDR("Modifier tdr", Feature.EVALUATION_ENVIRONNEMENTAL),
+//    DELETE_TDR("Supprimer tdr", Feature.EVALUATION_ENVIRONNEMENTAL),
+//    /* fin tdr */
+//
+//    /* suivi surveillance */
+//    READ_SUIVI_SURVEILLANCE("Consulter suivi surveillance", Feature.EVALUATION_ENVIRONNEMENTAL),
+//    ADD_SUIVI_SURVEILLANCE("Ajouter suivi surveillance", Feature.EVALUATION_ENVIRONNEMENTAL),
+//    EDIT_SUIVI_SURVEILLANCE("Modifier suivi surveillance", Feature.EVALUATION_ENVIRONNEMENTAL),
+//    DELETE_SUIVI_SURVEILLANCE("Supprimer suivi surveillance", Feature.EVALUATION_ENVIRONNEMENTAL),
+//    /* fin suivi surveillance */
+//
+//    /* début agrement */
+//    READ_AGREMENT("Consulter agrement", Feature.EVALUATION_ENVIRONNEMENTAL),
+//    ADD_AGREMENT("Ajouter agrement", Feature.EVALUATION_ENVIRONNEMENTAL),
+//    EDIT_AGREMENT("Modifier agrement", Feature.EVALUATION_ENVIRONNEMENTAL),
+//    DELETE_AGREMENT("Supprimer agrement", Feature.EVALUATION_ENVIRONNEMENTAL),
+//    /* fin agrement */
 
     /* début label */
     READ_LABEL("Consulter label", Feature.LABEL),
@@ -916,9 +950,26 @@ public enum SecurityPermissions {
 //    DELETE_GOUV_CONFORMITES("Supprimer conformites reglementaire gouvernance", Feature.GOUVERNANCE),
 //    /* fin Conformites gouvernance */
 
+
+    /* Début security courriers */
+    ADD_COURRIER("Ajouter courrier", Feature.COURRIER),
+    READ_COURRIER("Consulter courrier", Feature.COURRIER),
+    EDIT_COURRIER("Modifier courrier", Feature.COURRIER),
+    DELETE_COURRIER("Supprimer courrier", Feature.COURRIER),
+    ARCHIVER_COURRIER("Archiver courrier", Feature.COURRIER),
+    CHANGER_STATUT_COURRIER("Changer statut courrier", Feature.COURRIER),
+    READ_STATISTIQUES("Consulter statistiques", Feature.COURRIER),
+    IMPORT_COURRIER("Importer courrier", Feature.COURRIER),
+    EXPORT_COURRIER("Exporter courrier", Feature.COURRIER),
+    /* Fin security courriers */
+
+
     READ_COMPLETIONRATE("Consulter taux avancement", Feature.COMPLETION_RATE),
+
     ADD_COMPLETIONRATE("Ajouter taux avancement", Feature.COMPLETION_RATE),
+
     EDIT_COMPLETIONRATE("Modifier taux avancement", Feature.COMPLETION_RATE),
+
     DELETE_COMPLETIONRATE("Supprimer taux avancement", Feature.COMPLETION_RATE),
 
     /* début Cessions acquisition */
@@ -970,7 +1021,6 @@ public enum SecurityPermissions {
 //    EXPORT_DEPENSE("Exporter Depense", Feature.ENTREPRISE_LIST),
 
 
-
 //    READ_DECISION_AG("Decision Decision", Feature.ENTREPRISE_LIST),
 //    ADD_DECISION_AG("Ajouter Decision", Feature.ENTREPRISE_LIST),
 //    EDIT_DECISION_AG("Modifier Decision", Feature.ENTREPRISE_LIST),
@@ -985,19 +1035,22 @@ public enum SecurityPermissions {
 //    EXPORT_PARTICIPATION_AG("Exporter paricipation", Feature.ENTREPRISE_LIST),
 
     READ_PROGRAMME("Consulter programme", Feature.LIST_PROGRAMME),
+
     ADD_PROGRAMME("Ajouter programme", Feature.LIST_PROGRAMME),
+
     EDIT_PROGRAMME("Modifier programme", Feature.LIST_PROGRAMME),
+
     DELETE_PROGRAMME("Supprimer programme", Feature.LIST_PROGRAMME),
+
     CONFIG_PROGRAMME("Configurer programme", Feature.LIST_PROGRAMME),
 
     ADD_PROMOTEUR("Ajouter promoteur", Feature.PROMOTEUR),
+
     EDIT_PROMOTEUR("Modifier promoteur", Feature.PROMOTEUR),
+
     DELETE_PROMOTEUR("Supprimer promoteur", Feature.PROMOTEUR),
+
     READ_PROMOTEUR("Consulter promoteur", Feature.PROMOTEUR),
-
-
-
-
 
 
     //

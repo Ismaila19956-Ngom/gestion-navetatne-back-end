@@ -1,5 +1,13 @@
 package com.webgram.dgpsn.services.Impl;
 
+import com.webgram.dgpsn.exceptions.PasswordException;
+import com.webgram.dgpsn.exceptions.ResourceAlreadyExistException;
+import com.webgram.dgpsn.exceptions.ResourceNotFoundException;
+import com.webgram.dgpsn.mappers.UserMapper;
+import com.webgram.dgpsn.models.UpdatePasswordDTO;
+import com.webgram.dgpsn.models.UserDTO;
+import com.webgram.dgpsn.repositories.UserRepository;
+import com.webgram.dgpsn.services.UserService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -9,14 +17,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import com.webgram.dgpsn.exceptions.PasswordException;
-import com.webgram.dgpsn.exceptions.ResourceAlreadyExistException;
-import com.webgram.dgpsn.exceptions.ResourceNotFoundException;
-import com.webgram.dgpsn.mappers.UserMapper;
-import com.webgram.dgpsn.models.UpdatePasswordDTO;
-import com.webgram.dgpsn.models.UserDTO;
-import com.webgram.dgpsn.repositories.UserRepository;
-import com.webgram.dgpsn.services.UserService;
 
 import java.text.MessageFormat;
 import java.util.List;

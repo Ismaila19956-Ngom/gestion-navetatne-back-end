@@ -36,6 +36,13 @@ public interface LabelRepository extends JpaRepository<LabelEntity, Long>, Query
 
     Optional<LabelEntity> findByCode(String code);
 
-    @Query("select l from LabelEntity l where l.id in(:ids)")
+    @Query("SELECT l FROM LabelEntity l WHERE l.id IN :ids")
     Set<LabelEntity> findAllByIds(@Param("ids") List<Long> ids);
+
+    // Ajout des méthodes manquantes pour le système de courriers
+    List<LabelEntity> findByReferentielType(ReferentielType referentielType);
+
+    @Query("SELECT l FROM LabelEntity l WHERE l.referentielType = :referentielType AND l.code = :code")
+    Optional<LabelEntity> findByTypeAndCode(@Param("referentielType") ReferentielType referentielType, @Param("code") String code);
+
 }

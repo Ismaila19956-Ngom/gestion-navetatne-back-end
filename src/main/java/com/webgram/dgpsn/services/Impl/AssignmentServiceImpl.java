@@ -2,6 +2,17 @@ package com.webgram.dgpsn.services.Impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.khoutech.openexcel.services.WorkbookService;
+import com.webgram.dgpsn.annotations.Journal;
+import com.webgram.dgpsn.entities.AssignmentEntity;
+import com.webgram.dgpsn.entities.enums.StructureProjectType;
+import com.webgram.dgpsn.exceptions.ResourceNotFoundException;
+import com.webgram.dgpsn.mappers.AssignmentMapper;
+import com.webgram.dgpsn.models.AssignmentDTO;
+import com.webgram.dgpsn.properties.DocumentProperties;
+import com.webgram.dgpsn.repositories.AssignmentRepository;
+import com.webgram.dgpsn.repositories.ManagementUnitRepository;
+import com.webgram.dgpsn.services.AssignmentService;
+import com.webgram.dgpsn.services.DataStorageService;
 import com.webgram.dgpsn.tools.ActionType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,25 +22,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import com.webgram.dgpsn.annotations.Journal;
-import com.webgram.dgpsn.entities.AssignmentEntity;
-import com.webgram.dgpsn.entities.enums.StructureProjectType;
-import com.webgram.dgpsn.exceptions.ResourceNotFoundException;
-import com.webgram.dgpsn.mappers.AssignmentMapper;
-
-import com.webgram.dgpsn.models.AssignmentDTO;
-
-import com.webgram.dgpsn.properties.DocumentProperties;
-import com.webgram.dgpsn.repositories.AssignmentRepository;
-import com.webgram.dgpsn.repositories.ManagementUnitRepository;
-import com.webgram.dgpsn.services.AssignmentService;
-import com.webgram.dgpsn.services.DataStorageService;
 
 import java.io.IOException;
 import java.security.InvalidParameterException;
 import java.text.MessageFormat;
 import java.text.ParseException;
-import java.util.*;
+import java.util.Objects;
 
 @Service
 @Transactional

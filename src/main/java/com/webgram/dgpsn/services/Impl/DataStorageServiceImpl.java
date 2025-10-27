@@ -1,5 +1,7 @@
 package com.webgram.dgpsn.services.Impl;
 
+import com.webgram.dgpsn.properties.DocumentProperties;
+import com.webgram.dgpsn.services.DataStorageService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -9,8 +11,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.webgram.dgpsn.properties.DocumentProperties;
-import com.webgram.dgpsn.services.DataStorageService;
 
 import java.io.IOException;
 import java.io.InputStream;
