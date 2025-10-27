@@ -1,7 +1,9 @@
 package com.webgram.dgpsn.entities;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+import com.webgram.dgpsn.entities.enums.Statut;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,14 +17,16 @@ import org.aspectj.weaver.loadtime.Agent;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Table(name = "atalier")
+
 public class AtelierEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "titre")
-    private String titre;
+    @Column(name = "titre_atelier")
+    private String titreAtelier;
 
     @Column(name = "theme")
     private String theme;
@@ -30,23 +34,29 @@ public class AtelierEntity implements Serializable {
     @Column(name = "objectif")
     private String objectif;
 
-    @Column(name = "date")
-    private LocalDate  date;
+    @Column(name = "date_atelier")
+    private LocalDateTime dateAtelier;
 
     @Column(name = "heur_debut")
-    private LocalDate heurDebut;
+    private LocalDateTime heurDebut;
 
     @Column(name = "heur_fin")
-    private LocalDate heurFin;
+    private LocalDateTime heurFin;
 
     @Column(name = "lieu")
     private String lieu;
 
-    @ManyToOne(fetch=FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "agent_id")
-    private Agent agent;
+    private AgentEntity agent;
 
+    @Column(name = "cout_Organisation")
+    private  Double coutOrganisation;
 
-    @Column(name = "cout")
-    private  Double cout;
+    @Column(name = "nombre_participants_max")
+    private Long nombreParticipantsMax;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "statut")
+    private Statut statut;
 }

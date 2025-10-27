@@ -444,6 +444,22 @@ public enum SecurityPermissions {
     EDIT_FORMATION_EXTERIEUR("Modifier formation externe", Feature.FORMATION),
     DELETE_FORMATION_EXTERIEUR("Supprimer formation externe", Feature.FORMATION),
 
+
+    READ_ATELIER("lier atelier", Feature.ATELIER),
+    ADD_ATELIER("ajouter atelier ", Feature.ATELIER),
+    EDIT_ATELIER("modifier atelier ", Feature.ATELIER),
+    DELETE_ATELIER("supprimer atelier ", Feature.ATELIER),
+
+    READ_PARTICIPANT("lire participant ", Feature.PARTICIPANT),
+    ADD_PARTICIPANT("ajouter participant ", Feature.PARTICIPANT),
+    EDIT_PARTICIPANT("modifier participant ", Feature.PARTICIPANT),
+    DELETE_PARTICIPANT("supprimer participant ", Feature.PARTICIPANT),
+
+
+
+
+
+
     ADD_EXPENSE_ACTIVITY("Ajouter expense", Feature.EXPENSE_ACTIVITY),
     EDIT_EXPENSE_ACTIVITY("Modifier expense", Feature.EXPENSE_ACTIVITY),
     DELETE_EXPENSE_ACTIVITY("Supprimer expense", Feature.EXPENSE_ACTIVITY),

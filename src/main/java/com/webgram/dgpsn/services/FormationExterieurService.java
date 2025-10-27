@@ -11,12 +11,9 @@ import java.util.List;
 import java.util.Map;
 
 public interface FormationExterieurService {
-    FormationExterieurDTO createFormationExterieur(FormationExterieurDTO dto, Map<String, MultipartFile> files);
-    FormationExterieurDTO updateFormationExterieur(FormationExterieurDTO dto, Map<String, MultipartFile> files);
-    void deleteFormationExterieur(Long id);
-    FormationExterieurDTO getFormationExterieurById(Long id);
-    Page<FormationExterieurDTO> getAllFormationExterieurs(Map<String, String> searchParams, Pageable pageable);
-    void exportFormationExterieurs(PrintWriter writer);
-    List<FormationExterieurDTO> importFormationExterieurs(List<FormationExterieurDTO> dtos);
-    FormationExterieurDTO updateStatut(Long id, Statut statut);
+    FormationExterieurDTO create(FormationExterieurDTO dto);
+    FormationExterieurDTO update(FormationExterieurDTO dto);
+    FormationExterieurDTO read(Long id);
+    void delete(Long id);
+    Page<FormationExterieurDTO> readAll(Map<String, String> searchParams, Pageable pageable);
 }

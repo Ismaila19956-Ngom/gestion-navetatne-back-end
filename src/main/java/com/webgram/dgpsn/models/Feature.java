@@ -56,6 +56,14 @@ public enum Feature {
     POINT_OF_VIGILANCE("Point de vigilance", Module.PROJECT_DETAILED_PROGRESS_TRACKING),
     STATUS("Statut", Module.PROJECT_DETAILED_PROGRESS_TRACKING),
     FLAG("Flags", Module.PROJECT_DETAILED_PROGRESS_TRACKING),
+
+
+    FORMATION("Formation externe", Module.Gestion_Administrative),
+    ATELIER("atelier", Module.Gestion_Administrative),
+
+    PARTICIPANT("participant", Module.Gestion_Administrative),
+
+
     FUNDING("Financements", Module.PROJECT_DETAILED_PROGRESS_TRACKING),
     MEDIATHEQUE("Médiathèque", Module.PROJECT_DETAILED_PROGRESS_TRACKING),
     DOCUMENT("Documents", Module.PROJECT_DETAILED_PROGRESS_TRACKING),

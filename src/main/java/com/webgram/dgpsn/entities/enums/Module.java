@@ -14,6 +14,11 @@ public enum Module {
     FORMULAIRE("Gestion des procédures"),
     FINANCEMENT_SETTINGS("Financement"),
     PROJECT_DETAILED_PROGRESS_TRACKING("Avancement détaillé"),
+
+    Gestion_Administrative("Gestion Administrative des Missions, Formations et Ateliers"),
+
+    SERVICES_EXTERIEURS("Suivi détaillé des services externes"),
+
     PROJECT_ACTIVITY_MONITORING("Suivi des activités"),
     PROGRAMME("Programme"),
     ACTIVITY_SETTINGS("Suivi des activités"),

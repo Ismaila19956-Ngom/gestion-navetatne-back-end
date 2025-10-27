@@ -3,16 +3,17 @@ package com.webgram.dgpsn.models;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.webgram.dgpsn.entities.AgentEntity;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.webgram.dgpsn.entities.enums.Statut;
-import jakarta.validation.constraints.NotEmpty;
+import com.webgram.dgpsn.entities.enums.TypeParticipant;
 import jakarta.validation.constraints.NotNull;
-import java.io.Serializable;
-import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -20,34 +21,32 @@ import lombok.NoArgsConstructor;
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class AtelierDTO implements Serializable {
+public class ParticipantDTO implements Serializable {
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
 
-    @NotEmpty
-    private String titreAtelier;
-
-    private String theme;
-
-    private String objectif;
-
-    private LocalDateTime dateAtelier;
+    @NotNull
+    private LocalDate dateInscription;
 
     private Statut statut;
 
-    private LocalDateTime heurDebut;
+    private Double noteEvaluation;
 
-    private LocalDateTime heurFin;
+    private Boolean certificatObtenu;
 
-    @NotEmpty
-    private String lieu;
+    private String commentaires;
 
-    @NotNull
     private Long agentId;
+
     private AgentDTO agent;
 
-    private Double coutOrganisation;
+    private FormationExterieurDTO formation;
+    private Long formationId;
 
-    private Long nombreParticipantsMax;
+    private AtelierDTO atelier;
+    private Long atelierId;
+
+    private TypeParticipant typeParticipant;
+
 }
