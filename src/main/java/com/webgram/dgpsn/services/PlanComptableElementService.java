@@ -16,6 +16,7 @@ public interface PlanComptableElementService {
             String code,
             String libelle,
             TypePlanComptable type,
+            Long parentId,
             String sortBy,
             Boolean ascending
     );

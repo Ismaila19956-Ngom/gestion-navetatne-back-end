@@ -12,6 +12,7 @@ public enum TypePlanComptable {
     RUBRIQUE("Rubrique"),
     REALISATION("Realisation");
 
+
     private final String description;
 
     TypePlanComptable(String description) {
