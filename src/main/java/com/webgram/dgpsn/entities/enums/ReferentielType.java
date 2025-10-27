@@ -89,6 +89,7 @@ public enum ReferentielType {
     FRAIS("Frais", "Frais"),
     PRISE_EN_CHARGE("Prise en charge", "Prise en charge"),
     POSTE("Poste", "Poste Agent Rh"),
+    TYPE_CONTRAT("Type de contrat", "Paramétrage type de contrat RH"),
     TYPE_COURRIER("Type courrier", "Parametrage type courrier");
 //    STARTUP("Startup", "Paramétrage startup"),;
 
