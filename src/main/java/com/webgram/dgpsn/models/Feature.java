@@ -46,6 +46,7 @@ public enum Feature {
     //    DATE_IMPORTANT("date_important",Module.PROJECT_SETTINGS),
 //    COMPONENT("Composantes", Module.PROJECT_SETTINGS),
     INTERVENTION_AREA("Zones d'intervention", Module.PROJECT_SETTINGS),
+    CANDIDAT("Candidat", Module.ACTES_GESTION),
     SUPERVISION_EXECUTION_STRUCTURE("Structure tutelle/exécution", Module.PROJECT_SETTINGS),
     PARTNER("Partenaires", Module.PROJECT_SETTINGS),
     INDICATOR("Indicateurs", Module.PROJECT_SETTINGS),
