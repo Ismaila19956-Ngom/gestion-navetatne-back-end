@@ -45,51 +45,82 @@ public class WorkflowValidationHistoriqueServiceImpl implements WorkflowValidati
 //    private final ResultatindicaRepository resultatindicaRepository;
 //    private final FluxtresorerieService fluxtresorerieService;
 
-    @Override
-    @Journal(actionType = ActionType.ADD_WORKFLOW_HISTORIQUE)
-    public WorkflowValidationHistoriqueDTO createHistorique(WorkflowValidationHistoriqueDTO historiqueDTO) {
-//        var stepToValid =  workflowStepRepository.findById(historiqueDTO.getEtapeId())
-//                .orElseThrow(() -> new ResourceNotFoundException(String.format("L'etape avec l'id '%d' n'existe pas!", historiqueDTO.getEtapeId())));
+//    @Override
+//    @Journal(actionType = ActionType.ADD_WORKFLOW_HISTORIQUE)
+//    public WorkflowValidationHistoriqueDTO createHistorique(WorkflowValidationHistoriqueDTO historiqueDTO) {
+//
+////        var stepToValid =  workflowStepRepository.findById(historiqueDTO.getEtapeId())
+////                .orElseThrow(() -> new ResourceNotFoundException(String.format("L'etape avec l'id '%d' n'existe pas!", historiqueDTO.getEtapeId())));
+//
+//        /**
+//         * Here we set the current workflow to the next step
+//         * according to the previous step ('stepToValid')
+//         * and the object that workflow is configured ('historiqueDTO')
+//         * Historique is saved only if setWorkflowToNextStep success
+//         */
+////        this.setWorkflowToNextStep(stepToValid, historiqueDTO);
+//
+//        var historiqueToSave = historiqueMapper.asEntity(historiqueDTO);
+//
+//        if(Objects.nonNull(historiqueDTO.getEtapeId())) {
+//            SecurityUtils.getCurrentUserLogin()
+//                    .flatMap(userRepository::findByLogin)
+//                    .ifPresent(user -> {
+//                        var configOpt = stepValidationUserRepository.findUserConfig(historiqueDTO.getEtapeId(), user.getId());
+//                        if(configOpt.isPresent()) {
+//                            historiqueToSave.setUser(configOpt.get().getUser());
+//                        } else {
+//                            throw new UserNotAllowedToValidWorkflowException(String.format("User '%s' '%s' n'est pas configuré pour faire la validation!", user.getAgent().getPrenom(), user.getAgent().getNom()));
+//                        }
+//                    });
+//        }
+//
+//        historiqueToSave.setDate(new Date(System.currentTimeMillis()));
+//        if(historiqueDTO.getWorkflowType().equals(WorkflowType.DEMANDE_CONGE) || historiqueDTO.getWorkflowType().equals(WorkflowType.VALIDATION_COURRIER)) {
+//            if (historiqueDTO.getYear() == null || historiqueDTO.getMonth() == null) {
+//                throw new IllegalArgumentException("L'année et le mois sont requis pour enregistrer une validation.");
+//            }
+//        }
+//
+////        historiqueToSave.setYear(historiqueDTO.getYear());
+////        historiqueToSave.setMonth(historiqueDTO.getMonth());
+//        var savedHistorique = workflowHistoriqueRepository.save(historiqueToSave);
+//
+//        log.info("validation étape successfully added {}", historiqueDTO.getId());
+//
+//        return historiqueMapper.asDto(savedHistorique);
+//    }
 
-        /**
-         * Here we set the current workflow to the next step
-         * according to the previous step ('stepToValid')
-         * and the object that workflow is configured ('historiqueDTO')
-         * Historique is saved only if setWorkflowToNextStep success
-         */
-//        this.setWorkflowToNextStep(stepToValid, historiqueDTO);
+@Override
+@Journal(actionType = ActionType.ADD_WORKFLOW_HISTORIQUE)
+public WorkflowValidationHistoriqueDTO createHistorique(WorkflowValidationHistoriqueDTO historiqueDTO) {
+    var historiqueToSave = historiqueMapper.asEntity(historiqueDTO);
 
-        var historiqueToSave = historiqueMapper.asEntity(historiqueDTO);
-
-        if(Objects.nonNull(historiqueDTO.getEtapeId())) {
-            SecurityUtils.getCurrentUserLogin()
-                    .flatMap(userRepository::findByLogin)
-                    .ifPresent(user -> {
-                        var configOpt = stepValidationUserRepository.findUserConfig(historiqueDTO.getEtapeId(), user.getId());
-                        if(configOpt.isPresent()) {
-                            historiqueToSave.setUser(configOpt.get().getUser());
-                        } else {
-                            throw new UserNotAllowedToValidWorkflowException(String.format("User '%s' '%s' n'est pas configuré pour faire la validation!", user.getAgent().getPrenom(), user.getAgent().getNom()));
-                        }
-                    });
-        }
-
-        historiqueToSave.setDate(new Date(System.currentTimeMillis()));
-        if(historiqueDTO.getWorkflowType().equals(WorkflowType.DEMANDE_CONGE) || historiqueDTO.getWorkflowType().equals(WorkflowType.VALIDATION_COURRIER)) {
-            if (historiqueDTO.getYear() == null || historiqueDTO.getMonth() == null) {
-                throw new IllegalArgumentException("L'année et le mois sont requis pour enregistrer une validation.");
-            }
-        }
-
-        historiqueToSave.setYear(historiqueDTO.getYear());
-        historiqueToSave.setMonth(historiqueDTO.getMonth());
-        var savedHistorique = workflowHistoriqueRepository.save(historiqueToSave);
-
-        log.info("validation étape successfully added {}", historiqueDTO.getId());
-
-        return historiqueMapper.asDto(savedHistorique);
+    if (Objects.nonNull(historiqueDTO.getEtapeId())) {
+        SecurityUtils.getCurrentUserLogin()
+                .flatMap(userRepository::findByLogin)
+                .ifPresent(user -> {
+                    var configOpt = stepValidationUserRepository.findUserConfig(historiqueDTO.getEtapeId(), user.getId());
+                    if (configOpt.isPresent()) {
+                        historiqueToSave.setUser(configOpt.get().getUser());
+                    } else {
+                        throw new UserNotAllowedToValidWorkflowException(
+                                String.format("User '%s' '%s' n'est pas configuré pour faire la validation!",
+                                        user.getAgent().getPrenom(), user.getAgent().getNom()));
+                    }
+                });
     }
 
+    historiqueToSave.setDate(new Date(System.currentTimeMillis()));
+    // Les lignes suivantes ont été conservées pour sauvegarder year et month si fournis, mais elles ne sont plus obligatoires
+    historiqueToSave.setYear(historiqueDTO.getYear());
+    historiqueToSave.setMonth(historiqueDTO.getMonth());
+    var savedHistorique = workflowHistoriqueRepository.save(historiqueToSave);
+
+    log.info("validation étape successfully added {}", historiqueDTO.getId());
+
+    return historiqueMapper.asDto(savedHistorique);
+}
 //    @Override
 //    public WorkflowValidationHistoriqueDTO updateHistorique(WorkflowValidationHistoriqueDTO historiqueDTO) {
 //

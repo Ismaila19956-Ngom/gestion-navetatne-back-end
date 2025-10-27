@@ -8,6 +8,7 @@ import com.webgram.dgpsn.repositories.AgentRepository;
 import com.webgram.dgpsn.repositories.ProfileRepository;
 import com.webgram.dgpsn.repositories.UserRepository;
 import com.webgram.dgpsn.security.SecurityPermissions;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
