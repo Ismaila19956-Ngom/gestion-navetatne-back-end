@@ -14,16 +14,16 @@ public interface PlanComptableElementMapper extends EntityMapper<PlanComptableEl
     @Override
     @Mapping(target = "parent", source = "parentId", qualifiedByName = "getParent")
     PlanComptableElementEntity asEntity(PlanComptableElementDTO dto);
+
     @Override
     PlanComptableElementDTO asDto(PlanComptableElementEntity entity);
 
 
     @Named("getParent")
     public default PlanComptableElementEntity getParent(Long parentId) {
-        if(Objects.nonNull(parentId)) {
+        if (Objects.nonNull(parentId)) {
             return PlanComptableElementEntity.builder().id(parentId).build();
         }
         return null;
     }
-
 }
