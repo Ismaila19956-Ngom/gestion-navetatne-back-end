@@ -12,6 +12,7 @@ import com.webgram.dgpsn.security.SecurityPermissions;
 public class BudgetDgpsnRule {
     static final String BUDGET_DGPSN_API_PREFIX = "/budgetGlobal";
     static final String BUDGET_DGPSN_ID = "/{budgetId}";
+    static final String BUDGET_DGPSN_SYNTHESE = "/synthese";
 
     @Bean
     public SecurityRule addBudgetDgpsn() {
@@ -21,6 +22,21 @@ public class BudgetDgpsnRule {
                 .build()
                 .condition()
                 .hasPermission(SecurityPermissions.ADD_BUDGET)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+
+    @Bean
+    public SecurityRule getSynthese() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(BUDGET_DGPSN_API_PREFIX + BUDGET_DGPSN_ID + BUDGET_DGPSN_SYNTHESE)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.READ_BUDGET)
+                .hasPermission(SecurityPermissions.ADD_BUDGET)
+                .hasPermission(SecurityPermissions.EDIT_BUDGET)
+                .hasPermission(SecurityPermissions.DELETE_BUDGET)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
