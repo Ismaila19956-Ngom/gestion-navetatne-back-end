@@ -10,11 +10,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import com.webgram.dgpsn.entities.PlanComptableElementEntity;
 import com.webgram.dgpsn.entities.enums.TypePlanComptable;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Repository
 public interface PlanComptableElementRepository extends JpaRepository<PlanComptableElementEntity, Long>,
@@ -39,10 +41,12 @@ public interface PlanComptableElementRepository extends JpaRepository<PlanCompta
     ) {
         var booleanBuilder = new BooleanBuilder();
         Sort sort = Sort.unsorted();
+
         QPlanComptableElementEntity qEntity = QPlanComptableElementEntity.planComptableElementEntity;
 
         if (Objects.nonNull(idsToIgnore) && !idsToIgnore.isEmpty()) {
             booleanBuilder.and(qEntity.id.notIn(idsToIgnore));
+
         }
 
         if (Objects.nonNull(type)) {
@@ -76,5 +80,32 @@ public interface PlanComptableElementRepository extends JpaRepository<PlanCompta
         );
 
         return findAll(booleanBuilder, pageRequest);
+
     }
+
+    Optional<PlanComptableElementEntity> findByIdAndType(Long id, TypePlanComptable type);
+
+    List<PlanComptableElementEntity> findByParentIdAndType(Long parentId, TypePlanComptable type);
+
+    @Query("""
+            SELECT r FROM PlanComptableElementEntity r
+            WHERE r.type = 'RUBRIQUE'
+            AND EXISTS (
+                SELECT 1 FROM PlanComptableElementEntity sc
+                WHERE sc.id = r.parent.id
+                AND sc.type = 'SOUS_COMPTE'
+                AND EXISTS (
+                    SELECT 1 FROM PlanComptableElementEntity c
+                    WHERE c.id = sc.parent.id
+                    AND c.type = 'COMPTE'
+                    AND EXISTS (
+                        SELECT 1 FROM PlanComptableElementEntity cl
+                        WHERE cl.id = c.parent.id
+                        AND cl.type = 'CLASSE'
+                        AND cl.id = :classeId
+                    )
+                )
+            )
+            """)
+    List<PlanComptableElementEntity> findRubriquesByClasseId(@Param("classeId") Long classeId);
 }

@@ -10,7 +10,8 @@ public enum TypePlanComptable {
     COMPTE("Compte"),
     SOUS_COMPTE("Sous Compte"),
     RUBRIQUE("Rubrique"),
-    REALISATIONS("Realisations");
+    REALISATION("Realisation");
+
 
     private final String description;
 

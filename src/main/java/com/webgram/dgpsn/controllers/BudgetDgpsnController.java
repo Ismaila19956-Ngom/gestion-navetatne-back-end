@@ -1,5 +1,9 @@
 package com.webgram.dgpsn.controllers;
 
+import com.webgram.dgpsn.models.LigneBudgetaireDTO;
+import com.webgram.dgpsn.models.RealisationDTO;
+import com.webgram.dgpsn.services.LigneBudgetaireService;
+import com.webgram.dgpsn.services.RealisationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -13,12 +17,18 @@ import org.springframework.web.bind.annotation.*;
 import com.webgram.dgpsn.models.BudgetDgpsnDTO;
 import com.webgram.dgpsn.services.BudgetDgpsnService;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/budgetGlobal")
 @Tag(name = "BudgetDgpsn :", description = "Endpoint pour gérer les budgets DGPSN dans programme, projet et activité")
 @RequiredArgsConstructor
 public class BudgetDgpsnController {
     private final BudgetDgpsnService budgetDgpsnService;
+    private final LigneBudgetaireService ligneBudgetaireService;
+    private final RealisationService realisationService;
 
     @Operation(summary = "Create budget DGPSN", description = "This endpoint takes input budget DGPSN and saves it")
     @ApiResponses(value = {
@@ -55,10 +65,10 @@ public class BudgetDgpsnController {
             @ApiResponse(responseCode = "404", description = "Resource access does not exist"),
             @ApiResponse(responseCode = "500", description = "Internal server error during request processing")
     })
-    @DeleteMapping("/{budgetDgpsnId}")
+    @DeleteMapping("/{budgetId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteBudget(@Parameter(name = "budgetDgpsnId", description = "The budget DGPSN id deleted") @PathVariable Long budgetDgpsnId) {
-        budgetDgpsnService.delete(budgetDgpsnId);
+    public void deleteBudget(@Parameter(name = "budgetId", description = "The budget DGPSN id deleted") @PathVariable Long budgetId) {
+        budgetDgpsnService.delete(budgetId);
     }
 
     @Operation(summary = "Read all budget DGPSN", description = "It takes input param of the page and returns this list related")
@@ -76,5 +86,20 @@ public class BudgetDgpsnController {
             @Parameter(name = "annee", description = "Value of annee used to filter list budget") @RequestParam(value = "annee", required = false) Integer annee
     ) {
         return budgetDgpsnService.readAll(pageable, code, libelle, montant, annee);
+    }
+
+    @GetMapping("/{id}/synthese")
+    public Map<String, Object> getSynthese(
+            @Parameter(description = "ID du budget DGPSN à synthétiser", required = true, example = "1")
+            @PathVariable Long id) {
+        BudgetDgpsnDTO budget = budgetDgpsnService.read(id);
+        List<LigneBudgetaireDTO> lignes = ligneBudgetaireService.findByBudgetId(id);
+        List<RealisationDTO> realisations = realisationService.findByBudgetId(id);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("budget", budget);
+        response.put("lignes", lignes);
+        response.put("realisations", realisations);
+        return response;
     }
 }
