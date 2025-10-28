@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.criteria.Predicate;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -72,8 +73,8 @@ public class CourrierServiceImpl implements CourrierService {
     @Override
     @Transactional(readOnly = true)
     public Page<CourrierEntity> readAll(Pageable pageable, String keyword,
-            CourrierType type, ReferentielType nature,
-            ReferentielType statut) {
+                                        CourrierType type, ReferentielType nature,
+                                        ReferentielType statut) {
         log.info("Lecture des courriers avec filtres");
 
         // Utiliser Specification pour des filtres dynamiques
@@ -118,6 +119,22 @@ public class CourrierServiceImpl implements CourrierService {
         return courrierRepository.findById(id);
     }
 
+    /*
+        @Override
+        public CourrierEntity archiver(Long id) {
+            log.info("Archivage du courrier : {}", id);
+
+            CourrierEntity courrier = courrierRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Courrier non trouvé avec l'ID: " + id));
+
+            // Récupérer le label ARCHIVE
+            LabelEntity statutArchive = (LabelEntity) labelRepository
+                    .findByTypeAndCode(ReferentielType.STATUT_COURRIER, "ARCHIVE")
+                    .orElseThrow(() -> new RuntimeException("Statut ARCHIVE introuvable"));
+
+            courrier.setStatut(statutArchive);
+            return courrierRepository.save(courrier);
+        } */
     @Override
     public CourrierEntity archiver(Long id) {
         log.info("Archivage du courrier : {}", id);
@@ -125,8 +142,8 @@ public class CourrierServiceImpl implements CourrierService {
         CourrierEntity courrier = courrierRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Courrier non trouvé avec l'ID: " + id));
 
-        // Récupérer le label ARCHIVE
-        LabelEntity statutArchive = (LabelEntity) labelRepository
+        // CORRECTION : Supprimer le cast et utiliser le bon type
+        LabelEntity statutArchive = labelRepository
                 .findByTypeAndCode(ReferentielType.STATUT_COURRIER, "ARCHIVE")
                 .orElseThrow(() -> new RuntimeException("Statut ARCHIVE introuvable"));
 
@@ -163,7 +180,7 @@ public class CourrierServiceImpl implements CourrierService {
     @Override
     @Transactional(readOnly = true)
     public long countByTypeAndNatureAndStatut(CourrierType type, ReferentielType nature,
-            ReferentielType statut) {
+                                              ReferentielType statut) {
         Specification<CourrierEntity> spec = (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
 
