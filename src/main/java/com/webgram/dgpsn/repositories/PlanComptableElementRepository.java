@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import com.webgram.dgpsn.entities.PlanComptableElementEntity;
 import com.webgram.dgpsn.entities.enums.TypePlanComptable;
@@ -82,9 +83,29 @@ public interface PlanComptableElementRepository extends JpaRepository<PlanCompta
 
     }
 
-    //Vérifie que l'élément existe et est de type SOUS_COMPTE
     Optional<PlanComptableElementEntity> findByIdAndType(Long id, TypePlanComptable type);
 
-    // Récupère les réalisations enfants d'un parent donné
     List<PlanComptableElementEntity> findByParentIdAndType(Long parentId, TypePlanComptable type);
+
+    @Query("""
+            SELECT r FROM PlanComptableElementEntity r
+            WHERE r.type = 'RUBRIQUE'
+            AND EXISTS (
+                SELECT 1 FROM PlanComptableElementEntity sc
+                WHERE sc.id = r.parent.id
+                AND sc.type = 'SOUS_COMPTE'
+                AND EXISTS (
+                    SELECT 1 FROM PlanComptableElementEntity c
+                    WHERE c.id = sc.parent.id
+                    AND c.type = 'COMPTE'
+                    AND EXISTS (
+                        SELECT 1 FROM PlanComptableElementEntity cl
+                        WHERE cl.id = c.parent.id
+                        AND cl.type = 'CLASSE'
+                        AND cl.id = :classeId
+                    )
+                )
+            )
+            """)
+    List<PlanComptableElementEntity> findRubriquesByClasseId(@Param("classeId") Long classeId);
 }

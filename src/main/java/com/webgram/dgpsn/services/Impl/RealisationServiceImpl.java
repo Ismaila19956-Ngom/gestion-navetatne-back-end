@@ -3,8 +3,10 @@ package com.webgram.dgpsn.services.Impl;
 import com.webgram.dgpsn.annotations.Journal;
 import com.webgram.dgpsn.exceptions.ResourceNotFoundException;
 import com.webgram.dgpsn.mappers.RealisationMapper;
+import com.webgram.dgpsn.models.LigneBudgetaireDTO;
 import com.webgram.dgpsn.models.RealisationDTO;
 import com.webgram.dgpsn.repositories.RealisationRepository;
+import com.webgram.dgpsn.services.LigneBudgetaireService;
 import com.webgram.dgpsn.services.RealisationService;
 import com.webgram.dgpsn.tools.ActionType;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,6 +28,7 @@ import java.util.stream.Collectors;
 public class RealisationServiceImpl implements RealisationService {
     private final RealisationRepository realisationRepository;
     private final RealisationMapper realisationMapper;
+    private final LigneBudgetaireService ligneBudgetaireService;
 
     @Override
     @Journal(actionType = ActionType.ADD_DATES_IMPORTANTE)
@@ -106,10 +110,29 @@ public class RealisationServiceImpl implements RealisationService {
                 .map(realisationMapper::asDto);
     }
     // Add to RealisationServiceImpl
+//    @Override
+//    @Journal(actionType = ActionType.READ_DATES_IMPORTANTE)
+//    public List<RealisationDTO> findByBudgetId(Long budgetId) {
+//        return realisationRepository.findByLigneBudgetaireId(budgetId)
+//                .stream()
+//                .map(realisationMapper::asDto)
+//                .collect(Collectors.toList());
+//    }
     @Override
     @Journal(actionType = ActionType.READ_DATES_IMPORTANTE)
     public List<RealisationDTO> findByBudgetId(Long budgetId) {
-        return realisationRepository.findByLigneBudgetaireId(budgetId)
+        // 1. Récupérer toutes les lignes du budget
+        List<LigneBudgetaireDTO> lignes = ligneBudgetaireService.findByBudgetId(budgetId);
+        // 2. Extraire les IDs des lignes
+        List<Long> ligneIds = lignes.stream()
+                .map(LigneBudgetaireDTO::getId)
+                .collect(Collectors.toList());
+        // 3. Chercher les réalisations pour ces ligneIds
+        if (ligneIds.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        return realisationRepository.findByLigneBudgetaireIdIn(ligneIds)
                 .stream()
                 .map(realisationMapper::asDto)
                 .collect(Collectors.toList());

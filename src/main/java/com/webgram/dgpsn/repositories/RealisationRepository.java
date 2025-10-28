@@ -1,6 +1,7 @@
 package com.webgram.dgpsn.repositories;
 
 import com.querydsl.core.BooleanBuilder;
+import com.webgram.dgpsn.models.RealisationDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -65,5 +66,5 @@ public interface RealisationRepository extends JpaRepository<RealisationEntity, 
         return findAll(booleanBuilder, pageable);
     }
 
-    List<RealisationEntity> findByLigneBudgetaireId(Long ligneBudgetaireId);
+    List<RealisationEntity> findByLigneBudgetaireIdIn(List<Long> ligneBudgetaireIds);
 }

@@ -71,8 +71,14 @@ public class PlanComptableElementController {
 
     @GetMapping("/realisation/{id}")
     public ResponseEntity<List<PlanComptableElementDTO>> getRealisationsBySousAltaCompteId(@PathVariable Long id) {
-        var result = service.getRealisationsBySousCompteId(id);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        var result = service.getRealisationsByRubriqueId(id);
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/rubriques/{id}")
+    public ResponseEntity<List<PlanComptableElementDTO>> getRubriquesByClasseId(@PathVariable Long id) {
+        var rubriques = service.getRubriquesByClasseId(id);
+        return ResponseEntity.ok(rubriques);
     }
 }
 
