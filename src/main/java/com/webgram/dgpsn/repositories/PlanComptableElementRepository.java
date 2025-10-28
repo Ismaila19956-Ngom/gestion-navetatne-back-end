@@ -41,7 +41,6 @@ public interface PlanComptableElementRepository extends JpaRepository<PlanCompta
         var booleanBuilder = new BooleanBuilder();
         Sort sort = Sort.unsorted();
 
-
         QPlanComptableElementEntity qEntity = QPlanComptableElementEntity.planComptableElementEntity;
 
         if (Objects.nonNull(idsToIgnore) && !idsToIgnore.isEmpty()) {
