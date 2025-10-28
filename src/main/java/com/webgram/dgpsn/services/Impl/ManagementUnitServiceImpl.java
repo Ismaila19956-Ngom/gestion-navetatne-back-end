@@ -433,12 +433,12 @@ public class ManagementUnitServiceImpl implements ManagementUnitService {
                 .filter(p -> p.getType() == TypeProjet.PROJECT)
                 .orElseThrow(() -> new NoSuchElementException("Projet non trouvé ou type incorrect."));
 
-        TreeNodeDTO rootNode = new TreeNodeDTO(project.getId(), project.getCode(), project.getName(), project.getType());
+        TreeNodeDTO rootNode = new TreeNodeDTO(project.getId(), project.getCode(), project.getNomenclature(), project.getName(), project.getType());
 
         // Charger toutes les entités
         List<ManagementUnitEntity> allProjects = managementUnitRepository.findAll();
         Map<Long, TreeNodeDTO> nodeMap = new HashMap<>();
-        allProjects.forEach(p -> nodeMap.put(p.getId(), new TreeNodeDTO(p.getId(), p.getCode(), p.getName(), p.getType())));
+        allProjects.forEach(p -> nodeMap.put(p.getId(), new TreeNodeDTO(p.getId(), p.getCode(), p.getNomenclature(), p.getName(), p.getType())));
 
         // Construire l'arbre récursivement
         buildSubTreeRecursively(rootNode, allProjects, nodeMap);
@@ -479,7 +479,7 @@ public class ManagementUnitServiceImpl implements ManagementUnitService {
 
         // Créer tous les nœuds et les stocker dans le Map
         allUnits.forEach(unit -> {
-            TreeNodeDTO node = new TreeNodeDTO(unit.getId(), unit.getCode(), unit.getName(), unit.getType());
+            TreeNodeDTO node = new TreeNodeDTO(unit.getId(), unit.getCode(), unit.getNomenclature(), unit.getName(), unit.getType());
             nodeMap.put(unit.getId(), node);
 
             // Identifier les racines (Projets)
