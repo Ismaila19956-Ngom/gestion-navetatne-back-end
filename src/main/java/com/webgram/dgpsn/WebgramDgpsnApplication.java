@@ -55,7 +55,7 @@ public class WebgramDgpsnApplication {
             userRepository.save(UserEntity.builder()
                     .agent(agent)
                     .profile(profile)
-                    .login("admin")
+                    .login("admin")//
                     .password(passwordEncoder.encode("dgpsn@2025"))
                     .status(true)
                     .firstAttempt(false)
