@@ -18,6 +18,7 @@ import java.util.List;
 public class TreeNodeDTO implements Serializable {
     private Long id;
     private String code;
+    private String nomenclature;
     private String name;
     private TypeProjet type;
     private Double budget = 0.0;
@@ -25,9 +26,10 @@ public class TreeNodeDTO implements Serializable {
     private Double tauxExecution;
     private List<TreeNodeDTO> children = new ArrayList<>();
 
-    public TreeNodeDTO(Long id, String code, String name, TypeProjet type) {
+    public TreeNodeDTO(Long id, String code, String nomenclature, String name, TypeProjet type) {
         this.id = id;
         this.code = code;
+        this.nomenclature = nomenclature;
         this.name = name;
         this.type = type;
     }

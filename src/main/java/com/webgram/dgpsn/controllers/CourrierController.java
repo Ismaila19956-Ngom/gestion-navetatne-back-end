@@ -1,5 +1,7 @@
 package com.webgram.dgpsn.controllers;
 
+import com.webgram.dgpsn.entities.enums.ReferentielType;
+import com.webgram.dgpsn.services.CourrierService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -9,12 +11,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.webgram.dgpsn.entities.CourrierEntity;
 import com.webgram.dgpsn.entities.enums.CourrierType;
-import com.webgram.dgpsn.entities.enums.NatureCourrier;
-import com.webgram.dgpsn.entities.enums.StatutCourrier;
-import com.webgram.dgpsn.services.CourrierService;
 
 import java.util.Optional;
 
@@ -69,21 +69,36 @@ public class CourrierController {
             @RequestParam(value = "type", required = false) CourrierType type,
 
             @Parameter(name = "nature", description = "Filtrer par nature (ACADEMIQUE, ADMINISTRATIF, etc.)")
-            @RequestParam(value = "nature", required = false) NatureCourrier nature,
+            @RequestParam(value = "nature", required = false) ReferentielType nature,
 
             @Parameter(name = "statut", description = "Filtrer par statut")
-            @RequestParam(value = "statut", required = false) StatutCourrier statut) {
+            @RequestParam(value = "statut", required = false) ReferentielType statut) {
 
         return courrierService.readAll(pageable, keyword, type, nature, statut);
     }
 
     @Operation(summary = "Lire un courrier", description = "Endpoint pour récupérer un courrier par son ID")
-    @GetMapping("/{courrierId}")
+    /* @GetMapping("/{courrierId}")
     @ResponseStatus(HttpStatus.OK)
     public Optional<CourrierEntity> readCourrier(
             @Parameter(name = "courrierId", description = "ID du courrier à récupérer")
             @PathVariable Long courrierId) {
         return courrierService.read(courrierId);
+    } */
+    @GetMapping("/{courrierId}")
+    public ResponseEntity<?> readCourrier(@PathVariable Long courrierId) {
+        try {
+            Optional<CourrierEntity> courrier = courrierService.read(courrierId);
+            if (courrier.isPresent()) {
+                return ResponseEntity.ok(courrier.get());
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("Courrier non trouvé avec ID: " + courrierId);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erreur: " + e.getMessage());
+        }
     }
 
     @Operation(summary = "Archiver un courrier", description = "Endpoint pour archiver un courrier")
@@ -103,7 +118,7 @@ public class CourrierController {
             @PathVariable Long courrierId,
 
             @Parameter(name = "nouveauStatut", description = "Nouveau statut à assigner")
-            @RequestParam StatutCourrier nouveauStatut) {
+            @RequestParam ReferentielType nouveauStatut) {
         return courrierService.changerStatut(courrierId, nouveauStatut);
     }
 
@@ -115,10 +130,10 @@ public class CourrierController {
             @RequestParam CourrierType type,
 
             @Parameter(name = "nature", description = "Nature des courriers")
-            @RequestParam NatureCourrier nature,
+            @RequestParam ReferentielType nature,
 
             @Parameter(name = "statut", description = "Statut des courriers")
-            @RequestParam StatutCourrier statut) {
+            @RequestParam ReferentielType statut) {
         return courrierService.countByTypeAndNatureAndStatut(type, nature, statut);
     }
 
@@ -146,7 +161,7 @@ public class CourrierController {
     @ResponseStatus(HttpStatus.OK)
     public Page<CourrierEntity> getCourriersByNature(
             @Parameter(name = "nature", description = "Nature des courriers")
-            @PathVariable NatureCourrier nature,
+            @PathVariable ReferentielType nature,
             Pageable pageable) {
         return courrierService.findByNature(nature, pageable);
     }

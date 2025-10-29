@@ -10,24 +10,20 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import com.webgram.dgpsn.entities.PlanComptableElementEntity;
 import com.webgram.dgpsn.entities.enums.TypePlanComptable;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Repository
 public interface PlanComptableElementRepository extends JpaRepository<PlanComptableElementEntity, Long>,
         QuerydslPredicateExecutor<PlanComptableElementEntity> {
 
-    /**
-     * Vérifie si un code existe déjà
-     */
     boolean existsByCode(String code);
 
-    /**
-     * Vérifie si un code existe déjà en excluant un ID spécifique
-     */
     @Query("SELECT CASE WHEN COUNT(p) > 0 THEN true ELSE false END " +
             "FROM PlanComptableElementEntity p " +
             "WHERE p.code = :code AND p.id <> :id")
@@ -39,32 +35,40 @@ public interface PlanComptableElementRepository extends JpaRepository<PlanCompta
             String code,
             String libelle,
             TypePlanComptable type,
+            Long parentId,
             String sortBy,
             Boolean ascending
     ) {
         var booleanBuilder = new BooleanBuilder();
         Sort sort = Sort.unsorted();
-        QPlanComptableElementEntity qPlanComptableElementEntity =
-                QPlanComptableElementEntity.planComptableElementEntity;
 
-        // Application des filtres
+        QPlanComptableElementEntity qEntity = QPlanComptableElementEntity.planComptableElementEntity;
+
         if (Objects.nonNull(idsToIgnore) && !idsToIgnore.isEmpty()) {
-            booleanBuilder.and(qPlanComptableElementEntity.id.notIn(idsToIgnore));
-        }
-        if (Objects.nonNull(type)) {
-            booleanBuilder.and(qPlanComptableElementEntity.type.eq(type));
-        }
-        if (StringUtils.isNotEmpty(code)) {
-            booleanBuilder.and(qPlanComptableElementEntity.code.containsIgnoreCase(code));
-        }
-        if (StringUtils.isNotEmpty(libelle)) {
-            booleanBuilder.and(qPlanComptableElementEntity.libelle.containsIgnoreCase(libelle));
+            booleanBuilder.and(qEntity.id.notIn(idsToIgnore));
+
         }
 
-        // Configuration du tri
+        if (Objects.nonNull(type)) {
+            booleanBuilder.and(qEntity.type.eq(type));
+        }
+
+        if (Objects.nonNull(parentId)) {
+            booleanBuilder.and(qEntity.parent.id.eq(parentId));
+        }
+
+        if (StringUtils.isNotEmpty(code)) {
+            booleanBuilder.and(qEntity.code.containsIgnoreCase(code));
+        }
+
+        if (StringUtils.isNotEmpty(libelle)) {
+            booleanBuilder.and(qEntity.libelle.containsIgnoreCase(libelle));
+        }
+
         if (StringUtils.isNotEmpty(sortBy)) {
             sort = Sort.by(sortBy);
         }
+
         if (Objects.nonNull(ascending)) {
             sort = Boolean.TRUE.equals(ascending) ? sort.ascending() : sort.descending();
         }
@@ -76,5 +80,32 @@ public interface PlanComptableElementRepository extends JpaRepository<PlanCompta
         );
 
         return findAll(booleanBuilder, pageRequest);
+
     }
+
+    Optional<PlanComptableElementEntity> findByIdAndType(Long id, TypePlanComptable type);
+
+    List<PlanComptableElementEntity> findByParentIdAndType(Long parentId, TypePlanComptable type);
+
+    @Query("""
+            SELECT r FROM PlanComptableElementEntity r
+            WHERE r.type = 'RUBRIQUE'
+            AND EXISTS (
+                SELECT 1 FROM PlanComptableElementEntity sc
+                WHERE sc.id = r.parent.id
+                AND sc.type = 'SOUS_COMPTE'
+                AND EXISTS (
+                    SELECT 1 FROM PlanComptableElementEntity c
+                    WHERE c.id = sc.parent.id
+                    AND c.type = 'COMPTE'
+                    AND EXISTS (
+                        SELECT 1 FROM PlanComptableElementEntity cl
+                        WHERE cl.id = c.parent.id
+                        AND cl.type = 'CLASSE'
+                        AND cl.id = :classeId
+                    )
+                )
+            )
+            """)
+    List<PlanComptableElementEntity> findRubriquesByClasseId(@Param("classeId") Long classeId);
 }
