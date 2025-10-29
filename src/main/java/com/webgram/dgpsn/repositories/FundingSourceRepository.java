@@ -23,7 +23,10 @@ public interface FundingSourceRepository extends JpaRepository<FundingSourceEnti
             String montant,
             Long managementUnitId,
             Long structureId,
-            Long budgetId
+            Long budgetId,
+            Long tacheId,
+            Long valueIndicatorId,
+            Long budgetGlobalId
     ) throws ParseException {
         var booleanBuider = new BooleanBuilder();
 
@@ -41,6 +44,15 @@ public interface FundingSourceRepository extends JpaRepository<FundingSourceEnti
 
         if(Objects.nonNull(managementUnitId)) {
             booleanBuider.and(QFundingSourceEntity.fundingSourceEntity.managementUnit.id.eq(managementUnitId));
+        }
+        if (Objects.nonNull(tacheId)) {
+            booleanBuider.and(QFundingSourceEntity.fundingSourceEntity.tache.id.eq(tacheId));
+        }
+        if (Objects.nonNull(valueIndicatorId)) {
+            booleanBuider.and(QFundingSourceEntity.fundingSourceEntity.valueIndicator.id.eq(valueIndicatorId));
+        }
+        if (Objects.nonNull(budgetGlobalId)) {
+            booleanBuider.and(QFundingSourceEntity.fundingSourceEntity.budgetGlobal.id.eq(budgetGlobalId));
         }
         return findAll(booleanBuider, pageable);
     }
