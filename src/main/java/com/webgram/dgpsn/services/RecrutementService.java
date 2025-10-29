@@ -12,7 +12,7 @@ public interface RecrutementService {
     RecrutementDTO createRecrutement(RecrutementDTO recrutementDTO);
     RecrutementDTO updateRecrutement(RecrutementDTO recrutementDTO);
     void deleteRecrutement(Long id);
-    RecrutementDTO getRecrutement(Long id);
-    Page<RecrutementDTO> getAllRecrutements(Map<String, String> searchParams, Pageable pageable);
+    RecrutementDTO readRecrutement(Long id);
+    Page<RecrutementDTO> readAllRecrutement(Map<String, String> searchParams, Pageable pageable);
 
 }

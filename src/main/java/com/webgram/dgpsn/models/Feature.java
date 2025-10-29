@@ -80,6 +80,8 @@ public enum Feature {
     QUERY("Requêtes", Module.PROJECT_ACTIVITY_MONITORING),
     MEETING("Réunions", Module.PROJECT_ACTIVITY_MONITORING),
     AGENT("Agents", Module.REFERENTIEL),
+    CARACTERISTIQUE("Agents", Module.REFERENTIEL),
+    RECRUTEMENT("Recrutement", Module.REFERENTIEL),
     STRUCTURE("Structures", Module.REFERENTIEL),
     COMPLETION_RATE("Taux avancement", Module.PROJECT_DETAILED_PROGRESS_TRACKING),
     EVALUATION("evaluation", Module.PROJECT_DETAILED_PROGRESS_TRACKING),

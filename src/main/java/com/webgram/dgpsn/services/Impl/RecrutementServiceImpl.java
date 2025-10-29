@@ -3,7 +3,8 @@ package com.webgram.dgpsn.services.Impl;
 import com.querydsl.core.BooleanBuilder;
 import com.webgram.dgpsn.entities.ManagementUnitEntity;
 import com.webgram.dgpsn.entities.QRecrutementEntity;
-import com.webgram.dgpsn.entities.QRegionEntity;
+import com.webgram.dgpsn.entities.RecrutementEntity;
+import com.webgram.dgpsn.entities.enums.TypeContrat;
 import com.webgram.dgpsn.exceptions.ResourceNotFoundException;
 import com.webgram.dgpsn.mappers.RecrutementMapper;
 import com.webgram.dgpsn.models.RecrutementDTO;
@@ -19,6 +20,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.text.MessageFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -33,22 +37,52 @@ public class RecrutementServiceImpl implements RecrutementService {
     private final RecrutementRepository recrutementRepository;
     private final RecrutementMapper recrutementMapper;
 
-    private final UgpProjetRepository ugpProjetRepository;
 
     String ROLE_IDENTIFIER_NOT_FOUND_MESSAGE = "Invalide id recrutement {0}";
 
+//    @Override
+//    public RecrutementDTO createRecrutement(RecrutementDTO recrutementDTO) {
+//        var entity = recrutementMapper.asEntity(recrutementDTO);
+//        var savedEntity = recrutementRepository.save(entity);
+//        return recrutementMapper.asDto(savedEntity);
+//    }
+
     @Override
     public RecrutementDTO createRecrutement(RecrutementDTO recrutementDTO) {
+        // 1. Conversion du DTO en Entité
         var entity = recrutementMapper.asEntity(recrutementDTO);
+
+        // 2. Synchronisation de la relation bidirectionnelle
+        // Pour chaque CaracteristiqueExigeEntity dans la liste,
+        // on définit sa référence "recrutement" à l'entité parente.
+        if (entity.getCaracteristiques() != null) {
+            entity.getCaracteristiques().forEach(caracteristique -> caracteristique.setRecrutement(entity));
+        }
+
+        // 3. Sauvegarde de l'entité parente (avec cascade)
         var savedEntity = recrutementRepository.save(entity);
         return recrutementMapper.asDto(savedEntity);
     }
 
     @Override
     public RecrutementDTO updateRecrutement(RecrutementDTO recrutementDTO) {
-        return null;
-    }
+        // ✅ Vérifier que le recrutement existe
+        if (!recrutementRepository.existsById(recrutementDTO.getId())) {
+            throw new ResourceNotFoundException(
+                    MessageFormat.format(ROLE_IDENTIFIER_NOT_FOUND_MESSAGE, recrutementDTO.getId())
+            );
+        }
 
+        var entity = recrutementMapper.asEntity(recrutementDTO);
+
+        // ✅ Il est également crucial d'ajouter la même logique pour la mise à jour !
+        if (entity.getCaracteristiques() != null) {
+            entity.getCaracteristiques().forEach(caracteristique -> caracteristique.setRecrutement(entity));
+        }
+
+        var savedEntity = recrutementRepository.save(entity);
+        return recrutementMapper.asDto(savedEntity);
+    }
 
     @Override
     public void deleteRecrutement(Long id) {
@@ -60,17 +94,17 @@ public class RecrutementServiceImpl implements RecrutementService {
     }
 
     @Override
-    public RecrutementDTO getRecrutement(Long id) {
+    public RecrutementDTO readRecrutement(Long id) {
         var entity = recrutementRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
         return recrutementMapper.asDto(entity);    }
 
     @Override
-    public Page<RecrutementDTO> getAllRecrutements(Map<String, String> searchParams, Pageable pageable) {
+    public Page<RecrutementDTO> readAllRecrutement(Map<String, String> searchParams, Pageable pageable) {
         var booleanBuilder = new BooleanBuilder();
         buildSearch(searchParams, booleanBuilder);
-        return recrutementRepository.findAll(booleanBuilder, pageable)
-                .map(recrutementMapper::asDto);
+        Page<RecrutementEntity> entities = recrutementRepository.findAll(pageable);
+        return entities.map(recrutementMapper::asDto);
     }
 
     private void buildSearch(Map<String, String> searchParams, BooleanBuilder booleanBuilder) {
@@ -78,6 +112,21 @@ public class RecrutementServiceImpl implements RecrutementService {
             var qEntity = QRecrutementEntity.recrutementEntity;
             if (searchParams.containsKey("libelle"))
                 booleanBuilder.and(qEntity.libelle.containsIgnoreCase(searchParams.get("libelle")));
+
+
+            if (searchParams.containsKey("dateRecrutement")) {
+                Date dateRecrutement = null;
+                try {
+                    dateRecrutement = new SimpleDateFormat("yyyy-MM-dd").parse(searchParams.get("dateRecrutement"));
+                } catch (ParseException e) {
+                    throw new RuntimeException(e);
+                }
+                booleanBuilder.and(qEntity.dateRecrutement.eq(dateRecrutement));
+            }
+
+            if (searchParams.containsKey("typeContrat"))
+                booleanBuilder.and(qEntity.typeContrat.eq(TypeContrat.valueOf(searchParams.get("typeContrat"))));
+
         }
     }
 

@@ -1,16 +1,17 @@
-package com.webgram.dgpsn.mappers;
+    package com.webgram.dgpsn.mappers;
 
-import com.webgram.dgpsn.entities.BudgetPassationEntity;
-import com.webgram.dgpsn.entities.RecrutementEntity;
-import com.webgram.dgpsn.models.BudgetPassationDTO;
-import com.webgram.dgpsn.models.RecrutementDTO;
-import org.mapstruct.Mapper;
-import org.mapstruct.ReportingPolicy;
+    import com.webgram.dgpsn.entities.BudgetPassationEntity;
+    import com.webgram.dgpsn.entities.RecrutementEntity;
+    import com.webgram.dgpsn.models.BudgetPassationDTO;
+    import com.webgram.dgpsn.models.RecrutementDTO;
+    import org.mapstruct.*;
 
-@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = "spring")
-public interface RecrutementMapper extends EntityMapper<RecrutementDTO, RecrutementEntity> {
+    @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = "spring",  uses = {CaracteristiqueExigeMapper.class} )
+    public interface RecrutementMapper extends EntityMapper<RecrutementDTO, RecrutementEntity> {
+        @Override
+        RecrutementDTO asDto(RecrutementEntity entity);
 
-    RecrutementDTO asDto(RecrutementEntity entity);
+        @Override
+        RecrutementEntity asEntity(RecrutementDTO dto);
 
-    RecrutementEntity asEntity(RecrutementDTO dto);
-}
+    }

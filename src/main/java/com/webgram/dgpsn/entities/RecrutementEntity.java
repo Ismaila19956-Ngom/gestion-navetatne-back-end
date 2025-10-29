@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Table(name = "recrutement")
@@ -30,4 +32,10 @@ public class RecrutementEntity {
     @Temporal(TemporalType.DATE)
     private Date dateRecrutement;
 
+    @OneToMany(
+            mappedBy = "recrutement",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private Set<CaracteristiqueExigeEntity> caracteristiques = new HashSet<>(); // Initialisez toujours les collections !
 }
