@@ -12,9 +12,7 @@ import com.opencsv.bean.StatefulBeanToCsvBuilder;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import com.webgram.dgpsn.annotations.Journal;
-import com.webgram.dgpsn.entities.BudgetActivityEntity;
-import com.webgram.dgpsn.entities.ExpenseActivityEntity;
-import com.webgram.dgpsn.entities.ManagementUnitEntity;
+import com.webgram.dgpsn.entities.*;
 import com.webgram.dgpsn.entities.enums.StructureProjectType;
 import com.webgram.dgpsn.entities.enums.TypeProjet;
 import com.webgram.dgpsn.exceptions.PublishProjectOutOfBoundsException;
@@ -81,6 +79,8 @@ public class ManagementUnitServiceImpl implements ManagementUnitService {
     private final UserRepository userRepository;
     private final BudgetActivityRepository budgetActivityRepository;
     private final ExpenseActivityRepository expenseActivityRepository;
+    private final ValueIndicatorRepository valueIndicatorRepository;
+    private final TacheRepository tacheRepository;
 
     final WorkbookService workbookService;
 
@@ -427,26 +427,26 @@ public class ManagementUnitServiceImpl implements ManagementUnitService {
         }
     }
 
-    public TreeNodeDTO readTreeManagmentUnit(Long projetId) {
-
-        ManagementUnitEntity project = managementUnitRepository.findById(projetId)
-                .filter(p -> p.getType() == TypeProjet.PROJECT)
-                .orElseThrow(() -> new NoSuchElementException("Projet non trouvé ou type incorrect."));
-
-        TreeNodeDTO rootNode = new TreeNodeDTO(project.getId(), project.getCode(), project.getNomenclature(), project.getName(), project.getType());
-
-        // Charger toutes les entités
-        List<ManagementUnitEntity> allProjects = managementUnitRepository.findAll();
-        Map<Long, TreeNodeDTO> nodeMap = new HashMap<>();
-        allProjects.forEach(p -> nodeMap.put(p.getId(), new TreeNodeDTO(p.getId(), p.getCode(), p.getNomenclature(), p.getName(), p.getType())));
-
-        // Construire l'arbre récursivement
-        buildSubTreeRecursively(rootNode, allProjects, nodeMap);
-
-        // Trier l'arbre
-        sortRecursively(rootNode);
-        return rootNode;
-    }
+//    public TreeNodeDTO readTreeManagmentUnit(Long projetId) {
+//
+//        ManagementUnitEntity project = managementUnitRepository.findById(projetId)
+//                .filter(p -> p.getType() == TypeProjet.PROJECT)
+//                .orElseThrow(() -> new NoSuchElementException("Projet non trouvé ou type incorrect."));
+//
+//        TreeNodeDTO rootNode = new TreeNodeDTO(project.getId(), project.getCode(), project.getNomenclature(), project.getName(), project.getType());
+//
+//        // Charger toutes les entités
+//        List<ManagementUnitEntity> allProjects = managementUnitRepository.findAll();
+//        Map<Long, TreeNodeDTO> nodeMap = new HashMap<>();
+//        allProjects.forEach(p -> nodeMap.put(p.getId(), new TreeNodeDTO(p.getId(), p.getCode(), p.getNomenclature(), p.getName(), p.getType())));
+//
+//        // Construire l'arbre récursivement
+//        buildSubTreeRecursively(rootNode, allProjects, nodeMap);
+//
+//        // Trier l'arbre
+//        sortRecursively(rootNode);
+//        return rootNode;
+//    }
 
     @Override
     public TreeNodeDTO addNodeToTreeManagmentUnit(Long parentId, TreeNodeDTO nodeDTO) {
@@ -546,11 +546,11 @@ public class ManagementUnitServiceImpl implements ManagementUnitService {
                 });
     }
 
-    private void sortRecursively(TreeNodeDTO node) {
-        node.getChildren().removeIf(child -> child.getType() == null); // Supprimer les enfants sans type
-        node.getChildren().sort(Comparator.comparing(child -> child.getType().ordinal()));
-        node.getChildren().forEach(this::sortRecursively);
-    }
+//    private void sortRecursively(TreeNodeDTO node) {
+//        node.getChildren().removeIf(child -> child.getType() == null); // Supprimer les enfants sans type
+//        node.getChildren().sort(Comparator.comparing(child -> child.getType().ordinal()));
+//        node.getChildren().forEach(this::sortRecursively);
+//    }
 
     private Double aggregateBudgets(TreeNodeDTO node) {
         if (node.getChildren().isEmpty()) {
@@ -578,6 +578,144 @@ public class ManagementUnitServiceImpl implements ManagementUnitService {
         node.setTauxExecution(tauxExecution);
 
         return totalBudget;
+    }
+
+    ////////Laty
+    @Override
+    public TreeNodeDTO readTreeManagmentUnit(Long projetId) {
+        ManagementUnitEntity project = managementUnitRepository.findById(projetId)
+                .filter(p -> p.getType() == TypeProjet.PROJECT)
+                .orElseThrow(() -> new NoSuchElementException("Projet non trouvé ou type incorrect."));
+
+        TreeNodeDTO rootNode = new TreeNodeDTO(
+                project.getId(),
+                project.getCode(),
+                project.getNomenclature(),
+                project.getName(),
+                project.getType()
+        );
+
+        // Charger toutes les entités
+        List<ManagementUnitEntity> allProjects = managementUnitRepository.findAll();
+        List<ValueIndicatorEntity> allIndicators = valueIndicatorRepository.findAll();
+        List<TacheEntity> allTaches = tacheRepository.findAll();
+
+        Map<Long, TreeNodeDTO> nodeMap = new HashMap<>();
+
+        // Créer les nœuds pour les ManagementUnit
+        allProjects.forEach(p ->
+                nodeMap.put(p.getId(), new TreeNodeDTO(
+                        p.getId(),
+                        p.getCode(),
+                        p.getNomenclature(),
+                        p.getName(),
+                        p.getType()
+                ))
+        );
+
+        // Construire l'arbre avec indicateurs et tâches
+        buildCompleteTree(rootNode, allProjects, allIndicators, allTaches, nodeMap);
+
+        // Trier l'arbre
+        sortRecursively(rootNode);
+
+        return rootNode;
+    }
+
+    private void buildCompleteTree(
+            TreeNodeDTO parentNode,
+            List<ManagementUnitEntity> allProjects,
+            List<ValueIndicatorEntity> allIndicators,
+            List<TacheEntity> allTaches,
+            Map<Long, TreeNodeDTO> nodeMap) {
+
+        Long parentId = parentNode.getId();
+
+        // 1. Ajouter les enfants ManagementUnit (OBJECTIF, ACTION, ACTIVITY)
+        allProjects.stream()
+                .filter(p -> p.getParent() != null && p.getParent().getId().equals(parentId))
+                .forEach(child -> {
+                    TreeNodeDTO childNode = nodeMap.get(child.getId());
+                    parentNode.getChildren().add(childNode);
+
+                    // Récursion pour les sous-niveaux
+                    buildCompleteTree(childNode, allProjects, allIndicators, allTaches, nodeMap);
+                });
+
+        // 2. Si c'est une ACTIVITY, ajouter les indicateurs
+        if (parentNode.getType() == TypeProjet.ACTIVITY) {
+            allIndicators.stream()
+                    .filter(indicator -> indicator.getActivity() != null &&
+                            indicator.getActivity().getId().equals(parentId))
+                    .forEach(indicator -> {
+                        TreeNodeDTO indicatorNode = createIndicatorNode(indicator);
+                        parentNode.getChildren().add(indicatorNode);
+
+                        // 3. Pour chaque indicateur, ajouter les tâches associées
+                        addTachesToIndicator(indicatorNode, allTaches, parentId);
+                    });
+        }
+    }
+
+    private TreeNodeDTO createIndicatorNode(ValueIndicatorEntity indicator) {
+        TreeNodeDTO node = new TreeNodeDTO();
+        node.setId(indicator.getId());
+        node.setCode(indicator.getIndicatorProjet() != null &&
+                indicator.getIndicatorProjet().getIndicator() != null ?
+                indicator.getIndicatorProjet().getIndicator().getCode() : "IND-" + indicator.getId());
+        node.setName(indicator.getIndicatorProjet() != null &&
+                indicator.getIndicatorProjet().getIndicator() != null ?
+                indicator.getIndicatorProjet().getIndicator().getLibelle() : "Indicateur");
+        node.setNomenclature(node.getCode());
+        node.setType(TypeProjet.INDICATOR);
+        node.setTargetValue(indicator.getTargetValue());
+        node.setValueReched(indicator.getValueReched());
+        node.setStartDate(indicator.getStartDate());
+        node.setEndDate(indicator.getEndDate());
+        node.setChildren(new ArrayList<>());
+
+        return node;
+    }
+
+    private void addTachesToIndicator(TreeNodeDTO indicatorNode, List<TacheEntity> allTaches, Long activityId) {
+        allTaches.stream()
+                .filter(tache -> tache.getActivite() != null &&
+                        tache.getActivite().getId().equals(activityId))
+                .forEach(tache -> {
+                    TreeNodeDTO tacheNode = createTacheNode(tache);
+                    indicatorNode.getChildren().add(tacheNode);
+                });
+    }
+
+    private TreeNodeDTO createTacheNode(TacheEntity tache) {
+        TreeNodeDTO node = new TreeNodeDTO();
+        node.setId(tache.getId());
+        node.setCode("TACHE-" + tache.getId());
+        node.setName("Tâche - " + (tache.getCommentaire() != null ?
+                tache.getCommentaire().substring(0, Math.min(50, tache.getCommentaire().length())) :
+                "Sans description"));
+        node.setNomenclature(node.getCode());
+        node.setType(TypeProjet.TACHE);
+        node.setTrimestre(tache.getTrimestre());
+        node.setMois(tache.getMois());
+        node.setSemaines(tache.getSemaines());
+        node.setCommentaire(tache.getCommentaire());
+        node.setStatut(tache.getStatut() != null ? tache.getStatut().name() : null);
+        node.setStartDate(tache.getDateDebut());
+        node.setEndDate(tache.getDateFin());
+        node.setChildren(new ArrayList<>());
+
+        return node;
+    }
+
+    private void sortRecursively(TreeNodeDTO node) {
+        if (node.getChildren() == null || node.getChildren().isEmpty()) {
+            return;
+        }
+
+        node.getChildren().removeIf(child -> child.getType() == null);
+        node.getChildren().sort(Comparator.comparing(child -> child.getType().ordinal()));
+        node.getChildren().forEach(this::sortRecursively);
     }
 
 }

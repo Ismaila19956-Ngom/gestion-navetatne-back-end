@@ -1,0 +1,40 @@
+[33m6081a62[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32msis[m[33m, [m[1;31morigin/sis[m[33m)[m feat: travail initial sur la branche sis
+[33mec1b529[m[33m ([m[1;31morigin/dev[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mdev[m[33m)[m Merge branch 'sis' into 'dev'
+[33mfbbadc6[m Merge remote-tracking branch 'origin' into sis
+[33m4db3564[m commit coreection endpoint courriers post and get
+[33mf25a6f7[m Merge branch 'elimane' into 'dev'
+[33m2828331[m[33m ([m[1;31morigin/elimane[m[33m)[m Merge branch 'dev' into elimane
+[33m53c5aca[m add configration
+[33m69dc965[m Merge branch 'elimane' into 'dev'
+[33m6ad17c1[m commit configuration classe
+[33mc5f5cc7[m Merge branch 'dev' into elimane
+[33m14e74c2[m Merge branch 'abel' into 'dev'
+[33mbbd05ae[m[33m ([m[1;31morigin/abel[m[33m)[m abel-commit-uu
+[33m77f3f2e[m 5c99b72 -merge abel-dernier
+[33m5ecd214[m changement
+[33m5c99b72[m commitqqqq1
+[33mcaa3b75[m commit1
+[33mc5d049e[m commit
+[33m0cc3c15[m Merge branch 'elimane' into 'dev'
+[33med5eb55[m Merge branch 'dev' into elimane
+[33m00ffb99[m parametrage budget
+[33m1ed5a6a[m Merge branch 'sis' into 'dev'
+[33me05e968[m endpoint courrier
+[33ma7e04fe[m[33m ([m[1;31morigin/laty[m[33m)[m Merge branch 'abel' into 'dev'
+[33m2f5550e[m dd
+[33m5598194[m dd
+[33madb8b8a[m 1
+[33m1785274[m Merge branch 'dev' into abel
+[33mc0a4da8[m commit
+[33me414867[m Merge branch 'laty' into 'dev'
+[33m23e27c8[m Merge branch 'dev' into laty
+[33mf70d58b[m label type frais et prise en charge
+[33mfc2c721[m Merge branch 'laty' into 'dev'
+[33mc5ee358[m first commit laty
+[33mc7def85[m Merge branch 'abel' into 'dev'
+[33m496600e[m coomit-12
+[33m35606ac[m Merge branch 'issa' into 'dev'
+[33m97c41da[m initialisation du projet avec la partie securté
+[33mde520f4[m initialisation du projet avec la partie securté
+[33m206c836[m commit-29-09-2025
+[33m6caceee[m first-commit

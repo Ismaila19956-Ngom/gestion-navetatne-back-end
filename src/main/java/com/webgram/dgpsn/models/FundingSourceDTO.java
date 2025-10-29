@@ -3,7 +3,11 @@ package com.webgram.dgpsn.models;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.webgram.dgpsn.entities.TacheEntity;
+import com.webgram.dgpsn.entities.ValueIndicatorEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.*;
 import lombok.experimental.Accessors;
 import com.webgram.dgpsn.annotations.JournalAttribute;
@@ -32,11 +36,20 @@ public class FundingSourceDTO implements Serializable {
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private ManagementUnitDTO managementUnit;
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private BudgetDgpsnDTO budgetGlobal;
     private StructureDTO structure;
     private BudgetDTO budget;
+    private TacheEntity tache;
+    private ValueIndicatorEntity valueIndicator;
+
     @JournalAttribute
     @NotNull
     private Long managementUnitId;
+    private Long tacheId;
+    private Long valueIndicatorId;
     private Long structureId;
     private Long budgetId;
+    private Long budgetGlobalId;
 }
