@@ -17,7 +17,9 @@ public enum TypeProjet {
     PROJECT("Projet"),
     OBJECTIF("Objectif"),
     ACTION("Action"),
-    ACTIVITY("Activité");
+    ACTIVITY("Activité"),
+    INDICATOR("Indicateur"),
+    TACHE("Tâche");
 
     @Getter
     @Setter

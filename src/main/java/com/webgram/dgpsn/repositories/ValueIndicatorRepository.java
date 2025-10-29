@@ -46,5 +46,7 @@ public interface ValueIndicatorRepository extends JpaRepository<ValueIndicatorEn
         return findAll(booleanBuilder, pageable);
     }
 
+    List<ValueIndicatorEntity> findByActivityId(Long activityId);
+
     Optional<List<ValueIndicatorEntity>> findByIndicatorProjet(IndicatorProjetEntity indicatorProjet);
 }
