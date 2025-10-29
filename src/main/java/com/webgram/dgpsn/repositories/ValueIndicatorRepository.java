@@ -18,7 +18,7 @@ import java.util.Optional;
 @Repository
 public interface ValueIndicatorRepository extends JpaRepository<ValueIndicatorEntity, Long>, QuerydslPredicateExecutor<ValueIndicatorEntity> {
 
-    default Page<ValueIndicatorEntity> readAllByFilters(Pageable pageable,  Long projetId, Long indicatorId
+    default Page<ValueIndicatorEntity> readAllByFilters(Pageable pageable,  Long projetId, Long activityId, Long indicatorId
         , String period, Double targetValue, Double valueReched, Date startDate, Date endDate) {
         var booleanBuilder = new BooleanBuilder();
 
@@ -33,6 +33,9 @@ public interface ValueIndicatorRepository extends JpaRepository<ValueIndicatorEn
         }
         if(Objects.nonNull(projetId)){
             booleanBuilder.and(QValueIndicatorEntity.valueIndicatorEntity.projet.id.eq(projetId));
+        }
+        if(Objects.nonNull(activityId)){
+            booleanBuilder.and(QValueIndicatorEntity.valueIndicatorEntity.activity.id.eq(activityId));
         }
         if(Objects.nonNull(startDate)){
             booleanBuilder.and(QValueIndicatorEntity.valueIndicatorEntity.startDate.eq(startDate));

@@ -50,6 +50,11 @@ public class ValueIndicatorEntity extends Auditable<Long> implements Serializabl
     @ManyToOne
     @JoinColumn(name = "vind_linked_projet")
     private ManagementUnitEntity projet;
+
+    @ManyToOne
+    @JoinColumn(name = "vind_linked_activity")
+    private ManagementUnitEntity activity;
+
     @Column(name = "vind_validation")
     private Boolean valid;
 

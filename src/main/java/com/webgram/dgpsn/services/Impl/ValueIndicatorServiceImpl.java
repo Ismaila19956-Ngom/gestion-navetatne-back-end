@@ -96,9 +96,9 @@ public class ValueIndicatorServiceImpl implements ValueIndicatorService {
     }
 
     @Override
-    public Page<ValueIndicatorDTO> readAll(Pageable pageable, Long projetId, Long indicatorId, String period, Double targetValue, Double valueReched, Date startDate, Date endDate) {
+    public Page<ValueIndicatorDTO> readAll(Pageable pageable, Long projetId, Long activityId, Long indicatorId, String period, Double targetValue, Double valueReched, Date startDate, Date endDate) {
         return valueIndicatorRepository
-                .readAllByFilters(pageable, projetId, indicatorId, period, targetValue, valueReched, startDate, endDate)
+                .readAllByFilters(pageable, projetId, activityId, indicatorId, period, targetValue, valueReched, startDate, endDate)
                 .map(valueIndicatorMapper::asDto);
     }
 

@@ -39,7 +39,12 @@ public class ValueIndicatorDTO implements Serializable {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private ManagementUnitDTO projet;
 
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private ManagementUnitDTO activity;
+
     private Long projetId;
+    private Long activityId;
     private Long indicatorProjetId;
 
 

@@ -27,6 +27,7 @@ public abstract class ValueIndicatorMapper implements EntityMapper<ValueIndicato
 
     @Mapping(target = "indicatorProjet", source = "indicatorProjetId", qualifiedByName = "getIndicatorProjetById")
     @Mapping(target = "projet", source = "projetId", qualifiedByName = "getProject")
+    @Mapping(target = "activity", source = "activityId", qualifiedByName = "getActivity")
     public abstract ValueIndicatorEntity asEntity(ValueIndicatorDTO dto);
 
 
@@ -38,6 +39,14 @@ public abstract class ValueIndicatorMapper implements EntityMapper<ValueIndicato
 //    @Mapping(source = "period.code", target = "periodCode")
     @Mapping(source = "indicatorProjet.indicator.code", target = "indicatorCode")
     public abstract ValueIndicatorExcelDTO asExcelDto(ValueIndicatorEntity entity);
+
+    @Named("getActivity")
+    public ManagementUnitEntity getActivity(Long activityId) {
+        if(Objects.nonNull(activityId)) {
+            return ManagementUnitEntity.builder().id(activityId).build();
+        }
+        return null;
+    }
 
 //    @Named("getPeriodByCode")
 //    public PeriodEntity getPriod(String periodCode) {

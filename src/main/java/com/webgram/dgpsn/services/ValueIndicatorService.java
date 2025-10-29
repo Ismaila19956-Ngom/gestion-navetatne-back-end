@@ -18,6 +18,7 @@ public interface ValueIndicatorService {
     Page<ValueIndicatorDTO> readAll(
             Pageable pageable,
             Long projetId,
+            Long activityId,
             Long indicatorId,
             String period,
             Double targetValue,
