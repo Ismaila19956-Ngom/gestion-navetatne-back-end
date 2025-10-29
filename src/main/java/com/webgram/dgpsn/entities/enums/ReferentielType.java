@@ -89,16 +89,13 @@ public enum ReferentielType {
     FRAIS("Frais", "Frais"),
     PRISE_EN_CHARGE("Prise en charge", "Prise en charge"),
     POSTE("Poste", "Poste Agent Rh"),
-<<<<<<< HEAD
     TYPE_CONTRAT("Type de contrat", "Paramétrage type de contrat RH"),
     TYPE_COURRIER("Type courrier", "Parametrage type courrier"),
-    TYPE_CARACTERISTIQUE("Type caracteristiques recrutement", "Parametrage type caracteristiques recrutement");
-=======
+    TYPE_CARACTERISTIQUE("Type caracteristiques recrutement", "Parametrage type caracteristiques recrutement"),
     URGENCE_COURRIER("urgence courrier", "Parametrage urgence"),
     NATURE_COURRIER("nature courrier", "Parametrage nature"),
     STATUT_COURRIER("statut courrier", "Parametrage statut"),
     MODE_ENVOIE_COURRIER("mode envoie courrier", "Parametrage mode envoie");
->>>>>>> dev
 //    STARTUP("Startup", "Paramétrage startup"),;
 
 

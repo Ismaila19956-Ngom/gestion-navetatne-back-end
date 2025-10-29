@@ -572,7 +572,6 @@ public enum SecurityPermissions {
     EXPORT_AGENT("Export agent", Feature.AGENT),
     READ_FILE_AGENT("Read file agent", Feature.AGENT),
 
-<<<<<<< HEAD
     ADD_CARACTERISTIQUE("Ajouter caracteristique", Feature.CARACTERISTIQUE),
     DELETE_CARACTERISTIQUE("Consulter caracteristique", Feature.CARACTERISTIQUE),
     EDIT_CARACTERISTIQUE("Ajouter caracteristique", Feature.CARACTERISTIQUE),
@@ -590,7 +589,6 @@ public enum SecurityPermissions {
     EXPORT_RECRUTEMENT("Export recrutement", Feature.RECRUTEMENT),
     READ_FILE_RECRUTEMENT("read file recrutement", Feature.RECRUTEMENT),
 
-=======
     /*parametrage plant comptable*/
     READ_PLAN_COMPTABLE("Consulter parametrage plant comptable", Feature.PLAN_COMPTABLE),
     ADD_PLAN_COMPTABLE("Ajouter parametrage plant comptable", Feature.PLAN_COMPTABLE),
@@ -599,7 +597,6 @@ public enum SecurityPermissions {
     IMPORT_PLAN_COMPTABLE("Import parametrage plant comptable", Feature.PLAN_COMPTABLE),
     EXPORT_PLAN_COMPTABLE("Export parametrage plant comptable", Feature.PLAN_COMPTABLE),
     READ_FILE_PLAN_COMPTABLE("Read file parametrage plant comptable", Feature.PLAN_COMPTABLE),
->>>>>>> dev
 
     READ_MEETINGTYPE("Consulter Type reunion", Feature.MEETINGTYPE),
     ADD_MEETINGTYPE("Ajouter Type reunion", Feature.MEETINGTYPE),
