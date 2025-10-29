@@ -16,6 +16,6 @@ public interface TacheService {
     void delete(Long id);
     Page<TacheDto> readAll(Map<String, String> searchParams, Pageable pageable);
     List<TacheDto> readByActiviteId(Long activiteId);
-    TacheDto updateStatut(Long id, StatutTache statut);
+    void updateStatut(Long id, StatutTache statut);
     void exportTache(PrintWriter writer);
 }

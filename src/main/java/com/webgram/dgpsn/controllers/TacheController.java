@@ -95,11 +95,11 @@ public class TacheController {
     @ResponseStatus(HttpStatus.OK)
     public Response<Object> updateTacheStatut(
             @Parameter(name = "tacheId", description = "The Tache id") @PathVariable Long tacheId,
-            @Parameter(name = "statut", description = "New status (PLANIFIE, EN_COURS, TERMINE)") 
+            @Parameter(name = "statut", description = "New status (PLANIFIE, EN_COURS, TERMINE)")
             @RequestParam StatutTache statut) {
         try {
-            var dto = tacheService.updateStatut(tacheId, statut);
-            return Response.ok().setPayload(dto).setMessage("Statut de la tâche mis à jour");
+            tacheService.updateStatut(tacheId, statut);
+            return Response.ok().setPayload(null).setMessage("Statut de la tâche mis à jour");
         } catch (Exception ex) {
             return Response.badRequest().setMessage(ex.getMessage());
         }

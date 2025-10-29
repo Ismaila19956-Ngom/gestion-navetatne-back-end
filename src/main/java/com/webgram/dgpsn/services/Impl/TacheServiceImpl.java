@@ -17,6 +17,7 @@ import com.webgram.dgpsn.models.TacheDto;
 import com.webgram.dgpsn.repositories.TacheRepository;
 import com.webgram.dgpsn.services.modelExcel.TacheExcelDTO;
 import com.webgram.dgpsn.services.TacheService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -88,13 +89,11 @@ public class TacheServiceImpl implements TacheService {
     }
 
     @Override
-    public TacheDto updateStatut(Long id, StatutTache statut) {
-        var entity = tacheRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Tache not found with id: " + id));
-        
-        entity.setStatut(statut);
-        var updatedEntity = tacheRepository.save(entity);
-        return tacheMapper.asDto(updatedEntity);
+    public void updateStatut(Long tacheId, StatutTache nouveauStatut) {
+        int rowsUpdated = tacheRepository.updateStatut(tacheId, nouveauStatut);
+        if (rowsUpdated == 0) {
+            throw new EntityNotFoundException("Tâche non trouvée");
+        }
     }
 
     @Override
