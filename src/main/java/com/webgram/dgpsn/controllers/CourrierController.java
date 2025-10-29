@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.webgram.dgpsn.entities.CourrierEntity;
 import com.webgram.dgpsn.entities.enums.CourrierType;
@@ -77,12 +78,27 @@ public class CourrierController {
     }
 
     @Operation(summary = "Lire un courrier", description = "Endpoint pour récupérer un courrier par son ID")
-    @GetMapping("/{courrierId}")
+    /* @GetMapping("/{courrierId}")
     @ResponseStatus(HttpStatus.OK)
     public Optional<CourrierEntity> readCourrier(
             @Parameter(name = "courrierId", description = "ID du courrier à récupérer")
             @PathVariable Long courrierId) {
         return courrierService.read(courrierId);
+    } */
+    @GetMapping("/{courrierId}")
+    public ResponseEntity<?> readCourrier(@PathVariable Long courrierId) {
+        try {
+            Optional<CourrierEntity> courrier = courrierService.read(courrierId);
+            if (courrier.isPresent()) {
+                return ResponseEntity.ok(courrier.get());
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("Courrier non trouvé avec ID: " + courrierId);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erreur: " + e.getMessage());
+        }
     }
 
     @Operation(summary = "Archiver un courrier", description = "Endpoint pour archiver un courrier")

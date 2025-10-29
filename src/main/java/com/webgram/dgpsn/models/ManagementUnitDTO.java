@@ -89,6 +89,7 @@ public class ManagementUnitDTO {
     private List<StructureProjectDTO> ministerTutelles;
 
     private Long axeId;
+    private Long typeContratId;
     private Long responsibleId;
     private Long parentId;
     private List<Long> subSectorIds;
