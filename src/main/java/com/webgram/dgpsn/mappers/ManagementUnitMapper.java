@@ -20,6 +20,7 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = "spring")
 public abstract class ManagementUnitMapper implements EntityMapper<ManagementUnitDTO, ManagementUnitEntity> {
@@ -63,6 +64,9 @@ public abstract class ManagementUnitMapper implements EntityMapper<ManagementUni
     @Mapping(target = "subSectors", source = "subSectorIds", qualifiedByName = "mapSubSector")
     @Mapping(target = "executionZones", source = "executionZoneIds", qualifiedByName = "mapExecutionZone")
     @Mapping(target = "beneficiaries", source = "beneficiarieIds", qualifiedByName = "mapBeneficiary")
+    @Mapping(target = "verificationSources", source = "verificationSourceIds", qualifiedByName = "mapVerificationSource")
+    @Mapping(target = "actorsInvolved", source = "actorInvolvedIds", qualifiedByName = "mapActorInvolved")
+    @Mapping(target = "structure", source = "structureId", qualifiedByName = "getStructure")
     public abstract ManagementUnitEntity asEntity(ManagementUnitDTO dto);
 
 //    @Mapping(target = "minister", source = "codeMinister", qualifiedByName = "getStructureByCode")
@@ -203,6 +207,32 @@ public abstract class ManagementUnitMapper implements EntityMapper<ManagementUni
         }
         return null;
     }
+
+    @Named("mapActorInvolved")
+    public List<StructureEntity> mapActorInvolved(List<Long> actorInvolvedIds) {
+        List<StructureEntity> actorsInvolved = new ArrayList<>();
+        if(Objects.nonNull(actorInvolvedIds)) {
+            for(Long labelId: actorInvolvedIds) {
+                actorsInvolved.add(StructureEntity.builder().id(labelId).build());
+            }
+            return actorsInvolved;
+        }
+        return null;
+    }
+
+    @Named("mapVerificationSource")
+    public List<LabelEntity> mapVerificationSource(List<Long> verificationSourceIds) {
+        List<LabelEntity> verificationSources = new ArrayList<>();
+        if(Objects.nonNull(verificationSourceIds)) {
+            for(Long labelId: verificationSourceIds) {
+                verificationSources.add(LabelEntity.builder().id(labelId).build());
+            }
+            return verificationSources;
+        }
+        return null;
+    }
+
+
     @Named("getSubSector")
     public SubSectorEntity getSubSector(Long subSectorId) {
         if(Objects.nonNull(subSectorId)){

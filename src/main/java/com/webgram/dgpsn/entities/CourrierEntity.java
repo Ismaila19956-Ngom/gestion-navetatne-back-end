@@ -1,12 +1,9 @@
 package com.webgram.dgpsn.entities;
 
 import com.webgram.dgpsn.entities.enums.CourrierType;
-import com.webgram.dgpsn.entities.enums.NatureCourrier;
 import lombok.*;
 import lombok.experimental.Accessors;
 import com.webgram.dgpsn.entities.audits.Auditable;
-import com.webgram.dgpsn.entities.enums.UrgenceCourrier;
-import com.webgram.dgpsn.entities.enums.StatutCourrier;
 
 import jakarta.persistence.*;
 
@@ -46,18 +43,21 @@ public class CourrierEntity extends Auditable<Long> implements Serializable {
     @Column(name = "cour_type", nullable = false)
     private CourrierType type;
 
-    // NATURE : ACADEMIQUE vs ADMINISTRATIF
-    @Enumerated(EnumType.STRING)
-    @Column(name = "cour_nature", nullable = false)
-    private NatureCourrier nature;
+    @ManyToOne
+    @JoinColumn(name = "cour_nature")
+    private LabelEntity nature;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "cour_urgence", nullable = false)
-    private UrgenceCourrier urgence;
+    @ManyToOne
+    @JoinColumn(name = "cour_urgence")
+    private LabelEntity urgence;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "cour_statut", nullable = false)
-    private StatutCourrier statut;
+    @ManyToOne
+    @JoinColumn(name = "cour_statut")
+    private LabelEntity statut;
+
+    @ManyToOne
+    @JoinColumn(name = "cour_mode_envoi")
+    private LabelEntity modeEnvoi;
 
     // Dates communes
     @Column(name = "cour_date_courrier", nullable = false)
@@ -79,15 +79,10 @@ public class CourrierEntity extends Auditable<Long> implements Serializable {
     @Column(name = "cour_numero_suivi")
     private String numeroSuivi;
 
-    @Column(name = "cour_mode_envoi")
-    private String modeEnvoi;
-
     @Column(name = "cour_instructions", columnDefinition = "TEXT")
     private String instructions;
 
     @Column(name = "cour_notes", columnDefinition = "TEXT")
     private String notes;
 
-    @Column(name = "cour_priorite")
-    private String priorite;
 }

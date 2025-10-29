@@ -12,7 +12,7 @@ public enum ReferentielType {
     ETAT_AVANCEMENT("Etat d'avancement", "Paramétrage etat d'avancement"),
     FONCTION("Fonction", "Paramétrage fonction"),
     CATEGORIE("Categorie", "Paramétrage catégorie"),
-//    CRITICITE("Criticité", "Paramétrage criticité"),
+    //    CRITICITE("Criticité", "Paramétrage criticité"),
 //    DELAY_IMPACT("delay Impact", "Paramétrage delay impact"),
 //    FINANCIAL_IMPACT("finacial impact", "Paramétrage financial impact"),
 //    CANAL_RESOLUTION("Canal de résolution", "Paramétrage canal de résolution"),
@@ -20,16 +20,16 @@ public enum ReferentielType {
 //    GROUPE_PARTENAIRE("Groupe de partenaire", "Paramétrage groupe partenaire"),
 //    NATURE("Nature", "Paramétrage nature"),
     PAYS("Pays", "Paramétrage pays"),
-//    PHASE("Phase", "Paramétrage phase"),
+    //    PHASE("Phase", "Paramétrage phase"),
     SECTEUR("Secteur", "Paramétrage secteur"),
-//    PARTIE_PRENANTE("Partie prenante", "Paramétrage Partie prenante"),
+    //    PARTIE_PRENANTE("Partie prenante", "Paramétrage Partie prenante"),
 //    SOURCE("Source", "Paramétrage source"),
 //    TYPE_FINANCEMENT("Type de financement", "Paramétrage type de financement"),
 //    TYPE_CONDITIONNALITE("Type de conditionnalité", "Paramétrage type de conditionnalité"),
 //    TYPE_REUNION("Type de reunion", "Paramétrage type de reunion"),
 //    TYPE_REFERENCE_REGLEMENTAIRE("Type de référence réglementaire", "Paramétrage type de référence réglementaire"),
     TYPE_DOCUMENT("Type de document", "Paramétrage type de document"),
-//    TAG("Tag", "Paramétrage tag"),
+    //    TAG("Tag", "Paramétrage tag"),
     TYPE_INDICATEUR("Type d'indicateur", "Paramétrage type indicateur"),
     TYPE_MISSION("Type de mission", "Paramétrage type de mission"),
     UNITE("Unite", "Paramétrage unités"),
@@ -48,7 +48,7 @@ public enum ReferentielType {
     CATEGORY_REQUETE("Categorie requete", "Paramétrage requete activity"),
     //    TYPE_REQUETE("Types requetes","Paramétrage requete activity"),
     STATUS("Status", "Paramétrage Status"),
-//    CATEGORY_CONFORMITE_ENVIRONNEMENTAL("Categorie conformites environnemental", "Paramétrage conformites reglementaire environnemental"),
+    //    CATEGORY_CONFORMITE_ENVIRONNEMENTAL("Categorie conformites environnemental", "Paramétrage conformites reglementaire environnemental"),
 //    CATEGORY_IMPACT_SOCIAL("Categorie impact social", "Paramétrage impact social"),
 //    TYPE_IMPACT_SOCIAL("Type impact social", "Paramétrage type impact social"),
 //    CATEGORY_CONFORMITE_SOCIAL("Categorie conformite social", "Paramétrage conformites reglementaire social"),
@@ -89,13 +89,17 @@ public enum ReferentielType {
     FRAIS("Frais", "Frais"),
     PRISE_EN_CHARGE("Prise en charge", "Prise en charge"),
     POSTE("Poste", "Poste Agent Rh"),
+<<<<<<< HEAD
     TYPE_CONTRAT("Type de contrat", "Paramétrage type de contrat RH"),
     TYPE_COURRIER("Type courrier", "Parametrage type courrier"),
     TYPE_CARACTERISTIQUE("Type caracteristiques recrutement", "Parametrage type caracteristiques recrutement");
+=======
+    URGENCE_COURRIER("urgence courrier", "Parametrage urgence"),
+    NATURE_COURRIER("nature courrier", "Parametrage nature"),
+    STATUT_COURRIER("statut courrier", "Parametrage statut"),
+    MODE_ENVOIE_COURRIER("mode envoie courrier", "Parametrage mode envoie");
+>>>>>>> dev
 //    STARTUP("Startup", "Paramétrage startup"),;
-
-
-
 
 
     @Getter

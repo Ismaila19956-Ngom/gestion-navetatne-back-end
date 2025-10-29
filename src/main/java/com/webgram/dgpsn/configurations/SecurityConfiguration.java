@@ -56,10 +56,7 @@ public class SecurityConfiguration {
                                         "/api/*/v3/api-docs/**",
                                         "/webjars/springfox-swagger-ui/**",
                                         "/api/*/v2/api-docs",
-//                                "/dgpsn-api/mediatheques/**",
-//                                "/dgpsn-api/management-unit/**",
-                                        "/auth/**",
-                                        "/courriers/**"
+                                        "/auth/**"
                                 ).permitAll()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
