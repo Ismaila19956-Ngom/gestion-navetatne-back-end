@@ -207,10 +207,16 @@
             <version>1.6.1</version>
         </dependency>
 
-        <!--        Add add actuator dependency-->
+        <!-- Add add actuator dependency -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+            <version>1.11.0</version>
         </dependency>
 
     </dependencies>

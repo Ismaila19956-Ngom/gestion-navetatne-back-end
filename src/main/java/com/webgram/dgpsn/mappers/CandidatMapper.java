@@ -16,8 +16,7 @@ public class CandidatMapper {
                 .niveauEtude(entity.getNiveauEtude())
                 .experienceProfessionnelle(entity.getExperienceProfessionnelle())
                 .postePostule(entity.getPostePostule())
-                .preselectionneEntretien(entity.isPreselectionneEntretien())
-                .selectionne(entity.isSelectionne())
+                .statusCandidature(entity.getStatusCandidature())
                 .competences(entity.getCompetences())
                 .cv(entity.getCv())
                 .build();
@@ -34,8 +33,7 @@ public class CandidatMapper {
         entity.setNiveauEtude(dto.getNiveauEtude());
         entity.setExperienceProfessionnelle(dto.getExperienceProfessionnelle());
         entity.setPostePostule(dto.getPostePostule());
-        entity.setPreselectionneEntretien(dto.isPreselectionneEntretien());
-        entity.setSelectionne(dto.isSelectionne());
+       entity.setStatusCandidature(dto.getStatusCandidature());
         entity.setCompetences(dto.getCompetences());
         entity.setCv(dto.getCv());
         return entity;
