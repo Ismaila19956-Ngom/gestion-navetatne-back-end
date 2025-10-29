@@ -572,6 +572,23 @@ public enum SecurityPermissions {
     EXPORT_AGENT("Export agent", Feature.AGENT),
     READ_FILE_AGENT("Read file agent", Feature.AGENT),
 
+    ADD_CARACTERISTIQUE("Ajouter caracteristique", Feature.CARACTERISTIQUE),
+    DELETE_CARACTERISTIQUE("Consulter caracteristique", Feature.CARACTERISTIQUE),
+    EDIT_CARACTERISTIQUE("Ajouter caracteristique", Feature.CARACTERISTIQUE),
+    READ_CARACTERISTIQUE("Modifier caracteristique", Feature.CARACTERISTIQUE),
+    IMPORT_CARACTERISTIQUE("Import caracteristique", Feature.CARACTERISTIQUE),
+    EXPORT_CARACTERISTIQUE("Export caracteristique", Feature.CARACTERISTIQUE),
+    READ_FILE_CARACTERISTIQUE("read file caracteristique", Feature.CARACTERISTIQUE),
+
+
+    ADD_RECRUTEMENT("Ajouter recrutement", Feature.RECRUTEMENT),
+    EDIT_RECRUTEMENT("Ajouter recrutement", Feature.RECRUTEMENT),
+    DELETE_RECRUTEMENT("Ajouter recrutement", Feature.RECRUTEMENT),
+    READ_RECRUTEMENT("Consulter recrutement", Feature.RECRUTEMENT),
+    IMPORT_RECRUTEMENT("Import recrutement", Feature.RECRUTEMENT),
+    EXPORT_RECRUTEMENT("Export recrutement", Feature.RECRUTEMENT),
+    READ_FILE_RECRUTEMENT("read file recrutement", Feature.RECRUTEMENT),
+
     /*parametrage plant comptable*/
     READ_PLAN_COMPTABLE("Consulter parametrage plant comptable", Feature.PLAN_COMPTABLE),
     ADD_PLAN_COMPTABLE("Ajouter parametrage plant comptable", Feature.PLAN_COMPTABLE),

@@ -84,6 +84,9 @@ public class ManagementUnitEntity extends Auditable<Long> implements Serializabl
     @ManyToOne
     private LabelEntity axe;
 
+    @ManyToOne
+    private LabelEntity typeContrat;
+
     @Column(name = "prl_tag" , columnDefinition = "TEXT")
     private String tag;
 
