@@ -24,6 +24,20 @@ public class ManagementUnitRule {
     static final String ADD_NODE = "/add";
     static final String PARENT_ID = "/{parentId}";
     static final String ALL = "/all";
+    static final String PTBA = "/{managementUnitId}/ptba";
+
+    @Bean
+    public SecurityRule generatePtba() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(PROJECT_API_PREFIX + PTBA)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .hasPermission(SecurityPermissions.READ_PROJECT_ACTIVITY_MONITORING)
+                .hasPermission(SecurityPermissions.EXPORT_PROJECT)
+                .end();
+    }
 
     @Bean
     public SecurityRule createProjet() {

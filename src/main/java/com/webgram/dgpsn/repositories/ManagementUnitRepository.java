@@ -180,4 +180,23 @@ Optional<Double> countTotalProjects();
     List<ManagementUnitEntity> findByTypeIn(List<TypeProjet> types);
 
     List<ManagementUnitEntity> findAllByActifIsTrue();
+
+    //////////
+    /**
+     * Trouve tous les enfants d'un parent par type
+     */
+    @Query("SELECT m FROM ManagementUnitEntity m WHERE m.parent.id = :parentId AND m.type = :type ORDER BY m.code ASC")
+    List<ManagementUnitEntity> findByParentIdAndType(@Param("parentId") Long parentId, @Param("type") TypeProjet type);
+
+    /**
+     * Trouve tous les enfants d'un parent
+     */
+    @Query("SELECT m FROM ManagementUnitEntity m WHERE m.parent.id = :parentId ORDER BY m.code ASC")
+    List<ManagementUnitEntity> findByParentId(@Param("parentId") Long parentId);
+
+    /**
+     * Trouve toutes les unités de gestion par type
+     */
+//    @Query("SELECT m FROM ManagementUnitEntity m WHERE m.type = :type ORDER BY m.code ASC")
+//    List<ManagementUnitEntity> findByType(@Param("type") TypeProjet type);
 }

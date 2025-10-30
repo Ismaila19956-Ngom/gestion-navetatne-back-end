@@ -43,6 +43,7 @@ public class CourrierEntity extends Auditable<Long> implements Serializable {
     @Column(name = "cour_type", nullable = false)
     private CourrierType type;
 
+    /* Nature du courrier */
     @ManyToOne
     @JoinColumn(name = "cour_nature")
     private LabelEntity nature;

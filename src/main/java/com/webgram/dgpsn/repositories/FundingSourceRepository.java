@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import com.webgram.dgpsn.entities.*;
 import com.webgram.dgpsn.models.responses.StatisticalFundingDTO;
@@ -23,7 +24,10 @@ public interface FundingSourceRepository extends JpaRepository<FundingSourceEnti
             String montant,
             Long managementUnitId,
             Long structureId,
-            Long budgetId
+            Long budgetId,
+            Long tacheId,
+            Long valueIndicatorId,
+            Long budgetGlobalId
     ) throws ParseException {
         var booleanBuider = new BooleanBuilder();
 
@@ -42,6 +46,15 @@ public interface FundingSourceRepository extends JpaRepository<FundingSourceEnti
         if(Objects.nonNull(managementUnitId)) {
             booleanBuider.and(QFundingSourceEntity.fundingSourceEntity.managementUnit.id.eq(managementUnitId));
         }
+        if (Objects.nonNull(tacheId)) {
+            booleanBuider.and(QFundingSourceEntity.fundingSourceEntity.tache.id.eq(tacheId));
+        }
+        if (Objects.nonNull(valueIndicatorId)) {
+            booleanBuider.and(QFundingSourceEntity.fundingSourceEntity.valueIndicator.id.eq(valueIndicatorId));
+        }
+        if (Objects.nonNull(budgetGlobalId)) {
+            booleanBuider.and(QFundingSourceEntity.fundingSourceEntity.budgetGlobal.id.eq(budgetGlobalId));
+        }
         return findAll(booleanBuider, pageable);
     }
     @Query("select new com.webgram.dgpsn.models.responses.StatisticalFundingDTO(f.structure.nom, sum(f.montant)) from FundingSourceEntity f group by f.structure.nom")
@@ -57,5 +70,29 @@ List<StatisticalFundingDTO> avgAgeProjectByPartner();
     List<FundingSourceEntity> findAllByBudgetId(Long budgetId);
 
     Set<FundingSourceEntity> findByManagementUnitId(Long id);
+
+    /**
+     * Trouve toutes les sources de financement d'une unité de gestion
+     */
+    @Query("SELECT f FROM FundingSourceEntity f WHERE f.managementUnit.id = :managementUnitId")
+    List<FundingSourceEntity> findByManagementUnitIdPerso(@Param("managementUnitId") Long managementUnitId);
+
+    /**
+     * Trouve toutes les sources de financement d'une tâche
+     */
+    @Query("SELECT f FROM FundingSourceEntity f WHERE f.tache.id = :tacheId")
+    List<FundingSourceEntity> findByTacheId(@Param("tacheId") Long tacheId);
+
+    /**
+     * Trouve toutes les sources de financement d'un indicateur
+     */
+    @Query("SELECT f FROM FundingSourceEntity f WHERE f.valueIndicator.id = :valueIndicatorId")
+    List<FundingSourceEntity> findByValueIndicatorId(@Param("valueIndicatorId") Long valueIndicatorId);
+
+    /**
+     * Trouve toutes les sources de financement d'un budget
+     */
+    @Query("SELECT f FROM FundingSourceEntity f WHERE f.budget.id = :budgetId")
+    List<FundingSourceEntity> findByBudgetId(@Param("budgetId") Long budgetId);
 
 }

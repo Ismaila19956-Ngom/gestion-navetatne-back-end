@@ -31,9 +31,22 @@ public class FundingSourceEntity extends Auditable<Long> implements Serializable
     @ManyToOne
     @JoinColumn(name = "management_linked_source_financement")
     private ManagementUnitEntity managementUnit;
+
+    @ManyToOne()
+    @JoinColumn(name = "tache_linked_source_financement")
+    private TacheEntity tache;
+
+    @ManyToOne()
+    @JoinColumn(name = "value_indicator_linked_source_financement")
+    private ValueIndicatorEntity valueIndicator;
+
     @ManyToOne
     @JoinColumn(name = "budget_linked_source_financement")
     private BudgetEntity budget;
+
+    @ManyToOne
+    @JoinColumn(name = "budget_global_linked_source_financement")
+    private BudgetDgpsnEntity budgetGlobal;
 
     @ManyToOne
     @JoinColumn(name = "structure_linked_source_financement")

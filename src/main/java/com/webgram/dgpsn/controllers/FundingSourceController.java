@@ -63,9 +63,12 @@ public class FundingSourceController {
             @Parameter(name = "montant", description = "value of montant used to filter list source") @RequestParam(value = "montant", required = false) String montant,
             @Parameter(name = "managementUnitId", description = "value of managementUnitId used to filter list source") @RequestParam(value = "managementUnitId", required = false) Long managementUnitId ,
             @Parameter(name = "structureId", description = "value of structureId used to filter list source") @RequestParam(value = "structureId", required = false) Long structureId,
-            @Parameter(name = "budgetId", description = "value of budgetId used to filter list source") @RequestParam(value = "budgetId", required = false)Long budgetId
+            @Parameter(name = "budgetId", description = "value of budgetId used to filter list source") @RequestParam(value = "budgetId", required = false)Long budgetId,
+            @Parameter(name = "tacheId", description = "value of tacheId used to filter list source") @RequestParam(value = "tacheId", required = false)Long tacheId,
+            @Parameter(name = "valueIndicatorId", description = "value of valueIndicatorId used to filter list source") @RequestParam(value = "valueIndicatorId", required = false)Long valueIndicatorId,
+            @Parameter(name = "budgetGlobalId", description = "value of budgetGlobalId used to filter list source") @RequestParam(value = "budgetGlobalId", required = false)Long budgetGlobalId
     ) throws ParseException {
-        return fundingSourceService.readAll(pageable, montant, managementUnitId, structureId,budgetId);
+        return fundingSourceService.readAll(pageable, montant, managementUnitId, structureId,budgetId, tacheId, valueIndicatorId, budgetGlobalId);
     }
 
 //    @Operation(summary = "Import milestone", description = "this endpoint take input excel file and import it on database")

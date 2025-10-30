@@ -83,10 +83,13 @@ public class FundingSourceServiceImpl implements FundingSourceService {
             String montant,
             Long managementUnitId,
             Long structureId,
-            Long budgetId
+            Long budgetId,
+            Long tacheId,
+            Long valueIndicatorId,
+            Long budgetGlobalId
     ) throws ParseException {
         return fundingSourceRepository
-                .readAllByFiltering(pageable, montant,managementUnitId,structureId,budgetId)
+                .readAllByFiltering(pageable, montant,managementUnitId,structureId,budgetId, tacheId, valueIndicatorId, budgetGlobalId)
                 .map(fundingSourceMapper::asDto);
     }
 
