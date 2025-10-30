@@ -1,5 +1,7 @@
 package com.webgram.dgpsn.controllers;
 
+import com.webgram.dgpsn.models.responses.ptba.PtbaResponseDTO;
+import com.webgram.dgpsn.services.PtbaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -35,6 +37,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ManagementUnitController {
     private final ManagementUnitService managementUnitService;
+    private final PtbaService ptbaService;
 
     private static final String HEADER_PREFIX = "attachment; filename=\"";
     private static final String HEADER_SUFFIX = "\"";
@@ -233,5 +236,22 @@ public class ManagementUnitController {
     @GetMapping("/tree/all")
     public List<TreeNodeDTO> readAllProjectsWithTree() {
         return managementUnitService.readAllProjectsWithTree();
+    }
+
+    @Operation(
+            summary = "Generate PTBA",
+            description = "Génère le Plan de Travail et Budget Annuel (PTBA) pour un projet donné")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success"),
+            @ApiResponse(responseCode = "404", description = "Projet non trouvé"),
+            @ApiResponse(responseCode = "500", description = "Internal server error during request processing")})
+    @GetMapping("/{managementUnitId}/ptba")
+    @ResponseStatus(HttpStatus.OK)
+    public PtbaResponseDTO generatePtba(
+            @Parameter(name = "managementUnitId", description = "L'ID du projet/programme")
+            @PathVariable Long managementUnitId,
+            @Parameter(name = "annee", description = "L'année pour le PTBA (optionnel, utilise anneeDebut par défaut)")
+            @RequestParam(value = "annee", required = false) Integer annee) {
+        return ptbaService.generatePtba(managementUnitId, annee);
     }
 }

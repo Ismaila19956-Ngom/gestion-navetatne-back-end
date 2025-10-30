@@ -16,4 +16,22 @@ public interface TacheRepository extends JpaRepository<TacheEntity, Long>, Query
     @Modifying
     @Query("UPDATE TacheEntity t SET t.statut = :nouveauStatut WHERE t.id = :id")
     int updateStatut(@Param("id") Long id, @Param("nouveauStatut") TacheEntity.StatutTache nouveauStatut);
+
+    /**
+     * Trouve toutes les tâches d'une activité
+     */
+    @Query("SELECT t FROM TacheEntity t WHERE t.activite.id = :activiteId")
+    List<TacheEntity> findByActiviteIdPerso(@Param("activiteId") Long activiteId);
+
+    /**
+     * Trouve toutes les tâches d'une activité pour un trimestre donné
+     */
+    @Query("SELECT t FROM TacheEntity t WHERE t.activite.id = :activiteId AND t.trimestre = :trimestre")
+    List<TacheEntity> findByActiviteIdAndTrimestre(@Param("activiteId") Long activiteId, @Param("trimestre") Integer trimestre);
+
+    /**
+     * Trouve toutes les tâches d'un indicateur
+     */
+    @Query("SELECT t FROM TacheEntity t WHERE t.indicator.id = :indicatorId")
+    List<TacheEntity> findByIndicatorId(@Param("indicatorId") Long indicatorId);
 }
