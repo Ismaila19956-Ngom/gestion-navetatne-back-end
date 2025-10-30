@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.webgram.dgpsn.annotations.JournalAttribute;
 import com.webgram.dgpsn.entities.enums.SouceBudget;
+import com.webgram.dgpsn.entities.enums.StatutType;
 import com.webgram.dgpsn.entities.enums.TypeContrat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
@@ -34,6 +35,8 @@ public class RecrutementDTO implements Serializable {
     private String libelle;
     @JournalAttribute
     private TypeContrat typeContrat;
+    private StatutType statutType;
+
 
     private Date dateRecrutement;
     // ✅ Liste des caractéristiques

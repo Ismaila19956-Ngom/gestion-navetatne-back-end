@@ -15,6 +15,8 @@ public enum StatutType {
     TRAITEMENT_ENCOUR("En cours..."),
     ACCEPTER("Accepté"),
     REFUSER("Rejeté"),
+    REJETER("Refusé"),
+
     FERMER("Fermé");
 
     @Getter
