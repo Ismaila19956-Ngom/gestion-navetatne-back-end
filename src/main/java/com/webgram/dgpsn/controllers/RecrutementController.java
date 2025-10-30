@@ -1,5 +1,6 @@
 package com.webgram.dgpsn.controllers;
 
+import com.webgram.dgpsn.entities.enums.StatutType;
 import com.webgram.dgpsn.models.RecrutementDTO;
 import com.webgram.dgpsn.models.Response;
 import com.webgram.dgpsn.services.RecrutementService;
@@ -39,6 +40,7 @@ public class RecrutementController {
     public Response<Object> createRecrutement(@RequestBody RecrutementDTO recrutementDTO) {
         try {
             var dto = recrutementService.createRecrutement(recrutementDTO);
+          //    dto.setStatutType(StatutType.EN_COURS);
             return Response.ok().setPayload(dto).setMessage("Recrutement créé");
         } catch (Exception ex) {
             return Response.badRequest().setMessage(ex.getMessage());
@@ -94,4 +96,10 @@ public class RecrutementController {
         }
     }
 
+    @PutMapping("/{id}/statut")
+    public ResponseEntity<RecrutementDTO> updateStatut(
+            @PathVariable Long id,
+            @RequestParam StatutType statutType) {
+        return ResponseEntity.ok(recrutementService.updateStatut(id, statutType));
+    }
 }
