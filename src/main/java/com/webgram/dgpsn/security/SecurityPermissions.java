@@ -299,6 +299,11 @@ public enum SecurityPermissions {
     IMPORT_ACTOR("Importer acteur", Feature.ACTOR),
 
 
+    READ_CANDIDAT("Consulter candidat", Feature.CANDIDAT),
+    ADD_CANDIDAT("Ajouter candidat", Feature.CANDIDAT),
+    EDIT_CANDIDAT("Modifier candidat", Feature.CANDIDAT),
+    DELETE_CANDIDAT("Supprimer candidat", Feature.CANDIDAT),
+
 //    READ_PROJET_ENTREPRISE("Consulter projet entrprise", Feature.PROJET_ENTREPRISE),
 //    ADD_PROJET_ENTREPRISE("Ajouter projet entrprise", Feature.PROJET_ENTREPRISE),
 //    EDIT_PROJET_ENTREPRISE("Modifier projet entrprise", Feature.PROJET_ENTREPRISE),
@@ -566,6 +571,24 @@ public enum SecurityPermissions {
     IMPORT_AGENT("Import agent", Feature.AGENT),
     EXPORT_AGENT("Export agent", Feature.AGENT),
     READ_FILE_AGENT("Read file agent", Feature.AGENT),
+
+    ADD_CARACTERISTIQUE("Ajouter caracteristique", Feature.CARACTERISTIQUE),
+    DELETE_CARACTERISTIQUE("Consulter caracteristique", Feature.CARACTERISTIQUE),
+    EDIT_CARACTERISTIQUE("Ajouter caracteristique", Feature.CARACTERISTIQUE),
+    READ_CARACTERISTIQUE("Modifier caracteristique", Feature.CARACTERISTIQUE),
+    IMPORT_CARACTERISTIQUE("Import caracteristique", Feature.CARACTERISTIQUE),
+    EXPORT_CARACTERISTIQUE("Export caracteristique", Feature.CARACTERISTIQUE),
+    READ_FILE_CARACTERISTIQUE("read file caracteristique", Feature.CARACTERISTIQUE),
+
+
+    ADD_RECRUTEMENT("Ajouter recrutement", Feature.RECRUTEMENT),
+    EDIT_RECRUTEMENT("Modifier recrutement", Feature.RECRUTEMENT),
+    DELETE_RECRUTEMENT("Supprimer recrutement", Feature.RECRUTEMENT),
+    READ_RECRUTEMENT("Consulter recrutement", Feature.RECRUTEMENT),
+    IMPORT_RECRUTEMENT("Import recrutement", Feature.RECRUTEMENT),
+    UPDATE_STATUT_RECRUTEMENT("Modifier statut recrutement", Feature.RECRUTEMENT), // AJOUTER CETTE LIGNE
+    EXPORT_RECRUTEMENT("Export recrutement", Feature.RECRUTEMENT),
+    READ_FILE_RECRUTEMENT("read file recrutement", Feature.RECRUTEMENT),
 
     /*parametrage plant comptable*/
     READ_PLAN_COMPTABLE("Consulter parametrage plant comptable", Feature.PLAN_COMPTABLE),

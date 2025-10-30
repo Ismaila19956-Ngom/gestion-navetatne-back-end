@@ -24,6 +24,7 @@ public enum CategoryDocument {
     MATERNITE("Document Conge maternite", "Paramétrage des types de documents pour les congés de maternite"),
     MALADIE("Document Conge maladie", "Paramétrage des types de documents pour les congés maladie"),
     AUTRES("Document Conge Longue duree", "Paramétrage des types de documents pour les congés longue duree"),
+    CATEGORIE("Categorie Document", "Paramétrage de type Categorie Document"),
     SORTIE_TERRITOIRE("Sortie du territoire", "Paramétrage des types de documents pour les sorties du territoire");
 
 
