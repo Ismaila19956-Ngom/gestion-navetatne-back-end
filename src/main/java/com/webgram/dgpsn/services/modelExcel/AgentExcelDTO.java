@@ -5,8 +5,11 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.khoutech.openexcel.annotations.CellIndex;
 import com.opencsv.bean.CsvBindByName;
 import com.opencsv.bean.CsvBindByPosition;
+import com.webgram.dgpsn.entities.enums.Sexe;
 import lombok.*;
 import lombok.experimental.Accessors;
+
+import java.util.Date;
 
 @Data
 @Builder
@@ -53,9 +56,18 @@ public class AgentExcelDTO {
     @CsvBindByPosition(position = 6)
     @CsvBindByName(column = "CODE_STRUCTURE")
     private String codeStructure;
-
     @CellIndex(index = 7)
     @CsvBindByPosition(position = 7)
+    @CsvBindByName(column = "date_Naissance")
+    private Date dateNaissance;
+
+    @CellIndex(index = 8)
+    @CsvBindByPosition(position = 8)
+    @CsvBindByName(column = "SEXE")
+    private Sexe sexe;
+
+    @CellIndex(index = 9)
+    @CsvBindByPosition(position = 9)
     @CsvBindByName(column = "CODE_FONCTION")
     private String codeFonction;
 }

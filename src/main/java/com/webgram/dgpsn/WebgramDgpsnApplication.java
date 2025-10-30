@@ -1,10 +1,12 @@
 package com.webgram.dgpsn;
 
 import com.webgram.dgpsn.entities.AgentEntity;
+import com.webgram.dgpsn.entities.DirectionEntity;
 import com.webgram.dgpsn.entities.ProfileEntity;
 import com.webgram.dgpsn.entities.UserEntity;
 import com.webgram.dgpsn.entities.enums.Portee;
 import com.webgram.dgpsn.repositories.AgentRepository;
+import com.webgram.dgpsn.repositories.DirectionRepository;
 import com.webgram.dgpsn.repositories.ProfileRepository;
 import com.webgram.dgpsn.repositories.UserRepository;
 import com.webgram.dgpsn.security.SecurityPermissions;
@@ -29,9 +31,11 @@ public class WebgramDgpsnApplication {
     }
 
     @Bean
-    CommandLineRunner runner(UserRepository userRepository, ProfileRepository profileRepository, AgentRepository agentRepository, PasswordEncoder passwordEncoder) {
+    CommandLineRunner runner(DirectionRepository directionRepository, UserRepository userRepository, ProfileRepository profileRepository, AgentRepository agentRepository, PasswordEncoder passwordEncoder) {
         return args -> {
             createAdminUser(userRepository, profileRepository, agentRepository, passwordEncoder);
+            initOrganigramme(directionRepository);
+
         };
     }
 
@@ -61,6 +65,36 @@ public class WebgramDgpsnApplication {
                     .firstAttempt(false)
                     .build()
             );
+        }
+    }
+
+    private void initOrganigramme(DirectionRepository directionRepository) {
+        var directionDG = directionRepository.findByCode("DGPSN");
+//     log.info("directionDG {}", directionDG);
+        if (directionDG.isEmpty()) {
+            var dgpsn = DirectionEntity.builder()
+                    .code("DGPSN")
+                    .libelle("Direction General à la Protection Social et a la Solidarite National")
+                    .parent(null)
+                    .build();
+
+            var dg = DirectionEntity.builder()
+                    .code("DG")
+                    .libelle("Delegue General")
+                    .build();
+            dg.addChildren(List.of(
+                    DirectionEntity.builder()
+                            .code("AI")
+                            .libelle("Auditeur Interne")
+                            .build(),
+                    DirectionEntity.builder()
+                            .code("CTPS")
+                            .libelle("Conseil Technique en charges des Politiques de Protection Social")
+                            .build()
+            ));
+
+
+            directionRepository.save(dgpsn);
         }
     }
 

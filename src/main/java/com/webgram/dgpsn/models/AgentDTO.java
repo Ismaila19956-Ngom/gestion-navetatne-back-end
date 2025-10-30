@@ -3,6 +3,7 @@ package com.webgram.dgpsn.models;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.webgram.dgpsn.entities.enums.Sexe;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -10,6 +11,7 @@ import com.webgram.dgpsn.entities.LabelEntity;
 
 
 import java.io.Serializable;
+import java.util.Date;
 
 @Data
 @Builder
@@ -23,6 +25,9 @@ import java.io.Serializable;
 public class AgentDTO implements Serializable {
 
     private static final long serialVersionUID = -5387827484974552092L;
+
+    private Date dateNaissance;
+    private Sexe sexe;
 
     @Schema(description = "L'id technique, généré au moment de persister l'objet", accessMode = Schema.AccessMode.READ_ONLY)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)

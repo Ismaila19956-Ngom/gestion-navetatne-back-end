@@ -12,12 +12,12 @@ public interface CourrierMapper {
     CourrierMapper INSTANCE = Mappers.getMapper(CourrierMapper.class);
 
     // Conversion Entity → DTO
-    @Mapping(source = "type", target = "type")
-    @Mapping(source = "nature", target = "nature")
-    CourrierDTO toDTO(CourrierEntity entity);
+    @Mapping(source = "statut.id", target = "statutId")
+    @Mapping(source = "nature.id", target = "natureId")
+    @Mapping(source = "urgence.id", target = "urgenceId")
+    CourrierDTO asDto(CourrierEntity entity);
 
     // Conversion DTO → Entity
-    @Mapping(source = "type", target = "type")
-    @Mapping(source = "nature", target = "nature")
-    CourrierEntity toEntity(CourrierDTO dto);
+
+    CourrierEntity asEntity(CourrierDTO dto);
 }
