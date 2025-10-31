@@ -35,6 +35,8 @@ public class RecrutementDTO implements Serializable {
     @JournalAttribute
     private String libelle;
     @JournalAttribute
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+
     private LabelDTO typeContrat;
     private Long typeContratId;
     private StatutType statutType;
