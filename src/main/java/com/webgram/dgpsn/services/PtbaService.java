@@ -237,7 +237,7 @@ public class PtbaService {
 
     /**
      * Construit les sources de financement pour une activité + indicateurs + tâches
-     * IMPORTANT: Le coutCFA est la somme de toutes ces sources
+     * Le coutCFA est la somme de toutes ces sources
      */
     private PtbaFundingSourcesDTO buildFundingSources(
             ManagementUnitEntity activite,
@@ -246,33 +246,49 @@ public class PtbaService {
             Set<String> allBailleurs) {
 
         PtbaFundingSourcesDTO dto = new PtbaFundingSourcesDTO();
+        log.info("Début de construction des sources de financement pour l'activité ID: {}", activite.getId());
 
         // 1. Sources de financement de l'activité
+        log.info("Récupération des sources de financement pour l'activité ID: {}", activite.getId());
         List<FundingSourceEntity> sourcesActivite = fundingSourceRepository.findByManagementUnitIdPerso(activite.getId());
+        log.info("Nombre de sources trouvées pour l'activité : {}", sourcesActivite.size());
         addFundingSourcesToDTO(sourcesActivite, dto, allBailleurs);
 
         // 2. Sources de financement des indicateurs
+        log.info("Traitement des {} indicateur(s) lié(s) à l'activité", indicateurs.size());
         for (ManagementUnitEntity indicateur : indicateurs) {
-            // Récupérer les ValueIndicator liés à cet indicateur
+            log.info("Récupération des ValueIndicator pour l'indicateur ID: {}", indicateur.getId());
             List<ValueIndicatorEntity> valueIndicators = valueIndicatorRepository.findByActivityIdPerso(indicateur.getId());
+            log.info("Nombre de ValueIndicator trouvés pour l'indicateur {} : {}", indicateur.getId(), valueIndicators.size());
+
             for (ValueIndicatorEntity valueIndicator : valueIndicators) {
+                log.info("Récupération des sources de financement pour ValueIndicator ID: {}", valueIndicator.getId());
                 List<FundingSourceEntity> sourcesIndicateur = fundingSourceRepository.findByValueIndicatorId(valueIndicator.getId());
+                log.info("Nombre de sources trouvées pour ValueIndicator {} : {}", valueIndicator.getId(), sourcesIndicateur.size());
                 addFundingSourcesToDTO(sourcesIndicateur, dto, allBailleurs);
             }
         }
 
         // 3. Sources de financement des tâches
+        log.info("Traitement des {} tâche(s) liée(s) à l'activité", taches.size());
+        log.info("Récupération de toutes les TacheEntity pour l'activité ID: {}", activite.getId());
+        List<TacheEntity> tacheEntities = tacheRepository.findByActiviteIdPerso(activite.getId());
+        log.info("Nombre total de TacheEntity récupérées : {}", tacheEntities.size());
+
         for (ManagementUnitEntity tache : taches) {
-            // Récupérer les TacheEntity liées
-            List<TacheEntity> tacheEntities = tacheRepository.findByActiviteIdPerso(activite.getId());
+            log.info("Recherche de la TacheEntity correspondant à la tâche ID: {}", tache.getId());
             for (TacheEntity tacheEntity : tacheEntities) {
                 if (tacheEntity.getId().equals(tache.getId())) {
+                    log.info("TacheEntity trouvée pour ID: {}, récupération des sources de financement", tache.getId());
                     List<FundingSourceEntity> sourcesTache = fundingSourceRepository.findByTacheId(tacheEntity.getId());
+                    log.info("Nombre de sources trouvées pour la tâche {} : {}", tache.getId(), sourcesTache.size());
                     addFundingSourcesToDTO(sourcesTache, dto, allBailleurs);
+                    break; // Optionnel : sortir dès qu'on a trouvé
                 }
             }
         }
 
+        log.info("Construction des sources de financement terminée pour l'activité ID: {}", activite.getId());
         return dto;
     }
 
@@ -284,13 +300,22 @@ public class PtbaService {
             PtbaFundingSourcesDTO dto,
             Set<String> allBailleurs) {
 
+        log.info("Début de l'ajout de {} source(s) de financement au DTO", sources.size());
+
         for (FundingSourceEntity source : sources) {
             if (source.getStructure() != null && source.getMontant() != null && source.getMontant() > 0) {
                 String bailleurName = source.getStructure().getNom();
+                log.info("Ajout source : BAILLEUR='{}', MONTANT={} (ID source: {})",
+                        bailleurName, source.getMontant(), source.getId());
+
                 dto.addSource(bailleurName, source.getMontant());
                 allBailleurs.add(bailleurName);
+            } else {
+                log.info("Source ignorée (structure nulle, montant nul ou négatif) - ID: {}", source.getId());
             }
         }
+
+        log.info("Fin de l'ajout des sources. Total bailleurs distincts mis à jour : {}", allBailleurs.size());
     }
 
     /**
