@@ -60,8 +60,11 @@ public class CandidatEntity {
     @Column(name = "cv")
     private String cv;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "recrutement_id")
+    private RecrutementEntity recrutement;
 
-//    @JoinColumn(name = "recrutement_id")
-//    private Recrutement recrutement;
+    @OneToMany(mappedBy = "candidat", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<NotationEntity> notations = new ArrayList<>();
 
 }

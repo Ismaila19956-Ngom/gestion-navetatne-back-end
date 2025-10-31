@@ -1,5 +1,6 @@
 package com.webgram.dgpsn.models;
 
+import com.webgram.dgpsn.entities.RecrutementEntity;
 import com.webgram.dgpsn.entities.enums.ExperienceProfessionnelle;
 import com.webgram.dgpsn.entities.enums.NiveauEtude;
 import com.webgram.dgpsn.entities.enums.StatusCadidature;
@@ -27,4 +28,6 @@ public class CandidatDTO {
     private StatusCadidature statusCandidature;
     private List<String> competences;
     private String cv;
+    private Long recrutementId;
+    private List<NotationDTO> notations;
 }

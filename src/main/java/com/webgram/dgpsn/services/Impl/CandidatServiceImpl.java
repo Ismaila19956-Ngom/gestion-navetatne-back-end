@@ -1,6 +1,10 @@
 package com.webgram.dgpsn.services.Impl;
 
+import com.webgram.dgpsn.entities.NotationEntity;
 import com.webgram.dgpsn.entities.enums.StatusCadidature;
+import com.webgram.dgpsn.exceptions.ResourceNotFoundException;
+import com.webgram.dgpsn.repositories.NotationRepository;
+import com.webgram.dgpsn.repositories.RecrutementRepository;
 import com.webgram.dgpsn.services.CandidatService;
 
 import com.webgram.dgpsn.entities.CandidatEntity;
@@ -9,6 +13,7 @@ import com.webgram.dgpsn.entities.enums.NiveauEtude;
 import com.webgram.dgpsn.mappers.CandidatMapper;
 import com.webgram.dgpsn.models.CandidatDTO;
 import com.webgram.dgpsn.repositories.CandidatRepository;
+import com.webgram.dgpsn.utils.NotationDefaults;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -29,6 +34,8 @@ import java.util.UUID;
 public class CandidatServiceImpl implements CandidatService {
 
     private final CandidatRepository candidatRepository;
+    private final RecrutementRepository recrutementRepository;
+    private final NotationRepository notationRepository;
 
     @Override
     public Page<CandidatDTO> getCandidatsFiltered(
@@ -69,14 +76,32 @@ public class CandidatServiceImpl implements CandidatService {
 
     @Override
     public CandidatDTO saveCandidat(CandidatDTO dto) {
-        if(dto.getStatusCandidature() == null){
+        if (dto.getStatusCandidature() == null) {
             dto.setStatusCandidature(StatusCadidature.IN_PROGRESS);
         }
+
+        var recrutement = recrutementRepository.findById(dto.getRecrutementId())
+                .orElseThrow(() -> new ResourceNotFoundException("Recrutement not found"));
+
         CandidatEntity entity = CandidatMapper.toEntity(dto);
         entity.setMatricule(generateMatricule());
+        entity.setRecrutement(recrutement);
 
-        CandidatEntity saved = candidatRepository.save(entity);
-        return CandidatMapper.toDTO(saved);
+        // ✅ Étape 1 : enregistrer le candidat en base
+        CandidatEntity savedCandidat = candidatRepository.save(entity);
+
+        // ✅ Étape 2 : créer les notations et les lier au candidat déjà sauvegardé
+        List<NotationEntity> notations = NotationDefaults.defaultNotations()
+                .stream()
+                .peek(n -> n.setCandidat(savedCandidat))
+                .toList();
+
+        notationRepository.saveAll(notations);
+
+        // ✅ Étape 3 : attacher les notations à l’objet et le re-sauvegarder si tu veux
+        savedCandidat.setNotations(notations);
+
+        return CandidatMapper.toDTO(savedCandidat);
     }
 
     @Override

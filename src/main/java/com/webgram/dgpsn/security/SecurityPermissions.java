@@ -299,6 +299,11 @@ public enum SecurityPermissions {
     IMPORT_ACTOR("Importer acteur", Feature.ACTOR),
 
 
+    READ_NOTATION("Consulter candidat", Feature.CANDIDAT),
+    ADD_NOTATION("Ajouter candidat", Feature.CANDIDAT),
+    EDIT_NOTATION("Modifier candidat", Feature.CANDIDAT),
+    DELETE_NOTATION("Supprimer candidat", Feature.CANDIDAT),
+
     READ_CANDIDAT("Consulter candidat", Feature.CANDIDAT),
     ADD_CANDIDAT("Ajouter candidat", Feature.CANDIDAT),
     EDIT_CANDIDAT("Modifier candidat", Feature.CANDIDAT),
