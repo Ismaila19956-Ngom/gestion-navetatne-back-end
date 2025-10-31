@@ -52,17 +52,26 @@ public abstract class FundingSourceMapper implements EntityMapper<FundingSourceD
 
     @Named("getManagementUnit")
     public ManagementUnitEntity getManagementUnit(Long managementUnitId) {
-        return ManagementUnitEntity.builder().id(managementUnitId).build();
+        if (Objects.nonNull(managementUnitId)) {
+            return ManagementUnitEntity.builder().id(managementUnitId).build();
+        }
+        return null;
     }
 
     @Named("getStructure")
     public StructureEntity getStructure(Long structureId) {
-        return StructureEntity.builder().id(structureId).build();
+        if (Objects.nonNull(structureId)) {
+            return StructureEntity.builder().id(structureId).build();
+        }
+        return null;
     }
 
     @Named("getBudget")
     public BudgetEntity getBudget(Long budgetId) {
-        return BudgetEntity.builder().id(budgetId).build();
+        if (Objects.nonNull(budgetId)) {
+            return BudgetEntity.builder().id(budgetId).build();
+        }
+        return null;
     }
 
 

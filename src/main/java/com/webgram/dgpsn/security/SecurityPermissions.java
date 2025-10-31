@@ -587,10 +587,11 @@ public enum SecurityPermissions {
 
 
     ADD_RECRUTEMENT("Ajouter recrutement", Feature.RECRUTEMENT),
-    EDIT_RECRUTEMENT("Ajouter recrutement", Feature.RECRUTEMENT),
-    DELETE_RECRUTEMENT("Ajouter recrutement", Feature.RECRUTEMENT),
+    EDIT_RECRUTEMENT("Modifier recrutement", Feature.RECRUTEMENT),
+    DELETE_RECRUTEMENT("Supprimer recrutement", Feature.RECRUTEMENT),
     READ_RECRUTEMENT("Consulter recrutement", Feature.RECRUTEMENT),
     IMPORT_RECRUTEMENT("Import recrutement", Feature.RECRUTEMENT),
+    UPDATE_STATUT_RECRUTEMENT("Modifier statut recrutement", Feature.RECRUTEMENT), // AJOUTER CETTE LIGNE
     EXPORT_RECRUTEMENT("Export recrutement", Feature.RECRUTEMENT),
     READ_FILE_RECRUTEMENT("read file recrutement", Feature.RECRUTEMENT),
 
@@ -602,6 +603,14 @@ public enum SecurityPermissions {
     IMPORT_PLAN_COMPTABLE("Import parametrage plant comptable", Feature.PLAN_COMPTABLE),
     EXPORT_PLAN_COMPTABLE("Export parametrage plant comptable", Feature.PLAN_COMPTABLE),
     READ_FILE_PLAN_COMPTABLE("Read file parametrage plant comptable", Feature.PLAN_COMPTABLE),
+
+    /*fournisseur */
+    READ_FOURNISSEUR("Consulter fournisseur", Feature.FOURNISSEUR),
+    ADD_FOURNISSEUR("Ajouter un fournisseur", Feature.PLAN_COMPTABLE),
+    EDIT_FOURNISSEUR("Modifier un fournisseur",Feature.FOURNISSEUR),
+    DELETE_FOURNISSEUR("Supprimer un fournisseur",Feature.FOURNISSEUR),
+
+
 
     READ_MEETINGTYPE("Consulter Type reunion", Feature.MEETINGTYPE),
     ADD_MEETINGTYPE("Ajouter Type reunion", Feature.MEETINGTYPE),

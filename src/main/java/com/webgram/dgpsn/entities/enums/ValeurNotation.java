@@ -4,5 +4,6 @@ public enum ValeurNotation {
     TRES_BIEN,
     BIEN,
     MOYEN,
-    INSUFFISANT
+    INSUFFISANT,
+    PASSABLE
 }

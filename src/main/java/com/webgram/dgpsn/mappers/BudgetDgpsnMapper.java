@@ -9,6 +9,8 @@ import com.webgram.dgpsn.entities.BudgetDgpsnEntity;
 import com.webgram.dgpsn.entities.ManagementUnitEntity;
 import com.webgram.dgpsn.models.BudgetDgpsnDTO;
 
+import java.util.Objects;
+
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = "spring")
 public abstract class BudgetDgpsnMapper implements EntityMapper<BudgetDgpsnDTO, BudgetDgpsnEntity> {
 
@@ -20,6 +22,9 @@ public abstract class BudgetDgpsnMapper implements EntityMapper<BudgetDgpsnDTO, 
 
 //    @Named("getManagementUnit")
 //    public ManagementUnitEntity getManagementUnit(Long managementUnitId) {
-//        return ManagementUnitEntity.builder().id(managementUnitId).build();
+//        if (Objects.nonNull(managementUnitId)) {
+//            return ManagementUnitEntity.builder().id(managementUnitId).build();
+//        }
+//        return null;
 //    }
 }

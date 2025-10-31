@@ -1,6 +1,7 @@
 package com.webgram.dgpsn.services;
 
 import com.webgram.dgpsn.models.CandidatDTO;
+import com.webgram.dgpsn.entities.enums.StatutType;
 import com.webgram.dgpsn.models.RecrutementDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +24,7 @@ public interface RecrutementService {
     void deleteRecrutement(Long id);
     RecrutementDTO readRecrutement(Long id);
     Page<RecrutementDTO> readAllRecrutement(Map<String, String> searchParams, Pageable pageable);
+    RecrutementDTO updateStatut(Long id, StatutType statutType);
 
 
 }

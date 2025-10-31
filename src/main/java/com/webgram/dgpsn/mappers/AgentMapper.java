@@ -15,6 +15,7 @@ import com.webgram.dgpsn.repositories.StructureRepository;
 import com.webgram.dgpsn.services.modelExcel.AgentExcelDTO;
 
 import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
 import java.util.Objects;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = "spring")
@@ -70,5 +71,22 @@ public abstract class AgentMapper implements EntityMapper<AgentDTO, AgentEntity>
 
 //    @Mapping(source = "fonction.code", target = "codeFonction")
 //    @Mapping(source = "structure.code", target = "codeStructure")
-    public abstract AgentExcelDTO asExcelDto(AgentEntity entity);
+    @Mapping(target = "dateNaissance", source = "dateNaissance", qualifiedByName = "formatDate")
+    @Mapping(target = "sexe", source = "sexe", qualifiedByName = "formatSexe")
+
+public abstract AgentExcelDTO asExcelDto(AgentEntity entity);
+
+    @Named("formatDate")
+    String formatDate(java.util.Date date) {
+        if (date == null) return "";
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        return sdf.format(date);
+    }
+
+    @Named("formatSexe")
+    String formatSexe(Enum<?> sexe) {
+        return sexe != null ? sexe.name() : "";
+    }
+
+
 }

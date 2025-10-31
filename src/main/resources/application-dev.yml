@@ -1,0 +1,54 @@
+server:
+  port: 2015
+  servlet:
+    context-path: /dgpsn-api
+    error:
+      include-message: always
+      include-binding-errors: always
+      include-stacktrace: never
+      include-exception: false
+spring:
+  datasource:
+    name: ${DB_NAME:gestionrisque-db}
+    host: ${DB_HOST:185.166.39.101}
+    username: ${DB_USERNAME:webgram-pg}
+    password: ${DB_PASSWORD:Webgram2024#}
+    url: jdbc:postgresql://${spring.datasource.host}:5432/${spring.datasource.name}?autoReconnect=true&useSSL=false&createDatabaseIfNotExist=true
+
+  servlet:
+    multipart:
+      max-file-size: 30MB
+      max-request-size: 30MB
+  jpa:
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+  application:
+    name: DGPSN
+
+storage-document:
+  file-storage-root-path: ${user.home}//Documents//upload//docs
+  template-name: template.vm
+
+security-jwt:
+  base64-secret: MmMzN2VlODJhN2U3NDk2NzQ2ZjE4Nzg3ZDkxYzg5ZDdkZDEwMTdjYWM3OWRiYjQwOWU4M2NiYTdmOThkYTU3OTI3Nzg2YTAwYTc2ODEyMzgwNjhiYTU2MTkyNDNmNWJiODc5Y2M4MWVhNjJhYTU3ZjRmNzEzZDhlZmYxNDlhYWM=
+  token-validity-in-seconds: 86400
+  token-validity-in-seconds-for-remember-me: 86400
+
+webg-mail:
+  enabled: false
+  from: admin@admin.com
+  base-url: http://localhost:4200
+
+dgpsn-cors:
+  cors:
+    allowed-origins: "http://185.166.39.101:8088,http://185.166.39.101,http://185.166.39.101/"
+    allowed-methods: "*"
+    allowed-headers: "*"
+    exposed-headers: "Authorization,Link,Content-Disposition"
+    allow-credentials: true
+    max-age: 1800

@@ -20,6 +20,7 @@ public class RecrutementRule {
     static final String CANDIDAT_ID = "/{idCandidat}";
 
 
+
     @Bean
     public SecurityRule createRecrutement() {
         return SecurityRule.builder()
@@ -77,6 +78,7 @@ public class RecrutementRule {
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
+
     @Bean
     public SecurityRule deleteRecrutement() {
         return SecurityRule.builder()
@@ -89,6 +91,22 @@ public class RecrutementRule {
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
+
+    @Bean
+    public SecurityRule updateStatutRecrutement() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.PUT)
+                // Le pattern doit correspondre exactement à l'URL de votre API
+                .apiPattern(RECRUTEMENT_API_PREFIX + RECRUTEMENT_ID + "/statut")
+                .build()
+                .condition()
+                // Autorise les utilisateurs ayant l'une de ces permissions
+                .hasPermission(SecurityPermissions.UPDATE_STATUT_RECRUTEMENT)
+                .hasPermission(SecurityPermissions.EDIT_RECRUTEMENT) // Vous pouvez aussi réutiliser une permission existante
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+
     @Bean
     public SecurityRule importRecrutement() {
         return SecurityRule.builder()

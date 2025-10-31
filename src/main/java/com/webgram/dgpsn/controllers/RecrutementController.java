@@ -1,23 +1,30 @@
 package com.webgram.dgpsn.controllers;
 
 import com.webgram.dgpsn.models.CandidatDTO;
+import com.webgram.dgpsn.entities.enums.StatutType;
 import com.webgram.dgpsn.models.RecrutementDTO;
 import com.webgram.dgpsn.models.Response;
+import com.webgram.dgpsn.services.RecrutementService;
 import com.webgram.dgpsn.services.RecrutementService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/recrutements")
@@ -38,6 +45,7 @@ public class RecrutementController {
     public Response<Object> createRecrutement(@RequestBody RecrutementDTO recrutementDTO) {
         try {
             var dto = recrutementService.createRecrutement(recrutementDTO);
+          //    dto.setStatutType(StatutType.EN_COURS);
             return Response.ok().setPayload(dto).setMessage("Recrutement créé");
         } catch (Exception ex) {
             return Response.badRequest().setMessage(ex.getMessage());
@@ -54,8 +62,11 @@ public class RecrutementController {
         } catch (Exception ex) {
             return Response.badRequest().setMessage(ex.getMessage());
         }
+
     }
 
+    @Operation(summary = "Read the recrutement", description = "This endpoint is used to read recrutement, it takes input id recrutement")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Success"), @ApiResponse(responseCode = "400", description = "Request sent by the client was syntactically incorrect"), @ApiResponse(responseCode = "404", description = "Resource access does not exist"), @ApiResponse(responseCode = "500", description = "Internal server error during request processing")})
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public Response<Object> readRecrutement(@PathVariable Long id) {
@@ -137,4 +148,10 @@ public class RecrutementController {
         return ResponseEntity.ok(updated);
     }
 
+    @PutMapping("/{id}/statut")
+    public ResponseEntity<RecrutementDTO> updateStatut(
+            @PathVariable Long id,
+            @RequestParam StatutType statutType) {
+        return ResponseEntity.ok(recrutementService.updateStatut(id, statutType));
+    }
 }
