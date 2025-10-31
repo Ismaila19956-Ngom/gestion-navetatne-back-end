@@ -1,21 +1,23 @@
 package com.webgram.dgpsn.services.Impl;
 
 import com.webgram.dgpsn.entities.PlanComptableElementEntity;
+import com.webgram.dgpsn.entities.enums.TypePlanComptable;
 import com.webgram.dgpsn.exceptions.PlanComptableException;
 import com.webgram.dgpsn.exceptions.ResourceNotFoundException;
 import com.webgram.dgpsn.mappers.PlanComptableElementMapper;
 import com.webgram.dgpsn.models.PlanComptableElementDTO;
 import com.webgram.dgpsn.repositories.PlanComptableElementRepository;
 import com.webgram.dgpsn.services.PlanComptableElementService;
-import com.webgram.dgpsn.entities.enums.TypePlanComptable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -98,13 +100,25 @@ public class PlanComptableElementServiceImpl implements PlanComptableElementServ
             String code,
             String libelle,
             TypePlanComptable type,
-            Long plan,
+            Long parentId,
             String sortBy,
             Boolean ascending
     ) {
         return repository
-                .readAllByFiltering(pageable, idsToIgnore, code, libelle, type, plan, sortBy, ascending)
+                .readAllByFiltering(pageable, idsToIgnore, code, libelle, type, parentId, sortBy, ascending)
                 .map(mapper::asDto);
+    }
+
+
+    @Override
+    public List<PlanComptableElementDTO> getRealisationsByRubriqueId(Long rubriqueId) {
+        log.info("Récupération des réalisations pour la rubrique id {}", rubriqueId);
+        repository.findByIdAndType(rubriqueId, TypePlanComptable.RUBRIQUE)
+                .orElseThrow(() -> new ResourceNotFoundException("Rubrique", rubriqueId));
+        var realisations = repository.findByParentIdAndType(rubriqueId, TypePlanComptable.REALISATION);
+        return realisations.stream()
+                .map(mapper::asDto)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -132,7 +146,7 @@ public class PlanComptableElementServiceImpl implements PlanComptableElementServ
             case RUBRIQUE:
                 validateRubrique(dto, currentId);
                 break;
-            case REALISATIONS:
+            case REALISATION:
                 validateRealisations(dto, currentId);
                 break;
             default:
@@ -197,6 +211,7 @@ public class PlanComptableElementServiceImpl implements PlanComptableElementServ
 
         validateNoSelfReference(dto.getParentId(), currentId);
     }
+
     private void validateRealisations(PlanComptableElementDTO dto, Long currentId) {
         if (dto.getParentId() == null) {
             throw new PlanComptableException("Une REALISATIONS doit avoir un RUBRIQUE comme parent");
@@ -218,5 +233,17 @@ public class PlanComptableElementServiceImpl implements PlanComptableElementServ
         if (Objects.equals(planId, currentId)) {
             throw new PlanComptableException("Un élément ne peut pas être son propre parent");
         }
+
+    }
+
+    @Override
+    public List<PlanComptableElementDTO> getRubriquesByClasseId(Long classeId) {
+        log.info("Récupération des rubriques pour la classe ID: {}", classeId);
+        repository.findByIdAndType(classeId, TypePlanComptable.CLASSE)
+                .orElseThrow(() -> new ResourceNotFoundException("Classe", classeId));
+        List<PlanComptableElementEntity> rubriques = repository.findRubriquesByClasseId(classeId);
+        return rubriques.stream()
+                .map(mapper::asDto)
+                .collect(Collectors.toList());
     }
 }

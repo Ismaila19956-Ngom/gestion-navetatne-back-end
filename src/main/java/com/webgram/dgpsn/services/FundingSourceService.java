@@ -16,7 +16,10 @@ public interface FundingSourceService {
             String montant,
             Long managementUnitId,
             Long structureId,
-            Long budgetId
+            Long budgetId,
+            Long tacheId,
+            Long valueIndicatorId,
+            Long budgetGlobalId
     ) throws ParseException;
 
 //    void importMilestone(MultipartFile file, Long projectId);

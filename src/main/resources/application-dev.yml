@@ -7,14 +7,14 @@ server:
       include-binding-errors: always
       include-stacktrace: never
       include-exception: false
-
 spring:
   datasource:
-    name: ${DB_NAME:dgpsn-db}
+    name: ${DB_NAME:gestionrisque-db}
     host: ${DB_HOST:185.166.39.101}
     username: ${DB_USERNAME:webgram-pg}
     password: ${DB_PASSWORD:Webgram2024#}
     url: jdbc:postgresql://${spring.datasource.host}:5432/${spring.datasource.name}?autoReconnect=true&useSSL=false&createDatabaseIfNotExist=true
+
   servlet:
     multipart:
       max-file-size: 30MB
@@ -38,6 +38,11 @@ security-jwt:
   base64-secret: MmMzN2VlODJhN2U3NDk2NzQ2ZjE4Nzg3ZDkxYzg5ZDdkZDEwMTdjYWM3OWRiYjQwOWU4M2NiYTdmOThkYTU3OTI3Nzg2YTAwYTc2ODEyMzgwNjhiYTU2MTkyNDNmNWJiODc5Y2M4MWVhNjJhYTU3ZjRmNzEzZDhlZmYxNDlhYWM=
   token-validity-in-seconds: 86400
   token-validity-in-seconds-for-remember-me: 86400
+
+webg-mail:
+  enabled: false
+  from: admin@admin.com
+  base-url: http://localhost:4200
 
 dgpsn-cors:
   cors:

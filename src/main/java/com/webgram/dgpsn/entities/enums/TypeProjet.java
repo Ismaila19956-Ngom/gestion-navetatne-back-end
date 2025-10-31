@@ -15,10 +15,11 @@ import static java.util.Arrays.stream;
 public enum TypeProjet {
     PROGRAMME("Programme"),
     PROJECT("Projet"),
-    COMPONENT("Composante"),
-    RESULT("Résultat"),
-    PRODUCT("Produit"),
-    ACTIVITY("Activité");
+    OBJECTIF("Objectif"),
+    ACTION("Action"),
+    ACTIVITY("Activité"),
+    INDICATOR("Indicateur"),
+    TACHE("Tâche");
 
     @Getter
     @Setter

@@ -3,7 +3,9 @@ package com.webgram.dgpsn.models;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.webgram.dgpsn.annotations.JournalAttribute;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.Accessors;
 import com.webgram.dgpsn.entities.enums.TypePlanComptable;
@@ -29,14 +31,10 @@ public class PlanComptableElementDTO implements Serializable {
     private String commentaire;
     private TypePlanComptable type;
 
-    /**
-     * ID du plan parent (CLASSE)
-     * Accepte "plan": 1 en INPUT
-     * Retourne l'ID en OUTPUT
-     */
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private PlanComptableElementDTO parent;
-
+    @JournalAttribute
+    @NotNull
     private Long parentId;
 }

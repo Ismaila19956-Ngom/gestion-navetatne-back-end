@@ -46,6 +46,7 @@ public enum Feature {
     //    DATE_IMPORTANT("date_important",Module.PROJECT_SETTINGS),
 //    COMPONENT("Composantes", Module.PROJECT_SETTINGS),
     INTERVENTION_AREA("Zones d'intervention", Module.PROJECT_SETTINGS),
+    CANDIDAT("Candidat", Module.ACTES_GESTION),
     SUPERVISION_EXECUTION_STRUCTURE("Structure tutelle/exécution", Module.PROJECT_SETTINGS),
     PARTNER("Partenaires", Module.PROJECT_SETTINGS),
     INDICATOR("Indicateurs", Module.PROJECT_SETTINGS),
@@ -60,6 +61,14 @@ public enum Feature {
     POINT_OF_VIGILANCE("Point de vigilance", Module.PROJECT_DETAILED_PROGRESS_TRACKING),
     STATUS("Statut", Module.PROJECT_DETAILED_PROGRESS_TRACKING),
     FLAG("Flags", Module.PROJECT_DETAILED_PROGRESS_TRACKING),
+
+
+    FORMATION("Formation externe", Module.Gestion_Administrative),
+    ATELIER("atelier", Module.Gestion_Administrative),
+
+    PARTICIPANT("participant", Module.Gestion_Administrative),
+
+
     FUNDING("Financements", Module.PROJECT_DETAILED_PROGRESS_TRACKING),
     MEDIATHEQUE("Médiathèque", Module.PROJECT_DETAILED_PROGRESS_TRACKING),
     DOCUMENT("Documents", Module.PROJECT_DETAILED_PROGRESS_TRACKING),
@@ -81,6 +90,8 @@ public enum Feature {
     QUERY("Requêtes", Module.PROJECT_ACTIVITY_MONITORING),
     MEETING("Réunions", Module.PROJECT_ACTIVITY_MONITORING),
     AGENT("Agents", Module.REFERENTIEL),
+    CARACTERISTIQUE("Agents", Module.REFERENTIEL),
+    RECRUTEMENT("Recrutement", Module.REFERENTIEL),
     STRUCTURE("Structures", Module.REFERENTIEL),
     COMPLETION_RATE("Taux avancement", Module.PROJECT_DETAILED_PROGRESS_TRACKING),
     EVALUATION("evaluation", Module.PROJECT_DETAILED_PROGRESS_TRACKING),

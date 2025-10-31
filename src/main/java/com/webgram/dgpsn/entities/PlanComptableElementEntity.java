@@ -31,8 +31,8 @@ public class PlanComptableElementEntity extends Auditable<Long> implements Seria
     @Column(name = "pce_type")
     private TypePlanComptable type;
 
-    // Relation vers le plan parent via la colonne agt_linked_plan_comptable_element_bigint
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "pce_parent_id", referencedColumnName = "pce_id")
+    @ManyToOne
+    @JoinColumn(name = "pce_parent_id")
+
     private PlanComptableElementEntity parent;
 }

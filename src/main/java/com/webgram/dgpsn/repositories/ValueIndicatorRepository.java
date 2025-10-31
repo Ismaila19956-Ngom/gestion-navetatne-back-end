@@ -4,7 +4,9 @@ import com.querydsl.core.BooleanBuilder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import com.webgram.dgpsn.entities.IndicatorProjetEntity;
 import com.webgram.dgpsn.entities.QValueIndicatorEntity;
@@ -18,7 +20,7 @@ import java.util.Optional;
 @Repository
 public interface ValueIndicatorRepository extends JpaRepository<ValueIndicatorEntity, Long>, QuerydslPredicateExecutor<ValueIndicatorEntity> {
 
-    default Page<ValueIndicatorEntity> readAllByFilters(Pageable pageable,  Long projetId, Long indicatorId
+    default Page<ValueIndicatorEntity> readAllByFilters(Pageable pageable,  Long projetId, Long activityId, Long indicatorId
         , String period, Double targetValue, Double valueReched, Date startDate, Date endDate) {
         var booleanBuilder = new BooleanBuilder();
 
@@ -34,6 +36,9 @@ public interface ValueIndicatorRepository extends JpaRepository<ValueIndicatorEn
         if(Objects.nonNull(projetId)){
             booleanBuilder.and(QValueIndicatorEntity.valueIndicatorEntity.projet.id.eq(projetId));
         }
+        if(Objects.nonNull(activityId)){
+            booleanBuilder.and(QValueIndicatorEntity.valueIndicatorEntity.activity.id.eq(activityId));
+        }
         if(Objects.nonNull(startDate)){
             booleanBuilder.and(QValueIndicatorEntity.valueIndicatorEntity.startDate.eq(startDate));
         }
@@ -43,5 +48,31 @@ public interface ValueIndicatorRepository extends JpaRepository<ValueIndicatorEn
         return findAll(booleanBuilder, pageable);
     }
 
+    List<ValueIndicatorEntity> findByActivityId(Long activityId);
+
     Optional<List<ValueIndicatorEntity>> findByIndicatorProjet(IndicatorProjetEntity indicatorProjet);
+
+    /**
+     * Trouve toutes les valeurs d'indicateur pour un projet
+     */
+    @Query("SELECT v FROM ValueIndicatorEntity v WHERE v.projet.id = :projetId")
+    List<ValueIndicatorEntity> findByProjetId(@Param("projetId") Long projetId);
+
+    /**
+     * Trouve toutes les valeurs d'indicateur pour une activité
+     */
+    @Query("SELECT v FROM ValueIndicatorEntity v WHERE v.activity.id = :activityId")
+    List<ValueIndicatorEntity> findByActivityIdPerso(@Param("activityId") Long activityId);
+
+    /**
+     * Trouve toutes les valeurs d'indicateur pour un indicateur de projet
+     */
+    @Query("SELECT v FROM ValueIndicatorEntity v WHERE v.indicatorProjet.id = :indicatorProjetId")
+    List<ValueIndicatorEntity> findByIndicatorProjetId(@Param("indicatorProjetId") Long indicatorProjetId);
+
+    /**
+     * Trouve toutes les valeurs d'indicateur pour une année donnée
+     */
+    @Query("SELECT v FROM ValueIndicatorEntity v WHERE v.year = :year")
+    List<ValueIndicatorEntity> findByYear(@Param("year") Integer year);
 }

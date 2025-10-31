@@ -86,6 +86,7 @@ public class ValueIndicatorController {
     public Page<ValueIndicatorDTO> readAllValueIndicators(
             Pageable pageable,
             @Parameter(name = "projectId", description = "value of projectId used to filter list partnerProject") @RequestParam(value = "projectId", required = false) Long projectId,
+            @Parameter(name = "activityId", description = "value of activityId used to filter list actorProject") @RequestParam(value = "activityId", required = false) Long activityId,
             @Parameter(name = "indicatorId", description = "value of indicatorId used to filter list actorProject") @RequestParam(value = "indicatorId", required = false) Long indicatorId,
             @Parameter(name = "period", description = "value of period used to filter list actorProject") @RequestParam(value = "period", required = false) String period,
             @Parameter(name = "targetValue", description = "value of targetValue used to filter list actorProject") @RequestParam(value = "targetValue", required = false) Double targetValue,
@@ -93,7 +94,7 @@ public class ValueIndicatorController {
             @Parameter(name = "startDate", description = "value of startDate used to filter list actorProject") @RequestParam(value = "startDate", required = false) Date startDate,
             @Parameter(name = "endDate", description = "value of period used to filter list actorProject") @RequestParam(value = "endDate", required = false) Date endDate
     ) {
-        return valueIndicatorService.readAll(pageable, projectId, indicatorId, period, targetValue, valueReched, startDate, endDate);
+        return valueIndicatorService.readAll(pageable, projectId, activityId, indicatorId, period, targetValue, valueReched, startDate, endDate);
     }
 
     @Operation(summary = "Import value indicator", description = "this endpoint take input excel file and import it on database")

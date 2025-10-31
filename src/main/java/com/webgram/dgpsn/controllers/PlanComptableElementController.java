@@ -61,10 +61,26 @@ public class PlanComptableElementController {
             @RequestParam(required = false) String code,
             @RequestParam(required = false) String libelle,
             @RequestParam(required = false) TypePlanComptable type,
-            @RequestParam(required = false) Long parent,
+            @RequestParam(required = false) Long parentId,
             @RequestParam(required = false) String sortBy,
             @RequestParam(required = false) Boolean ascending
     ) {
-        return service.readAll(pageable, idsToIgnore, code, libelle, type, parent, sortBy, ascending);
+        return service.readAll(pageable, idsToIgnore, code, libelle, type, parentId, sortBy, ascending);
+    }
+
+
+    @GetMapping("/realisation/{id}")
+    public ResponseEntity<List<PlanComptableElementDTO>> getRealisationsBySousAltaCompteId(@PathVariable Long id) {
+        var result = service.getRealisationsByRubriqueId(id);
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/rubriques/{id}")
+    public ResponseEntity<List<PlanComptableElementDTO>> getRubriquesByClasseId(@PathVariable Long id) {
+        var rubriques = service.getRubriquesByClasseId(id);
+        return ResponseEntity.ok(rubriques);
     }
 }
+
+
+

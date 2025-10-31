@@ -66,11 +66,21 @@ public class ManagementUnitDTO {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private ManagementUnitDTO parent;
 
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private StructureDTO structure;
+
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private List<SubSectorDTO> subSectors;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private List<LabelDTO> beneficiaries;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private List<LabelDTO> verificationSources;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private List<StructureDTO> actorsInvolved;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private List<LabelDTO> executionZones;
@@ -79,11 +89,15 @@ public class ManagementUnitDTO {
     private List<StructureProjectDTO> ministerTutelles;
 
     private Long axeId;
+    private Long typeContratId;
     private Long responsibleId;
     private Long parentId;
     private List<Long> subSectorIds;
     private List<Long> beneficiarieIds;
     private List<Long> executionZoneIds;
+    private List<Long> verificationSourceIds;
+    private List<Long> actorInvolvedIds;
+    private Long structureId;
 
 
 }

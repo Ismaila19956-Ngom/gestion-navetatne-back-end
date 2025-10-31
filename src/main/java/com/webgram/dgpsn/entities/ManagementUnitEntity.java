@@ -1,5 +1,6 @@
 package com.webgram.dgpsn.entities;
 
+import com.webgram.dgpsn.models.StructureDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import com.webgram.dgpsn.entities.audits.Auditable;
@@ -83,6 +84,9 @@ public class ManagementUnitEntity extends Auditable<Long> implements Serializabl
     @ManyToOne
     private LabelEntity axe;
 
+    @ManyToOne
+    private LabelEntity typeContrat;
+
     @Column(name = "prl_tag" , columnDefinition = "TEXT")
     private String tag;
 
@@ -118,10 +122,22 @@ public class ManagementUnitEntity extends Auditable<Long> implements Serializabl
     private List<LabelEntity> executionZones;
 
     @ManyToMany
+    @JoinTable(name = "management_unit_verificationSources",
+            joinColumns = {@JoinColumn(name = "management_unit_id")},
+            inverseJoinColumns = {@JoinColumn(name = "verificationSources_id")})
+    private List<LabelEntity> verificationSources;
+
+    @ManyToMany
     @JoinTable(name = "management_unit_beneficiary",
             joinColumns = {@JoinColumn(name = "management_unit_id")},
             inverseJoinColumns = {@JoinColumn(name = "beneficiary_id")})
     private List<LabelEntity> beneficiaries;
+
+    @ManyToMany
+    @JoinTable(name = "management_unit_actorsInvolved",
+            joinColumns = {@JoinColumn(name = "management_unit_id")},
+            inverseJoinColumns = {@JoinColumn(name = "actorsInvolved_id")})
+    private List<StructureEntity> actorsInvolved;
 
     @ManyToOne
     private StructureEntity structure;
