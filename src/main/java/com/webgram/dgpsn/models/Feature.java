@@ -158,7 +158,8 @@ public enum Feature {
     PROMOTEUR("Promoteur", Module.REFERENTIEL),
 //    PASSATION ("Promoteur", Module.BAF),
 
-    PLAN_COMPTABLE("Plan comptable", Module.PROJECT_SETTINGS    );
+    PLAN_COMPTABLE("Plan comptable", Module.PROJECT_SETTINGS    ),
+    FOURNISSEUR("Fournisseur", Module.PROJECT_SETTINGS);
 
 
 
