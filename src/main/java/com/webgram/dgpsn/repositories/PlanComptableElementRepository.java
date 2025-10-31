@@ -1,7 +1,9 @@
 package com.webgram.dgpsn.repositories;
 
 import com.querydsl.core.BooleanBuilder;
+import com.webgram.dgpsn.entities.LigneBudgetaireEntity;
 import com.webgram.dgpsn.entities.QPlanComptableElementEntity;
+import com.webgram.dgpsn.entities.enums.TypeLigneBugetaire;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,6 +23,13 @@ import java.util.Optional;
 @Repository
 public interface PlanComptableElementRepository extends JpaRepository<PlanComptableElementEntity, Long>,
         QuerydslPredicateExecutor<PlanComptableElementEntity> {
+
+    Optional<PlanComptableElementEntity> findByCodeAndType(String code, TypePlanComptable type);
+
+    @Query("SELECT r FROM PlanComptableElementEntity r WHERE r.type = 'RUBRIQUE' AND " +
+            "r.parent.parent.parent.id = :classeId ORDER BY r.parent.parent.code, r.parent.code, r.code")
+    List<PlanComptableElementEntity> findRubriquesByClasseIdPerso(@Param("classeId") Long classeId);
+
 
     boolean existsByCode(String code);
 
