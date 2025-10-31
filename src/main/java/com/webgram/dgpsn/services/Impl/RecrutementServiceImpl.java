@@ -1,6 +1,7 @@
 package com.webgram.dgpsn.services.Impl;
 
 import com.querydsl.core.BooleanBuilder;
+import com.webgram.dgpsn.entities.LabelEntity;
 import com.webgram.dgpsn.entities.ManagementUnitEntity;
 import com.webgram.dgpsn.entities.QRecrutementEntity;
 import com.webgram.dgpsn.entities.RecrutementEntity;
@@ -146,7 +147,8 @@ public class RecrutementServiceImpl implements RecrutementService {
             }
 
             if (searchParams.containsKey("typeContrat"))
-                booleanBuilder.and(qEntity.typeContrat.eq(TypeContrat.valueOf(searchParams.get("typeContrat"))));
+                booleanBuilder.and(qEntity.typeContrat.libelle.equalsIgnoreCase(searchParams.get("typeContrat"))
+                        .or(qEntity.typeContrat.code.equalsIgnoreCase(searchParams.get("typeContrat"))));
 
         }
 

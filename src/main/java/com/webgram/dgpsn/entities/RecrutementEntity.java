@@ -26,8 +26,9 @@ public class RecrutementEntity {
     @Column(name = "recru_libelle")
     private String libelle;
 
-    @Column(name = "recru_type_contrat")
-    private TypeContrat typeContrat;
+    @ManyToOne
+    @JoinColumn(name = "recru_type_contrat")
+    private LabelEntity typeContrat;
 
     @Column(name = "recru_date")
     @Temporal(TemporalType.DATE)
