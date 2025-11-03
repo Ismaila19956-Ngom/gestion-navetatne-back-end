@@ -5,6 +5,7 @@ import com.webgram.dgpsn.entities.CandidatEntity;
 import com.webgram.dgpsn.entities.QCandidatEntity;
 import com.webgram.dgpsn.entities.enums.ExperienceProfessionnelle;
 import com.webgram.dgpsn.entities.enums.NiveauEtude;
+import com.webgram.dgpsn.entities.enums.StatusCadidature;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -28,49 +29,47 @@ public interface CandidatRepository extends JpaRepository<CandidatEntity, Long>,
             String adresse,
             NiveauEtude niveauEtude,
             ExperienceProfessionnelle experience,
-            Boolean preselectionneEntretien,
-            Boolean selectionne,
+            StatusCadidature statusCandidature,  // NOUVEAU
             String sortBy,
             Boolean ascending
     ) {
         BooleanBuilder booleanBuilder = new BooleanBuilder();
         Sort sort = Sort.unsorted();
 
-        if (Objects.nonNull(idsToIgnore)) {
+        // 1. Ignorer certains IDs
+        if (Objects.nonNull(idsToIgnore) && !idsToIgnore.isEmpty()) {
             booleanBuilder.and(QCandidatEntity.candidatEntity.id.notIn(idsToIgnore));
         }
-        if (StringUtils.isNotEmpty(nom)) {
+
+        // 2. Filtres texte
+        if (StringUtils.isNotBlank(nom)) {
             booleanBuilder.and(QCandidatEntity.candidatEntity.nom.containsIgnoreCase(nom));
         }
-        if (StringUtils.isNotEmpty(prenom)) {
+        if (StringUtils.isNotBlank(prenom)) {
             booleanBuilder.and(QCandidatEntity.candidatEntity.prenom.containsIgnoreCase(prenom));
         }
-        if (StringUtils.isNotEmpty(adresse)) {
+        if (StringUtils.isNotBlank(adresse)) {
             booleanBuilder.and(QCandidatEntity.candidatEntity.adresse.containsIgnoreCase(adresse));
         }
+
+        // 3. Filtres enum
         if (Objects.nonNull(niveauEtude)) {
             booleanBuilder.and(QCandidatEntity.candidatEntity.niveauEtude.eq(niveauEtude));
         }
         if (Objects.nonNull(experience)) {
             booleanBuilder.and(QCandidatEntity.candidatEntity.experienceProfessionnelle.eq(experience));
         }
-        if (Objects.nonNull(preselectionneEntretien)) {
-            booleanBuilder.and(QCandidatEntity.candidatEntity.preselectionneEntretien.eq(preselectionneEntretien));
-        }
-        if (Objects.nonNull(selectionne)) {
-            booleanBuilder.and(QCandidatEntity.candidatEntity.selectionne.eq(selectionne));
+
+        // 4. FILTRE PAR STATUT (remplace les booléens)
+        if (Objects.nonNull(statusCandidature)) {
+            booleanBuilder.and(QCandidatEntity.candidatEntity.statusCandidature.eq(statusCandidature));
         }
 
-        // Aucun filtre sur les compétences pour le moment
-        // booleanBuilder.and(QCandidatEntity.candidatEntity.competences.contains(...));
-
-        if (StringUtils.isNotEmpty(sortBy)) {
-            sort = Sort.by(sortBy);
-        }
-        if (Boolean.TRUE.equals(ascending)) {
-            sort = sort.ascending();
-        } else if (Boolean.FALSE.equals(ascending)) {
-            sort = sort.descending();
+        // 5. Tri
+        if (StringUtils.isNotBlank(sortBy)) {
+            sort = ascending != null && ascending ?
+                    Sort.by(sortBy).ascending() :
+                    Sort.by(sortBy).descending();
         }
 
         PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);

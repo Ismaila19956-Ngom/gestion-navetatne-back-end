@@ -2,8 +2,14 @@ package com.webgram.dgpsn.mappers;
 
 import com.webgram.dgpsn.entities.CandidatEntity;
 import com.webgram.dgpsn.models.CandidatDTO;
+import org.mapstruct.factory.Mappers;
+
+import java.util.stream.Collectors;
 
 public class CandidatMapper {
+
+    // Création manuelle de l'instance MapStruct
+    private static final NotationMapper notationMapper = Mappers.getMapper(NotationMapper.class);
 
     public static CandidatDTO toDTO(CandidatEntity entity) {
         return CandidatDTO.builder()
@@ -16,10 +22,17 @@ public class CandidatMapper {
                 .niveauEtude(entity.getNiveauEtude())
                 .experienceProfessionnelle(entity.getExperienceProfessionnelle())
                 .postePostule(entity.getPostePostule())
-                .preselectionneEntretien(entity.isPreselectionneEntretien())
-                .selectionne(entity.isSelectionne())
+                .statusCandidature(entity.getStatusCandidature())
                 .competences(entity.getCompetences())
                 .cv(entity.getCv())
+                .recrutementId(entity.getRecrutement().getId())
+                .notations(
+                        entity.getNotations() != null
+                                ? entity.getNotations().stream()
+                                .map(notationMapper::toDto)
+                                .collect(Collectors.toList())
+                                : null
+                )
                 .build();
     }
 
@@ -34,11 +47,10 @@ public class CandidatMapper {
         entity.setNiveauEtude(dto.getNiveauEtude());
         entity.setExperienceProfessionnelle(dto.getExperienceProfessionnelle());
         entity.setPostePostule(dto.getPostePostule());
-        entity.setPreselectionneEntretien(dto.isPreselectionneEntretien());
-        entity.setSelectionne(dto.isSelectionne());
+        entity.setStatusCandidature(dto.getStatusCandidature());
         entity.setCompetences(dto.getCompetences());
         entity.setCv(dto.getCv());
+        // Les notations seront gérées dans le service
         return entity;
     }
-
 }
