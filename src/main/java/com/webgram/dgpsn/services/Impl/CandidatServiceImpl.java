@@ -1,5 +1,10 @@
 package com.webgram.dgpsn.services.Impl;
 
+import com.webgram.dgpsn.entities.NotationEntity;
+import com.webgram.dgpsn.entities.enums.StatusCadidature;
+import com.webgram.dgpsn.exceptions.ResourceNotFoundException;
+import com.webgram.dgpsn.repositories.NotationRepository;
+import com.webgram.dgpsn.repositories.RecrutementRepository;
 import com.webgram.dgpsn.services.CandidatService;
 
 import com.webgram.dgpsn.entities.CandidatEntity;
@@ -8,11 +13,18 @@ import com.webgram.dgpsn.entities.enums.NiveauEtude;
 import com.webgram.dgpsn.mappers.CandidatMapper;
 import com.webgram.dgpsn.models.CandidatDTO;
 import com.webgram.dgpsn.repositories.CandidatRepository;
+import com.webgram.dgpsn.utils.NotationDefaults;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.BeanWrapperImpl;
+import java.beans.PropertyDescriptor;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,6 +34,8 @@ import java.util.UUID;
 public class CandidatServiceImpl implements CandidatService {
 
     private final CandidatRepository candidatRepository;
+    private final RecrutementRepository recrutementRepository;
+    private final NotationRepository notationRepository;
 
     @Override
     public Page<CandidatDTO> getCandidatsFiltered(
@@ -32,8 +46,7 @@ public class CandidatServiceImpl implements CandidatService {
             String adresse,
             NiveauEtude niveauEtude,
             ExperienceProfessionnelle experience,
-            Boolean preselectionneEntretien,
-            Boolean selectionne,
+            StatusCadidature statusCadidature,
             String sortBy,
             Boolean ascending
     ) {
@@ -45,8 +58,7 @@ public class CandidatServiceImpl implements CandidatService {
                 adresse,
                 niveauEtude,
                 experience,
-                preselectionneEntretien,
-                selectionne,
+                statusCadidature,
                 sortBy,
                 ascending
         );
@@ -63,17 +75,52 @@ public class CandidatServiceImpl implements CandidatService {
 
 
     @Override
-    public CandidatDTO saveOrUpdateCandidat(CandidatDTO dto) {
-        CandidatEntity entity = CandidatMapper.toEntity(dto);
-
-        if (entity.getId() == null || entity.getMatricule() == null) {
-            entity.setMatricule(generateMatricule());
+    public CandidatDTO saveCandidat(CandidatDTO dto) {
+        if (dto.getStatusCandidature() == null) {
+            dto.setStatusCandidature(StatusCadidature.IN_PROGRESS);
         }
 
-        CandidatEntity saved = candidatRepository.save(entity);
-        return CandidatMapper.toDTO(saved);
+        var recrutement = recrutementRepository.findById(dto.getRecrutementId())
+                .orElseThrow(() -> new ResourceNotFoundException("Recrutement not found"));
+
+        CandidatEntity entity = CandidatMapper.toEntity(dto);
+        entity.setMatricule(generateMatricule());
+        entity.setRecrutement(recrutement);
+
+        // ✅ Étape 1 : enregistrer le candidat en base
+        CandidatEntity savedCandidat = candidatRepository.save(entity);
+
+        // ✅ Étape 2 : créer les notations et les lier au candidat déjà sauvegardé
+        List<NotationEntity> notations = NotationDefaults.defaultNotations()
+                .stream()
+                .peek(n -> n.setCandidat(savedCandidat))
+                .toList();
+
+        notationRepository.saveAll(notations);
+
+        // ✅ Étape 3 : attacher les notations à l’objet et le re-sauvegarder si tu veux
+        savedCandidat.setNotations(notations);
+
+        return CandidatMapper.toDTO(savedCandidat);
     }
 
+    @Override
+    public CandidatDTO updateCandidat(Long id, CandidatDTO dto) {
+        if (id == null) {
+            throw new IllegalArgumentException("L'ID dans l'URL est requis.");
+        }
+        if (!id.equals(dto.getId())) {
+            throw new IllegalArgumentException(
+                    String.format("L'ID dans l'URL (%d) ne correspond pas à l'ID dans le corps (%d).", id, dto.getId())
+            );
+        }
+        CandidatEntity existing = candidatRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Candidat non trouvé avec l'ID : " + id));
+
+        BeanUtils.copyProperties(dto, existing, getNullPropertyNames(dto));
+        CandidatEntity saved = candidatRepository.save(existing);
+        return CandidatMapper.toDTO(saved);
+    }
     @Override
     public void deleteCandidat(Long id) {
         candidatRepository.deleteById(id);
@@ -84,6 +131,25 @@ public class CandidatServiceImpl implements CandidatService {
         CandidatEntity entity = candidatRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Candidat non trouvé : " + id));
         return CandidatMapper.toDTO(entity);
+    }
+
+    private String[] getNullPropertyNames(Object source) {
+        BeanWrapper src = new BeanWrapperImpl(source);
+        PropertyDescriptor[] pds = src.getPropertyDescriptors();
+
+        Set<String> emptyNames = new HashSet<>();
+        for (PropertyDescriptor pd : pds) {
+            if (pd.getName().equals("class")) continue;
+
+            Object srcValue = src.getPropertyValue(pd.getName());
+            if (srcValue == null) {
+                emptyNames.add(pd.getName());
+            }
+        }
+        // TODO: Protect id and matricule
+        emptyNames.add("id");
+        emptyNames.add("matricule");
+        return emptyNames.toArray(new String[0]);
     }
 
     private String generateMatricule() {

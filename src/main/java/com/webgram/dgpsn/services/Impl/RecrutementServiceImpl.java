@@ -1,15 +1,19 @@
 package com.webgram.dgpsn.services.Impl;
 
 import com.querydsl.core.BooleanBuilder;
+import com.webgram.dgpsn.entities.LabelEntity;
 import com.webgram.dgpsn.entities.ManagementUnitEntity;
 import com.webgram.dgpsn.entities.QRecrutementEntity;
 import com.webgram.dgpsn.entities.RecrutementEntity;
+import com.webgram.dgpsn.entities.enums.StatutType;
 import com.webgram.dgpsn.entities.enums.TypeContrat;
 import com.webgram.dgpsn.exceptions.ResourceNotFoundException;
+import com.webgram.dgpsn.mappers.CandidatMapper;
 import com.webgram.dgpsn.mappers.RecrutementMapper;
+import com.webgram.dgpsn.models.CandidatDTO;
 import com.webgram.dgpsn.models.RecrutementDTO;
 import com.webgram.dgpsn.repositories.RecrutementRepository;
-import com.webgram.dgpsn.repositories.UgpProjetRepository;
+import com.webgram.dgpsn.services.CandidatService;
 import com.webgram.dgpsn.services.RecrutementService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -18,11 +22,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.MessageFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -36,6 +42,8 @@ import java.util.stream.Collectors;
 public class RecrutementServiceImpl implements RecrutementService {
     private final RecrutementRepository recrutementRepository;
     private final RecrutementMapper recrutementMapper;
+    final CandidatService candidatService;
+    private static final String RECRUTEMENT_NOT_FOUND_MESSAGE = "Recrutement non trouvé avec l'ID {0}";
 
 
     String ROLE_IDENTIFIER_NOT_FOUND_MESSAGE = "Invalide id recrutement {0}";
@@ -48,41 +56,92 @@ public class RecrutementServiceImpl implements RecrutementService {
 //    }
 
     @Override
-    public RecrutementDTO createRecrutement(RecrutementDTO recrutementDTO) {
-        // 1. Conversion du DTO en Entité
-        var entity = recrutementMapper.asEntity(recrutementDTO);
+    public CandidatDTO addCandidat(Long idRecrutement, CandidatDTO dto){
+        dto.setRecrutementId(idRecrutement);
+        return candidatService.saveCandidat(dto);
+    }
 
-        // 2. Synchronisation de la relation bidirectionnelle
-        // Pour chaque CaracteristiqueExigeEntity dans la liste,
-        // on définit sa référence "recrutement" à l'entité parente.
+
+
+    @Override
+    public List<CandidatDTO> getCandidatsRecrutements(Long idRecrutement){
+        var recrutement = recrutementRepository.findById(idRecrutement).orElseThrow(
+                () -> new ResourceNotFoundException("Recrutement not found"));
+        return  recrutement.getCandidats().stream().map(
+                CandidatMapper::toDTO).toList();
+    }
+
+
+    @Override
+    public CandidatDTO updateCandidat(Long idRecrutement, Long idCandidat, CandidatDTO dto) {
+        var recrutement = recrutementRepository.findById(idRecrutement)
+                .orElseThrow(() -> new ResourceNotFoundException("Recrutement non trouvé avec id : " + idRecrutement));
+
+        boolean candidatAppartient = recrutement.getCandidats().stream()
+                .anyMatch(c -> Objects.equals(c.getId(), idCandidat));
+
+        if (!candidatAppartient) {
+            throw new ResourceNotFoundException("Le candidat n'appartient pas à ce recrutement.");
+        }
+        dto.setRecrutementId(idRecrutement);
+        return candidatService.updateCandidat(idCandidat, dto);
+    }
+
+
+    @Override
+    @Transactional
+    public RecrutementDTO createRecrutement(RecrutementDTO recrutementDTO) {
+        log.info("Création d'un nouveau recrutement : {}", recrutementDTO.getLibelle());
+
+        RecrutementEntity entity = recrutementMapper.asEntity(recrutementDTO);
+
+        // Assurer la cohérence de la relation bidirectionnelle
         if (entity.getCaracteristiques() != null) {
             entity.getCaracteristiques().forEach(caracteristique -> caracteristique.setRecrutement(entity));
         }
 
-        // 3. Sauvegarde de l'entité parente (avec cascade)
-        var savedEntity = recrutementRepository.save(entity);
+        // Définir le statut initial par défaut
+        entity.setStatutType(StatutType.TRAITEMENT_ENCOUR);
+
+        RecrutementEntity savedEntity = recrutementRepository.save(entity);
+        log.info("Recrutement créé avec succès, ID : {}", savedEntity.getId());
+
         return recrutementMapper.asDto(savedEntity);
     }
 
     @Override
+    @Transactional
     public RecrutementDTO updateRecrutement(RecrutementDTO recrutementDTO) {
-        // ✅ Vérifier que le recrutement existe
-        if (!recrutementRepository.existsById(recrutementDTO.getId())) {
-            throw new ResourceNotFoundException(
-                    MessageFormat.format(ROLE_IDENTIFIER_NOT_FOUND_MESSAGE, recrutementDTO.getId())
-            );
+        log.info("Mise à jour du recrutement avec l'ID : {}", recrutementDTO.getId());
+
+        RecrutementEntity existingEntity = recrutementRepository.findById(recrutementDTO.getId())
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        MessageFormat.format(RECRUTEMENT_NOT_FOUND_MESSAGE, recrutementDTO.getId())
+                ));
+
+        // Mapper le DTO vers une nouvelle entité pour obtenir les nouvelles valeurs
+        RecrutementEntity updatedData = recrutementMapper.asEntity(recrutementDTO);
+
+        // Mettre à jour les champs de l'entité existante
+        existingEntity.setLibelle(updatedData.getLibelle());
+        existingEntity.setTypeContrat(updatedData.getTypeContrat());
+        existingEntity.setDateRecrutement(updatedData.getDateRecrutement());
+
+        // Gérer la mise à jour de la collection de caractéristiques
+        existingEntity.getCaracteristiques().clear();
+        if (updatedData.getCaracteristiques() != null) {
+            updatedData.getCaracteristiques().forEach(car -> {
+                car.setRecrutement(existingEntity); // Important pour la relation bidirectionnelle
+                existingEntity.getCaracteristiques().add(car);
+            });
         }
 
-        var entity = recrutementMapper.asEntity(recrutementDTO);
+        RecrutementEntity savedEntity = recrutementRepository.save(existingEntity);
+        log.info("Recrutement mis à jour avec succès, ID : {}", savedEntity.getId());
 
-        // ✅ Il est également crucial d'ajouter la même logique pour la mise à jour !
-        if (entity.getCaracteristiques() != null) {
-            entity.getCaracteristiques().forEach(caracteristique -> caracteristique.setRecrutement(entity));
-        }
-
-        var savedEntity = recrutementRepository.save(entity);
         return recrutementMapper.asDto(savedEntity);
     }
+
 
     @Override
     public void deleteRecrutement(Long id) {
@@ -125,9 +184,35 @@ public class RecrutementServiceImpl implements RecrutementService {
             }
 
             if (searchParams.containsKey("typeContrat"))
-                booleanBuilder.and(qEntity.typeContrat.eq(TypeContrat.valueOf(searchParams.get("typeContrat"))));
+                booleanBuilder.and(qEntity.typeContrat.libelle.equalsIgnoreCase(searchParams.get("typeContrat"))
+                        .or(qEntity.typeContrat.code.equalsIgnoreCase(searchParams.get("typeContrat"))));
 
         }
+
+
     }
 
+    @Override
+    @Transactional
+    public RecrutementDTO updateStatut(Long id, StatutType statutType) {
+        log.info("Mise à jour du statut pour le recrutement ID={} vers {}", id, statutType);
+
+        if (id == null || statutType == null) {
+            throw new IllegalArgumentException("L'ID du recrutement et le statut ne peuvent pas être nuls.");
+        }
+
+        RecrutementEntity entity = recrutementRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(MessageFormat.format(RECRUTEMENT_NOT_FOUND_MESSAGE, id)));
+
+        if (entity.getStatutType() == statutType) {
+            log.warn("Le statut du recrutement ID={} est déjà {}. Aucune mise à jour effectuée.", id, statutType);
+            return recrutementMapper.asDto(entity);
+        }
+
+        log.info("Changement de statut pour le recrutement ID={}: de {} à {}", id, entity.getStatutType(), statutType);
+        entity.setStatutType(statutType);
+
+        RecrutementEntity updatedEntity = recrutementRepository.save(entity);
+        return recrutementMapper.asDto(updatedEntity);
+    }
 }

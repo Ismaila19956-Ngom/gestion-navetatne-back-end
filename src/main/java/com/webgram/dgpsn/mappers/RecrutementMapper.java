@@ -8,8 +8,11 @@
 
     @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = "spring",  uses = {CaracteristiqueExigeMapper.class} )
     public interface RecrutementMapper extends EntityMapper<RecrutementDTO, RecrutementEntity> {
+        @Mapping(source = "typeContrat.id", target = "typeContratId")
+
         @Override
         RecrutementDTO asDto(RecrutementEntity entity);
+        @Mapping(source = "typeContratId", target = "typeContrat.id")
 
         @Override
         RecrutementEntity asEntity(RecrutementDTO dto);

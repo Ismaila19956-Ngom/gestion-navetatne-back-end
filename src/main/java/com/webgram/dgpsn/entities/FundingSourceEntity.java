@@ -44,7 +44,6 @@ public class FundingSourceEntity extends Auditable<Long> implements Serializable
     @JoinColumn(name = "budget_linked_source_financement")
     private BudgetEntity budget;
 
-    //BudgetGlobal
     @ManyToOne
     @JoinColumn(name = "budget_global_linked_source_financement")
     private BudgetDgpsnEntity budgetGlobal;

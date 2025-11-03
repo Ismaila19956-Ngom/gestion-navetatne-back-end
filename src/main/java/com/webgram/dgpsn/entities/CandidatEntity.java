@@ -2,8 +2,10 @@ package com.webgram.dgpsn.entities;
 
 import com.webgram.dgpsn.entities.enums.ExperienceProfessionnelle;
 import com.webgram.dgpsn.entities.enums.NiveauEtude;
+import com.webgram.dgpsn.entities.enums.StatusCadidature;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,6 +17,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class CandidatEntity {
 
     @Id
@@ -45,19 +48,23 @@ public class CandidatEntity {
     @Column(name = "poste_postule")
     private String postePostule;
 
-    @Column(name = "preselectionne_entretien")
-    private boolean preselectionneEntretien = false;
+    @Builder.Default
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status_candidature", nullable = false)
+    private StatusCadidature statusCandidature = StatusCadidature.IN_PROGRESS;
 
-    private boolean selectionne = false;
-
+    @Builder.Default
     @Column(name = "competences", columnDefinition = "text[]")
     private List<String> competences = new ArrayList<>();
 
     @Column(name = "cv")
-    private String cv; // optionnel : peut contenir URL ou chemin du fichier
+    private String cv;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "recrutement_id")
+    private RecrutementEntity recrutement;
 
-//    @JoinColumn(name = "recrutement_id")
-//    private Recrutement recrutement;
+    @OneToMany(mappedBy = "candidat", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<NotationEntity> notations = new ArrayList<>();
 
 }

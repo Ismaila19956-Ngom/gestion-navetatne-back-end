@@ -1,5 +1,6 @@
 package com.webgram.dgpsn.services.Impl;
 
+import com.webgram.dgpsn.annotations.Journal;
 import com.webgram.dgpsn.entities.PlanComptableElementEntity;
 import com.webgram.dgpsn.entities.enums.TypePlanComptable;
 import com.webgram.dgpsn.exceptions.PlanComptableException;
@@ -8,6 +9,7 @@ import com.webgram.dgpsn.mappers.PlanComptableElementMapper;
 import com.webgram.dgpsn.models.PlanComptableElementDTO;
 import com.webgram.dgpsn.repositories.PlanComptableElementRepository;
 import com.webgram.dgpsn.services.PlanComptableElementService;
+import com.webgram.dgpsn.tools.ActionType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -29,6 +31,7 @@ public class PlanComptableElementServiceImpl implements PlanComptableElementServ
     private final PlanComptableElementMapper mapper;
 
     @Override
+    @Journal(actionType = ActionType.CREATE_CLASSE)
     public PlanComptableElementDTO create(PlanComptableElementDTO dto) {
         log.info("Creating PlanComptableElement - type: {}, code: {}", dto.getType(), dto.getCode());
 
@@ -46,6 +49,7 @@ public class PlanComptableElementServiceImpl implements PlanComptableElementServ
     }
 
     @Override
+    @Journal(actionType = ActionType.UPDATE_CLASSE)
     public PlanComptableElementDTO update(PlanComptableElementDTO dto) {
         log.info("Updating PlanComptableElement - id: {}", dto.getId());
 
@@ -78,6 +82,7 @@ public class PlanComptableElementServiceImpl implements PlanComptableElementServ
     }
 
     @Override
+    @Journal(actionType = ActionType.READ_CLASSE)
     public PlanComptableElementDTO read(Long elementId) {
         var entity = repository.findById(elementId)
                 .orElseThrow(() -> new ResourceNotFoundException("PlanComptableElement", elementId));
@@ -85,6 +90,7 @@ public class PlanComptableElementServiceImpl implements PlanComptableElementServ
     }
 
     @Override
+    @Journal(actionType = ActionType.DELETE_CLASSE)
     public void delete(Long elementId) {
         if (!repository.existsById(elementId)) {
             throw new ResourceNotFoundException("PlanComptableElement", elementId);
@@ -94,6 +100,7 @@ public class PlanComptableElementServiceImpl implements PlanComptableElementServ
     }
 
     @Override
+    @Journal(actionType = ActionType.READ_CLASSE)
     public Page<PlanComptableElementDTO> readAll(
             Pageable pageable,
             List<Long> idsToIgnore,

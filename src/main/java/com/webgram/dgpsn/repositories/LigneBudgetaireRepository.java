@@ -16,6 +16,26 @@ import java.util.Objects;
 @Repository
 public interface LigneBudgetaireRepository extends JpaRepository<LigneBudgetaireEntity, Long>, QuerydslPredicateExecutor<LigneBudgetaireEntity> {
 
+    default List<LigneBudgetaireEntity> findByBudgetIdAndRubriqueIdAndType(
+            Long budgetId,
+            Long rubriqueId,
+            TypeLigneBugetaire type) {
+
+        var booleanBuilder = new BooleanBuilder();
+
+        if (Objects.nonNull(budgetId)) {
+            booleanBuilder.and(QLigneBudgetaireEntity.ligneBudgetaireEntity.budget.id.eq(budgetId));
+        }
+        if (Objects.nonNull(rubriqueId)) {
+            booleanBuilder.and(QLigneBudgetaireEntity.ligneBudgetaireEntity.rubrique.id.eq(rubriqueId));
+        }
+        if (Objects.nonNull(type)) {
+            booleanBuilder.and(QLigneBudgetaireEntity.ligneBudgetaireEntity.typeLigneBugetaire.eq(type));
+        }
+
+        return (List<LigneBudgetaireEntity>) findAll(booleanBuilder);
+    }
+
     default Page<LigneBudgetaireEntity> readAllByFiltering(
             Pageable pageable,
             Long rubriqueId,
