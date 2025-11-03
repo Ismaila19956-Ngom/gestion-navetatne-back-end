@@ -32,7 +32,7 @@ public class CaracteristiqueRecrutementDTO implements Serializable {
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LabelEntity caracteristiqueType;
-    @JsonProperty("caracteristiqueId")
+   // @JsonProperty("caracteristiqueId")
     private Long caracteristiqueTypeId;
 
 
