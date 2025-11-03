@@ -75,40 +75,6 @@ public class CongeServiceImpl implements CongeService {
     private static final String NUMERO_FICHE_PREFIX = "DOD";
 
     @Override
-//    public CongeDTO create(CongeDTO congeDTO) {
-//        if (hasActiveConge(congeDTO.getAgentId(), congeDTO.getDateDemande(), congeDTO.getTypeConge(), congeDTO.getDateDepart(), congeDTO.getDateReprise())) {
-//            AgentEntity agent = agentRepository.findById(congeDTO.getAgentId())
-//                    .orElseThrow(() -> new ResourceNotFoundException(AGENT_NOT_FOUND));
-//            throw new RuntimeException(
-//                    String.format("L'agent %s (%s) a déjà un congé en cours.", agent.getPrenom(), agent.getNom(), agent.getMatricule())
-//            );
-//        }
-//        if (TypeConge.ADMINISTRATIF.equals(congeDTO.getTypeConge())) {
-//            if (isDateOverlap(congeDTO.getAgentId(), congeDTO.getDateDepart(), congeDTO.getDateReprise())) {
-//                throw new IllegalStateException("Un chevauchement de dates a été détecté : l'agent a déjà un congé en cours . Veuillez vérifier la dates debut autorisation et de fin autorisation .");
-//            }
-//        }
-////        congeReferenceService.setCongeReferences(congeDTO);
-//        congeDTO.setStatutType(StatutType.TRAITEMENT_ENCOUR);
-////        congeDTO.setNumFicheConge(generateNumeroFiche());
-//        congeDTO.setDureeCessation(congeDTO.getDuree());
-//        generateAlertCreateConge(congeDTO);
-//
-//        CongeDTO.setFinalStep(Boolean.FALSE);
-//
-//        /**
-//         * Check if a workflow is configured for this module (WorkflowType.FLUX_TRESORERIE)
-//         * then set the step of 'entity' to the first step
-//         */
-//        workflowRepository.findByType(WorkflowType.DEMANDE_CONGE)
-//                .ifPresent(flow-> workflowStepRepository
-//                        .findTopByWorkflowIdOrderByOrdreAsc(flow.getId())
-//                        .ifPresent(CongeDTO::setWorkflowStep));
-//        var savedConge = congeRepository.save(congeMapper.asEntity(congeDTO));
-//
-//        return congeMapper.asDto(savedConge);
-//    }
-
     public CongeDTO create(CongeDTO congeDTO) {
         if (hasActiveConge(congeDTO.getAgentId(), congeDTO.getDateDemande(), congeDTO.getTypeConge(), congeDTO.getDateDepart(), congeDTO.getDateReprise())) {
             AgentEntity agent = agentRepository.findById(congeDTO.getAgentId())
@@ -148,18 +114,44 @@ public class CongeServiceImpl implements CongeService {
 
     }
 
-    @Override
-    public CongeDTO update(Long congeId, CongeDTO congeDTO) {
-        read(congeId);
-        var agent = agentRepository.findById(congeDTO.getAgentId());
-        if (agent.isEmpty()) {
-            throw new ResourceNotFoundException(AGENT_NOT_FOUND);
-        }
-        congeDTO.setId(congeId);
-        congeDTO.setDureeCessation(congeDTO.getDuree());
-        var savedConge = congeRepository.save(congeMapper.asEntity(congeDTO));
-        return congeMapper.asDto(savedConge);
+//    @Override
+//    public CongeDTO update(Long congeId, CongeDTO congeDTO) {
+//        read(congeId);
+//        var agent = agentRepository.findById(congeDTO.getAgentId());
+//        if (agent.isEmpty()) {
+//            throw new ResourceNotFoundException(AGENT_NOT_FOUND);
+//        }
+//        congeDTO.setId(congeId);
+//        congeDTO.setDureeCessation(congeDTO.getDuree());
+//        var savedConge = congeRepository.save(congeMapper.asEntity(congeDTO));
+//        return congeMapper.asDto(savedConge);
+//    }
+@Override
+public CongeDTO update(Long congeId, CongeDTO congeDTO) {
+    var existing = congeRepository.findById(congeId)
+            .orElseThrow(() -> new ResourceNotFoundException(FORMATION_NOT_FOUND));
+    var agent = agentRepository.findById(congeDTO.getAgentId());
+    if (agent.isEmpty()) {
+        throw new ResourceNotFoundException(AGENT_NOT_FOUND);
     }
+    congeDTO.setId(congeId);
+    congeDTO.setDureeCessation(congeDTO.getDuree());
+    var entity = congeMapper.asEntity(congeDTO);
+    entity.setFinalStep(existing.getFinalStep());
+    var existingWorkflowStep = existing.getWorkflowStep();
+    if (Objects.isNull(existingWorkflowStep)) {
+        workflowRepository.findByType(WorkflowType.DEMANDE_CONGE)
+                .ifPresent(flow -> workflowStepRepository
+                        .findTopByWorkflowIdOrderByOrdreAsc(flow.getId())
+                        .ifPresent(entity::setWorkflowStep));
+    } else {
+        entity.setWorkflowStep(existingWorkflowStep);
+    }
+    entity.setDocument(existing.getDocument());
+    var updated = congeRepository.save(entity);
+    return congeMapper.asDto(updated);
+}
+
 
     @Override
     public CongeDTO read(Long congeId) {
