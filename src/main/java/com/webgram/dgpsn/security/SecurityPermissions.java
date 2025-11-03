@@ -1003,6 +1003,7 @@ public enum SecurityPermissions {
     EDIT_COURRIER("Modifier courrier", Feature.COURRIER),
     DELETE_COURRIER("Supprimer courrier", Feature.COURRIER),
     ARCHIVER_COURRIER("Archiver courrier", Feature.COURRIER),
+    DESARCHIVER_COURRIER("Desarchiver courrier", Feature.COURRIER),
     CHANGER_STATUT_COURRIER("Changer statut courrier", Feature.COURRIER),
     READ_STATISTIQUES("Consulter statistiques", Feature.COURRIER),
     IMPORT_COURRIER("Importer courrier", Feature.COURRIER),

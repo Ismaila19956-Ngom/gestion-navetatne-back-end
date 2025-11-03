@@ -13,6 +13,7 @@ public class CourrierRule {
     static final String COURRIER_API_PREFIX = "/courriers";
     static final String COURRIER_ID = "/{courrierId}";
     static final String ARCHIVER_PREFIX = "/archiver";
+    static final String DESARCHIVER_PREFIX = "/desarchiver";
     static final String STATUT_PREFIX = "/statut";
     static final String STATISTIQUES_PREFIX = "/statistiques";
     static final String COMPTAGE_PREFIX = "/comptage";
@@ -61,6 +62,18 @@ public class CourrierRule {
         return SecurityRule.builder()
                 .httpMethod(HttpMethod.PUT)
                 .apiPattern(COURRIER_API_PREFIX + COURRIER_ID)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.EDIT_COURRIER)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+
+    @Bean
+    public SecurityRule updateDesarchivageCourrier() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.PUT)
+                .apiPattern(COURRIER_API_PREFIX + COURRIER_ID + DESARCHIVER_PREFIX)
                 .build()
                 .condition()
                 .hasPermission(SecurityPermissions.EDIT_COURRIER)
