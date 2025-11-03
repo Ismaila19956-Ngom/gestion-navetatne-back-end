@@ -97,10 +97,6 @@ public class RecrutementController {
         recrutementService.deleteRecrutement(id);
     }
 
-    // ============================================================
-    // 🔹 NOUVELLES MÉTHODES AJOUTÉES
-    // ============================================================
-
     @Operation(summary = "Ajouter un candidat à un recrutement")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Candidat ajouté au recrutement"),

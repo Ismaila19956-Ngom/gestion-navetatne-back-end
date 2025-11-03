@@ -32,6 +32,5 @@ public interface CandidatService {
 
     void deleteCandidat(Long id);
 
-
     CandidatDTO getCandidatById(Long id);
 }
