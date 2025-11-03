@@ -15,7 +15,7 @@ public class CandidatRule {
     static final String CANDIDAT_ID = "/{id}";
 
     @Bean
-    public SecurityRule saveOrUpdateCandidat() {
+    public SecurityRule saveCandidat() {
         return SecurityRule.builder()
                 .httpMethod(HttpMethod.POST)
                 .apiPattern(CANDIDAT_API_PREFIX)
@@ -53,7 +53,7 @@ public class CandidatRule {
     @Bean
     public SecurityRule updateCandidat() {
         return SecurityRule.builder()
-                .httpMethod(HttpMethod.PUT)
+                .httpMethod(HttpMethod.PATCH)
                 .apiPattern(CANDIDAT_API_PREFIX + CANDIDAT_ID)
                 .build()
                 .condition()
