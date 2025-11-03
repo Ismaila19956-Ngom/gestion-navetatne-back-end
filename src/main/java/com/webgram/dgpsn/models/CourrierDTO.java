@@ -30,6 +30,10 @@ public class CourrierDTO {
     private String instructions;
     private String notes;
 
+    // NOUVEL ATTRIBUT : Archive
+    @Builder.Default
+    private Boolean archive = false;
+
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LabelDTO urgence;
