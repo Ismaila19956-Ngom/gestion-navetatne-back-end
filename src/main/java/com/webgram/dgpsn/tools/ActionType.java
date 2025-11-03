@@ -7,6 +7,18 @@ import lombok.experimental.UtilityClass;
 @UtilityClass // tous les méthodes et les attributs sont static
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ActionType {
+    //parametrage
+    public static final String CREATE_CLASSE = " Ajout de parametre: Parametrage/ parametre  nouvelle  classe";
+    public static final String UPDATE_CLASSE = " Modification  de parametre:Parametrage/ parametre  list classe action";
+    public static final String DELETE_CLASSE = " Suppression de  parametre: Parametrage/ parametre  list classe action";
+    public  static final String READ_CLASSE = "Consultation parametre:Parametrage/ parametre  list classe action";
+
+    // fournisseur
+    public static final String CREATE_FOURNISSEUR = " Ajout de parametre: Parametrage/ parametre  nouvelle  classe";
+    public static final String UPDATE_FOURNISSEUR = " Modification  de parametre:Parametrage/ parametre  list classe action";
+    public static final String DELETE_FOURNISSEUR = " Suppression de  parametre: Parametrage/ parametre  list classe action";
+    public  static final String READ_FOURNISSEUR = " Consultation parametre:Parametrage/ parametre  list classe action";
+
      public static final String UPDATE_PROJECT = "Modification de projet : GESTION PROJET / Liste projets / Bouton Modifier";
      public static final String CREATE_PROJECT = "Ajout de projet : GESTION PROJET / Liste projets / Bouton Nouveau projet";
      public static final String DELETE_PROJECT = "Suppression de projet : GESTION PROJET / Liste projets / Bouton Supprimer";
@@ -79,7 +91,7 @@ public class ActionType {
      public static final String EXPORT_DATES_IMPORTANTE_TO_EXCEL = "Exportation en excel des dates importantes : GESTION PROJET / Liste projets / Paramétrage / Onglet Dates importantes / Exporter / Excel";
      public static final String EXPORT_DATES_IMPORTANTE_TO_PDF = "Exportation PDF des dates importantes : GESTION PROJET / Liste projets / Paramétrage / Onglet Dates importantes / Exporter / PDF";
 
-     // Workflow Historique
+
     public static final String READ_WORKFLOW_HISTORIQUE = "Consultation de l'historique de validation : SÉCURITÉ / Workflow";
     public static final String ADD_WORKFLOW_HISTORIQUE = "Ajout à l'historique de validation : SÉCURITÉ / Workflow / Ajouter";
     public static final String EDIT_WORKFLOW_HISTORIQUE = "Modification de l'historique de validation : SÉCURITÉ / Workflow / Modifier";
