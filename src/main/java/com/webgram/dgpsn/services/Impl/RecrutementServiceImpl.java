@@ -8,10 +8,12 @@ import com.webgram.dgpsn.entities.RecrutementEntity;
 import com.webgram.dgpsn.entities.enums.StatutType;
 import com.webgram.dgpsn.entities.enums.TypeContrat;
 import com.webgram.dgpsn.exceptions.ResourceNotFoundException;
+import com.webgram.dgpsn.mappers.CandidatMapper;
 import com.webgram.dgpsn.mappers.RecrutementMapper;
+import com.webgram.dgpsn.models.CandidatDTO;
 import com.webgram.dgpsn.models.RecrutementDTO;
 import com.webgram.dgpsn.repositories.RecrutementRepository;
-import com.webgram.dgpsn.repositories.UgpProjetRepository;
+import com.webgram.dgpsn.services.CandidatService;
 import com.webgram.dgpsn.services.RecrutementService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +28,7 @@ import java.text.MessageFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -39,6 +42,7 @@ import java.util.stream.Collectors;
 public class RecrutementServiceImpl implements RecrutementService {
     private final RecrutementRepository recrutementRepository;
     private final RecrutementMapper recrutementMapper;
+    final CandidatService candidatService;
     private static final String RECRUTEMENT_NOT_FOUND_MESSAGE = "Recrutement non trouvé avec l'ID {0}";
 
 
@@ -50,6 +54,39 @@ public class RecrutementServiceImpl implements RecrutementService {
 //        var savedEntity = recrutementRepository.save(entity);
 //        return recrutementMapper.asDto(savedEntity);
 //    }
+
+    @Override
+    public CandidatDTO addCandidat(Long idRecrutement, CandidatDTO dto){
+        dto.setRecrutementId(idRecrutement);
+        return candidatService.saveCandidat(dto);
+    }
+
+
+
+    @Override
+    public List<CandidatDTO> getCandidatsRecrutements(Long idRecrutement){
+        var recrutement = recrutementRepository.findById(idRecrutement).orElseThrow(
+                () -> new ResourceNotFoundException("Recrutement not found"));
+        return  recrutement.getCandidats().stream().map(
+                CandidatMapper::toDTO).toList();
+    }
+
+
+    @Override
+    public CandidatDTO updateCandidat(Long idRecrutement, Long idCandidat, CandidatDTO dto) {
+        var recrutement = recrutementRepository.findById(idRecrutement)
+                .orElseThrow(() -> new ResourceNotFoundException("Recrutement non trouvé avec id : " + idRecrutement));
+
+        boolean candidatAppartient = recrutement.getCandidats().stream()
+                .anyMatch(c -> Objects.equals(c.getId(), idCandidat));
+
+        if (!candidatAppartient) {
+            throw new ResourceNotFoundException("Le candidat n'appartient pas à ce recrutement.");
+        }
+        dto.setRecrutementId(idRecrutement);
+        return candidatService.updateCandidat(idCandidat, dto);
+    }
+
 
     @Override
     @Transactional

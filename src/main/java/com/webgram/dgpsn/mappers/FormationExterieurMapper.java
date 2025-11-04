@@ -14,16 +14,16 @@ import java.util.Objects;
 )
 public interface FormationExterieurMapper extends EntityMapper<FormationExterieurDTO, FormationExterieurEntity> {
 
-    //@Mapping(target = "agent", source = "agentId", qualifiedByName = "getAgent")
+    @Mapping(target = "agent", source = "agentId", qualifiedByName = "getAgent")
     FormationExterieurEntity asEntity(FormationExterieurDTO dto);
 
-   /* @Named("getAgent")
+   @Named("getAgent")
     default AgentEntity getAgent(Long agentId) {
         if (Objects.nonNull(agentId)) {
             return AgentEntity.builder().id(agentId).build();
         }
         return null;
-    }*/
+    }
 
     @org.mapstruct.BeanMapping(nullValuePropertyMappingStrategy = org.mapstruct.NullValuePropertyMappingStrategy.IGNORE)
     void updateEntityFromDto(FormationExterieurDTO dto, @org.mapstruct.MappingTarget FormationExterieurEntity entity);

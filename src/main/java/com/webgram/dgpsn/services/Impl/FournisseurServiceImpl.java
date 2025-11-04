@@ -1,10 +1,12 @@
 package com.webgram.dgpsn.services.Impl;
 
+import com.webgram.dgpsn.annotations.Journal;
 import com.webgram.dgpsn.exceptions.ResourceNotFoundException;
 import com.webgram.dgpsn.mappers.FournisseurMapper;
 import com.webgram.dgpsn.models.FournisseurDTO;
 import com.webgram.dgpsn.repositories.FournisseurRepository;
 import com.webgram.dgpsn.services.FournisseurService;
+import com.webgram.dgpsn.tools.ActionType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -22,6 +24,7 @@ public class FournisseurServiceImpl implements FournisseurService {
     private static final String FOURNISSEUR_IDENTIFIER_NOT_FOUND_MESSAGE = "Invalide id fournisseur: {}";
 
     @Override
+    @Journal(actionType = ActionType.CREATE_FOURNISSEUR)
     public FournisseurDTO create(FournisseurDTO fournisseurDTO) {
         var savedFournisseur = fournisseurRepository.save(fournisseurMapper.asEntity(fournisseurDTO));
         log.info("fournisseur successfully added {}", savedFournisseur);
@@ -30,6 +33,7 @@ public class FournisseurServiceImpl implements FournisseurService {
 
 
     @Override
+    @Journal(actionType = ActionType.UPDATE_FOURNISSEUR)
     public FournisseurDTO update(Long fournisseurId, FournisseurDTO fournisseurDTO) {
         if (!fournisseurRepository.existsById(fournisseurId)) {
             throw new ResourceNotFoundException("Fournisseur", fournisseurId);
@@ -42,6 +46,7 @@ public class FournisseurServiceImpl implements FournisseurService {
     }
 
     @Override
+    @Journal(actionType = ActionType.READ_FOURNISSEUR)
     public FournisseurDTO read(Long fournisseurId) {
         var fournisseur = fournisseurRepository
                 .findById(fournisseurId)
@@ -51,6 +56,7 @@ public class FournisseurServiceImpl implements FournisseurService {
     }
 
     @Override
+    @Journal(actionType = ActionType.DELETE_FOURNISSEUR)
     public void delete(Long fournisseurId) {
         try {
             fournisseurRepository.deleteById(fournisseurId);
@@ -61,6 +67,7 @@ public class FournisseurServiceImpl implements FournisseurService {
     }
 
     @Override
+    @Journal(actionType = ActionType.READ_FOURNISSEUR)
     public Page<FournisseurDTO> readAll(
             Pageable pageable,
             String raisonSociale,
