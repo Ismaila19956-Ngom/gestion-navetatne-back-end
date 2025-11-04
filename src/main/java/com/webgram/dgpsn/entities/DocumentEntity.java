@@ -51,6 +51,7 @@ public class DocumentEntity extends Auditable<Long> implements Serializable {
     @Column(name = "doc_category")
     @Enumerated(EnumType.STRING)
     private CategoryDocument category;
+
     private String categoryLibelle;
 
 }
