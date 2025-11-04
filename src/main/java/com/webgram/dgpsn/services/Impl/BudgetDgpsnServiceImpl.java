@@ -4,8 +4,12 @@ import com.webgram.dgpsn.annotations.Journal;
 import com.webgram.dgpsn.exceptions.ResourceNotFoundException;
 import com.webgram.dgpsn.mappers.BudgetDgpsnMapper;
 import com.webgram.dgpsn.models.BudgetDgpsnDTO;
+import com.webgram.dgpsn.models.LigneBudgetaireDTO;
+import com.webgram.dgpsn.models.RealisationDTO;
 import com.webgram.dgpsn.repositories.BudgetDgpsnRepository;
 import com.webgram.dgpsn.services.BudgetDgpsnService;
+import com.webgram.dgpsn.services.LigneBudgetaireService;
+import com.webgram.dgpsn.services.RealisationService;
 import com.webgram.dgpsn.tools.ActionType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +18,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -21,6 +31,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class BudgetDgpsnServiceImpl implements BudgetDgpsnService {
     private final BudgetDgpsnRepository budgetDgpsnRepository;
     private final BudgetDgpsnMapper budgetDgpsnMapper;
+    private final LigneBudgetaireService ligneBudgetaireService;
+    private final RealisationService realisationService;
 
     @Override
     @Journal(actionType = ActionType.ADD_DATES_IMPORTANTE)
@@ -80,5 +92,116 @@ public class BudgetDgpsnServiceImpl implements BudgetDgpsnService {
         return budgetDgpsnRepository
                 .readAllByFiltering(pageable, code, libelle, montant, annee)
                 .map(budgetDgpsnMapper::asDto);
+    }
+
+    @Override
+    public Map<String, Object> getSyntheseBudgetaire(Long budgetId, String periode, Integer trimestre, Integer mois) {
+        // Récupérer les données de base
+        BudgetDgpsnDTO budget = this.read(budgetId);
+        List<LigneBudgetaireDTO> lignes = ligneBudgetaireService.findByBudgetId(budgetId);
+        List<RealisationDTO> realisations = realisationService.findByBudgetId(budgetId);
+        // Filtrer les réalisations selon la période si spécifiée
+        if (periode != null && !periode.isEmpty() && realisations != null) {
+            realisations = filtrerRealisationsParPeriode(realisations, budget.getAnnee(), periode, trimestre, mois);
+        }
+        // Construire la réponse
+        Map<String, Object> response = new HashMap<>();
+        response.put("budget", budget);
+        response.put("lignes", lignes);
+        response.put("realisations", realisations);
+        response.put("periode", periode != null ? periode : "annee");
+
+        if ("trimestre".equals(periode) && trimestre != null) {
+            response.put("trimestre", trimestre);
+        }
+        if ("mois".equals(periode) && mois != null) {
+            response.put("mois", mois);
+        }
+
+        return response;
+    }
+
+    /**
+     * Filtre les réalisations selon la période demandée
+     */
+    private List<RealisationDTO> filtrerRealisationsParPeriode(
+            List<RealisationDTO> realisations,
+            Integer annee,
+            String periode,
+            Integer trimestre,
+            Integer mois) {
+
+        return realisations.stream()
+                .filter(realisation -> {
+                    LocalDate dateRealisation = extraireDateRealisation(realisation);
+
+                    if (dateRealisation == null) {
+                        return false;
+                    }
+
+                    // Vérifier que la date appartient à l'année du budget
+                    if (dateRealisation.getYear() != annee) {
+                        return false;
+                    }
+
+                    // Filtrer selon le type de période
+                    return switch (periode) {
+                        case "trimestre" -> filtrerParTrimestre(dateRealisation, trimestre);
+                        case "mois" -> filtrerParMois(dateRealisation, mois);
+                        case "annee" -> true;
+                        default -> true;
+                    };
+                })
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Extrait la date d'une réalisation
+     */
+    private LocalDate extraireDateRealisation(RealisationDTO realisation) {
+        if (realisation.getDate() == null) {
+            return null;
+        }
+
+        try {
+            // La date est déjà un LocalDate dans le DTO
+            return realisation.getDate();
+        } catch (Exception e) {
+            // Log l'erreur si nécessaire
+            return null;
+        }
+    }
+
+    /**
+     * Vérifie si une date appartient au trimestre spécifié
+     */
+    private boolean filtrerParTrimestre(LocalDate date, Integer trimestre) {
+        if (trimestre == null || trimestre < 1 || trimestre > 4) {
+            return false;
+        }
+
+        int moisDebut = (trimestre - 1) * 3 + 1;
+        int moisFin = trimestre * 3;
+        int moisDate = date.getMonthValue();
+
+        return moisDate >= moisDebut && moisDate <= moisFin;
+    }
+
+    /**
+     * Vérifie si une date appartient au mois spécifié
+     */
+    private boolean filtrerParMois(LocalDate date, Integer mois) {
+        if (mois == null || mois < 1 || mois > 12) {
+            return false;
+        }
+
+        return date.getMonthValue() == mois;
+    }
+
+    /**
+     * Calcule le trimestre d'une date
+     */
+    private int getTrimestreFromDate(LocalDate date) {
+        return (date.getMonthValue() - 1) / 3 + 1;
     }
 }
