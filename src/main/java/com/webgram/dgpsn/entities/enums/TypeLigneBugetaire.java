@@ -8,10 +8,14 @@ import java.text.MessageFormat;
 import java.util.Map;
 
 public enum TypeLigneBugetaire {
-    CLASSE_6( "ligne bugetaire classe 6" ),
-    CLASSE_7( "ligne bugetaire classe 7"),
+    CLASSE_1( "ligne bugetaire classe 1"),
     CLASSE_2( "ligne bugetaire classe 2"),
-    CLASSE_1( "ligne bugetaire classe 1");
+    CLASSE_3( "ligne bugetaire classe 3"),
+    CLASSE_4( "ligne bugetaire classe 4"),
+    CLASSE_5( "ligne bugetaire classe 5"),
+    CLASSE_6( "ligne bugetaire classe 6"),
+    CLASSE_7( "ligne bugetaire classe 7"),
+    CLASSE_8( "ligne bugetaire classe 8");
 
     @Getter
     private final String description;

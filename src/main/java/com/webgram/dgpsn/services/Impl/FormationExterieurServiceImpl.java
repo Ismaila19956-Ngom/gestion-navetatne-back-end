@@ -79,8 +79,12 @@ public class FormationExterieurServiceImpl implements FormationExterieurService 
             if (searchParams.containsKey("organismeFormateur"))
                 booleanBuilder.and(qEntity.organismeFormateur.containsIgnoreCase(searchParams.get("organismeFormateur")));
 
+            if (searchParams.containsKey("agentId"))
+                    booleanBuilder.and(qEntity.agent.id.eq(Long.valueOf(searchParams.get("agentId"))));
+
             if (searchParams.containsKey("lieu"))
                 booleanBuilder.and(qEntity.lieu.containsIgnoreCase(searchParams.get("lieu")));
+
 
             if (searchParams.containsKey("statut"))
                 booleanBuilder.and(qEntity.statut.eq(Statut.valueOf(searchParams.get("statut"))));
