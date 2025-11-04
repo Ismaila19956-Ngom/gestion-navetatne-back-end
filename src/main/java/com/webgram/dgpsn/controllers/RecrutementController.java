@@ -1,5 +1,6 @@
 package com.webgram.dgpsn.controllers;
 
+import com.webgram.dgpsn.models.CandidatDTO;
 import com.webgram.dgpsn.entities.enums.StatutType;
 import com.webgram.dgpsn.models.RecrutementDTO;
 import com.webgram.dgpsn.models.Response;
@@ -27,14 +28,18 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/recrutements")
-@Tag(name = "recrutement-controller", description = "recrutement controller")
+@Tag(name = "recrutement-controller", description = "Recrutement controller")
 @RequiredArgsConstructor
 public class RecrutementController {
+
     private final RecrutementService recrutementService;
 
-
     @Operation(summary = "Create recrutement", description = "this endpoint takes input recrutement and saves it")
-    @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Success"), @ApiResponse(responseCode = "400", description = "Request sent by the client was syntactically incorrect"), @ApiResponse(responseCode = "500", description = "Internal server error during request processing")})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Success"),
+            @ApiResponse(responseCode = "400", description = "Request sent by the client was syntactically incorrect"),
+            @ApiResponse(responseCode = "500", description = "Internal server error during request processing")
+    })
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     public Response<Object> createRecrutement(@RequestBody RecrutementDTO recrutementDTO) {
@@ -49,11 +54,11 @@ public class RecrutementController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Response<Object> updateRecrutement(@Parameter(name = "id", description = "the recrutement id to updated") @PathVariable("id") Long id, @RequestBody RecrutementDTO recrutementDTO) {
+    public Response<Object> updateRecrutement(@PathVariable("id") Long id, @RequestBody RecrutementDTO recrutementDTO) {
         recrutementDTO.setId(id);
         try {
             var dto = recrutementService.updateRecrutement(recrutementDTO);
-            return Response.ok().setPayload(dto).setMessage("recrutement modifié");
+            return Response.ok().setPayload(dto).setMessage("Recrutement modifié");
         } catch (Exception ex) {
             return Response.badRequest().setMessage(ex.getMessage());
         }
@@ -64,36 +69,79 @@ public class RecrutementController {
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Success"), @ApiResponse(responseCode = "400", description = "Request sent by the client was syntactically incorrect"), @ApiResponse(responseCode = "404", description = "Resource access does not exist"), @ApiResponse(responseCode = "500", description = "Internal server error during request processing")})
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Response<Object> readRecrutement(@Parameter(name = "id", description = "the type recrutement id to valid") @PathVariable Long id) {
+    public Response<Object> readRecrutement(@PathVariable Long id) {
         try {
             var dto = recrutementService.readRecrutement(id);
-            return Response.ok().setPayload(dto).setMessage("recrutement trouvé");
+            return Response.ok().setPayload(dto).setMessage("Recrutement trouvé");
         } catch (Exception ex) {
             return Response.badRequest().setMessage(ex.getMessage());
         }
     }
 
-    @Operation(summary = "Read all Budget", description = "It takes input param of the page and returns this list related")
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Success"), @ApiResponse(responseCode = "500", description = "Internal server error during request processing")})
     @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
     public Response<Object> readAllRecrutement(@RequestParam Map<String, String> searchParams, Pageable pageable) {
         var page = recrutementService.readAllRecrutement(searchParams, pageable);
-        Response.PageMetadata metadata = Response.PageMetadata.builder().number(page.getNumber()).totalElements(page.getTotalElements()).size(page.getSize()).totalPages(page.getTotalPages()).build();
+        Response.PageMetadata metadata = Response.PageMetadata.builder()
+                .number(page.getNumber())
+                .totalElements(page.getTotalElements())
+                .size(page.getSize())
+                .totalPages(page.getTotalPages())
+                .build();
         return Response.ok().setPayload(page.getContent()).setMetadata(metadata);
     }
 
-
-    @Operation(summary = "delete the recrutement", description = "Delete recrutement, it takes input id recrutement")
-    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "No content"), @ApiResponse(responseCode = "400", description = "Request sent by the client was syntactically incorrect"), @ApiResponse(responseCode = "404", description = "Resource access does not exist"), @ApiResponse(responseCode = "500", description = "Internal server error during request processing")})
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteRecrutement(@PathVariable("id") Long id) {
+        recrutementService.deleteRecrutement(id);
+    }
+
+    @Operation(summary = "Ajouter un candidat à un recrutement")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Candidat ajouté au recrutement"),
+            @ApiResponse(responseCode = "404", description = "Recrutement non trouvé")
+    })
+    @PostMapping("/{id}/candidats")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Response<Object> addCandidatToRecrutement(
+            @Parameter(description = "ID du recrutement") @PathVariable("id") Long idRecrutement,
+            @Valid @RequestBody CandidatDTO dto
+    ) {
         try {
-            recrutementService.deleteRecrutement(id);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+            var saved = recrutementService.addCandidat(idRecrutement, dto);
+            return Response.ok().setPayload(saved).setMessage("Candidat ajouté au recrutement");
+        } catch (Exception ex) {
+            return Response.badRequest().setMessage(ex.getMessage());
         }
+    }
+
+    @Operation(summary = "Lister les candidats d’un recrutement")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Candidats récupérés avec succès"),
+            @ApiResponse(responseCode = "404", description = "Recrutement non trouvé")
+    })
+    @GetMapping("/{id}/candidats")
+    @ResponseStatus(HttpStatus.OK)
+    public Response<Object> getCandidatsByRecrutement(
+            @Parameter(description = "ID du recrutement") @PathVariable("id") Long idRecrutement
+    ) {
+        try {
+            List<CandidatDTO> candidats = recrutementService.getCandidatsRecrutements(idRecrutement);
+            return Response.ok().setPayload(candidats).setMessage("Liste des candidats du recrutement");
+        } catch (Exception ex) {
+            return Response.badRequest().setMessage(ex.getMessage());
+        }
+    }
+
+    @PutMapping("/{idRecrutement}/candidats/{idCandidat}")
+    public ResponseEntity<CandidatDTO> updateCandidatOfRecrutement(
+            @PathVariable Long idRecrutement,
+            @PathVariable Long idCandidat,
+            @RequestBody CandidatDTO dto
+    ) {
+        var updated = recrutementService.updateCandidat(idRecrutement, idCandidat, dto);
+        return ResponseEntity.ok(updated);
     }
 
     @PutMapping("/{id}/statut")

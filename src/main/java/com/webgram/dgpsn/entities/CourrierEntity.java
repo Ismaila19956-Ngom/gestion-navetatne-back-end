@@ -86,4 +86,8 @@ public class CourrierEntity extends Auditable<Long> implements Serializable {
     @Column(name = "cour_notes", columnDefinition = "TEXT")
     private String notes;
 
+    // NOUVEL ATTRIBUT : Archive
+    @Column(name = "cour_archive", nullable = false)
+    @Builder.Default
+    private Boolean archive = false;
 }

@@ -45,6 +45,11 @@ public class CourrierServiceImpl implements CourrierService {
             courrier.setDateReception(LocalDateTime.now());
         }
 
+        // S'assurer que archive est false par défaut
+        if (courrier.getArchive() == null) {
+            courrier.setArchive(false);
+        }
+
         return courrierRepository.save(courrier);
     }
 
@@ -74,7 +79,7 @@ public class CourrierServiceImpl implements CourrierService {
     @Transactional(readOnly = true)
     public Page<CourrierEntity> readAll(Pageable pageable, String keyword,
                                         CourrierType type, ReferentielType nature,
-                                        ReferentielType statut) {
+                                        ReferentielType statut, Boolean archive) { // MODIFICATION : Ajout du paramètre archive
         log.info("Lecture des courriers avec filtres");
 
         // Utiliser Specification pour des filtres dynamiques
@@ -106,6 +111,11 @@ public class CourrierServiceImpl implements CourrierService {
                 predicates.add(cb.equal(root.get("statut").get("referentielType"), statut));
             }
 
+            // FILTRE PAR ARCHIVE (NOUVEAU)
+            if (archive != null) {
+                predicates.add(cb.equal(root.get("archive"), archive));
+            }
+
             return cb.and(predicates.toArray(new Predicate[0]));
         };
 
@@ -119,22 +129,6 @@ public class CourrierServiceImpl implements CourrierService {
         return courrierRepository.findById(id);
     }
 
-    /*
-        @Override
-        public CourrierEntity archiver(Long id) {
-            log.info("Archivage du courrier : {}", id);
-
-            CourrierEntity courrier = courrierRepository.findById(id)
-                    .orElseThrow(() -> new RuntimeException("Courrier non trouvé avec l'ID: " + id));
-
-            // Récupérer le label ARCHIVE
-            LabelEntity statutArchive = (LabelEntity) labelRepository
-                    .findByTypeAndCode(ReferentielType.STATUT_COURRIER, "ARCHIVE")
-                    .orElseThrow(() -> new RuntimeException("Statut ARCHIVE introuvable"));
-
-            courrier.setStatut(statutArchive);
-            return courrierRepository.save(courrier);
-        } */
     @Override
     public CourrierEntity archiver(Long id) {
         log.info("Archivage du courrier : {}", id);
@@ -142,12 +136,21 @@ public class CourrierServiceImpl implements CourrierService {
         CourrierEntity courrier = courrierRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Courrier non trouvé avec l'ID: " + id));
 
-        // CORRECTION : Supprimer le cast et utiliser le bon type
-        LabelEntity statutArchive = labelRepository
-                .findByTypeAndCode(ReferentielType.STATUT_COURRIER, "ARCHIVE")
-                .orElseThrow(() -> new RuntimeException("Statut ARCHIVE introuvable"));
+        // NOUVELLE APPROCHE : Utiliser l'attribut archive
+        courrier.setArchive(true);
+        courrier.setDateTraitement(LocalDateTime.now());
 
-        courrier.setStatut(statutArchive);
+        return courrierRepository.save(courrier);
+    }
+
+    @Override
+    public CourrierEntity desarchiver(Long id) {
+        log.info("Désarchivage du courrier : {}", id);
+
+        CourrierEntity courrier = courrierRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Courrier non trouvé avec l'ID: " + id));
+
+        courrier.setArchive(false);
         return courrierRepository.save(courrier);
     }
 
@@ -212,8 +215,8 @@ public class CourrierServiceImpl implements CourrierService {
                 predicates.add(cb.equal(root.get("type"), type));
             }
 
-            // Exclure les courriers archivés
-            predicates.add(cb.notEqual(root.get("statut").get("code"), "ARCHIVE"));
+            // Compter seulement les courriers non archivés
+            predicates.add(cb.equal(root.get("archive"), false));
 
             return cb.and(predicates.toArray(new Predicate[0]));
         };
@@ -224,24 +227,57 @@ public class CourrierServiceImpl implements CourrierService {
     @Override
     @Transactional(readOnly = true)
     public Page<CourrierEntity> findByType(CourrierType type, Pageable pageable) {
-        return courrierRepository.findByType(type, pageable);
+        Specification<CourrierEntity> spec = (root, query, cb) ->
+                cb.equal(root.get("type"), type);
+        return courrierRepository.findAll(spec, pageable);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Page<CourrierEntity> findByNature(ReferentielType nature, Pageable pageable) {
-        Specification<CourrierEntity> spec = (root, query, cb) -> cb.equal(root.get("nature").get("referentielType"),
-                nature);
-
+        Specification<CourrierEntity> spec = (root, query, cb) ->
+                cb.equal(root.get("nature").get("referentielType"), nature);
         return courrierRepository.findAll(spec, pageable);
     }
 
     @Override
     @Transactional(readOnly = true)
     public long countByNature(ReferentielType nature) {
-        Specification<CourrierEntity> spec = (root, query, cb) -> cb.equal(root.get("nature").get("referentielType"),
-                nature);
+        Specification<CourrierEntity> spec = (root, query, cb) ->
+                cb.equal(root.get("nature").get("referentielType"), nature);
+        return courrierRepository.count(spec);
+    }
 
+    // NOUVELLES MÉTHODES IMPLÉMENTÉES
+    @Override
+    @Transactional(readOnly = true)
+    public Page<CourrierEntity> findArchives(Pageable pageable) {
+        Specification<CourrierEntity> spec = (root, query, cb) ->
+                cb.equal(root.get("archive"), true);
+        return courrierRepository.findAll(spec, pageable);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<CourrierEntity> findNonArchives(Pageable pageable) {
+        Specification<CourrierEntity> spec = (root, query, cb) ->
+                cb.equal(root.get("archive"), false);
+        return courrierRepository.findAll(spec, pageable);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public long countArchives() {
+        Specification<CourrierEntity> spec = (root, query, cb) ->
+                cb.equal(root.get("archive"), true);
+        return courrierRepository.count(spec);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public long countNonArchives() {
+        Specification<CourrierEntity> spec = (root, query, cb) ->
+                cb.equal(root.get("archive"), false);
         return courrierRepository.count(spec);
     }
 }

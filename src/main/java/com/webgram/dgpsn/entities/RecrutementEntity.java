@@ -5,9 +5,7 @@ import com.webgram.dgpsn.entities.enums.TypeContrat;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 
 @Table(name = "recrutement")
@@ -26,8 +24,9 @@ public class RecrutementEntity {
     @Column(name = "recru_libelle")
     private String libelle;
 
-    @Column(name = "recru_type_contrat")
-    private TypeContrat typeContrat;
+    @ManyToOne
+    @JoinColumn(name = "recru_type_contrat")
+    private LabelEntity typeContrat;
 
     @Column(name = "recru_date")
     @Temporal(TemporalType.DATE)
@@ -43,4 +42,10 @@ public class RecrutementEntity {
             orphanRemoval = true
     )
     private Set<CaracteristiqueExigeEntity> caracteristiques = new HashSet<>(); // Initialisez toujours les collections !
+
+    @OneToMany(
+            mappedBy = "recrutement",
+            cascade = CascadeType.ALL
+    )
+    private List<CandidatEntity> candidats = new ArrayList<>();
 }
