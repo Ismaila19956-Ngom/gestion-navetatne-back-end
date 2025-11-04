@@ -72,19 +72,15 @@ public class CourrierController {
             @RequestParam(value = "nature", required = false) ReferentielType nature,
 
             @Parameter(name = "statut", description = "Filtrer par statut")
-            @RequestParam(value = "statut", required = false) ReferentielType statut) {
+            @RequestParam(value = "statut", required = false) ReferentielType statut,
 
-        return courrierService.readAll(pageable, keyword, type, nature, statut);
+            @Parameter(name = "archive", description = "Filtrer par statut d'archivage") // NOUVEAU PARAMÈTRE
+            @RequestParam(value = "archive", required = false) Boolean archive) {
+
+        return courrierService.readAll(pageable, keyword, type, nature, statut, archive);
     }
 
     @Operation(summary = "Lire un courrier", description = "Endpoint pour récupérer un courrier par son ID")
-    /* @GetMapping("/{courrierId}")
-    @ResponseStatus(HttpStatus.OK)
-    public Optional<CourrierEntity> readCourrier(
-            @Parameter(name = "courrierId", description = "ID du courrier à récupérer")
-            @PathVariable Long courrierId) {
-        return courrierService.read(courrierId);
-    } */
     @GetMapping("/{courrierId}")
     public ResponseEntity<?> readCourrier(@PathVariable Long courrierId) {
         try {
@@ -108,6 +104,15 @@ public class CourrierController {
             @Parameter(name = "courrierId", description = "ID du courrier à archiver")
             @PathVariable Long courrierId) {
         return courrierService.archiver(courrierId);
+    }
+
+    @Operation(summary = "Désarchiver un courrier", description = "Endpoint pour désarchiver un courrier") // NOUVEL ENDPOINT
+    @PutMapping("/{courrierId}/desarchiver")
+    @ResponseStatus(HttpStatus.OK)
+    public CourrierEntity desarchiverCourrier(
+            @Parameter(name = "courrierId", description = "ID du courrier à désarchiver")
+            @PathVariable Long courrierId) {
+        return courrierService.desarchiver(courrierId);
     }
 
     @Operation(summary = "Changer le statut d'un courrier", description = "Endpoint pour modifier le statut d'un courrier")
@@ -164,5 +169,34 @@ public class CourrierController {
             @PathVariable ReferentielType nature,
             Pageable pageable) {
         return courrierService.findByNature(nature, pageable);
+    }
+
+    // NOUVEAUX ENDPOINTS POUR LA GESTION DES ARCHIVES
+    @Operation(summary = "Lister les courriers archivés", description = "Endpoint pour lister tous les courriers archivés")
+    @GetMapping("/archives")
+    @ResponseStatus(HttpStatus.OK)
+    public Page<CourrierEntity> getCourriersArchives(Pageable pageable) {
+        return courrierService.findArchives(pageable);
+    }
+
+    @Operation(summary = "Lister les courriers non archivés", description = "Endpoint pour lister tous les courriers non archivés")
+    @GetMapping("/non-archives")
+    @ResponseStatus(HttpStatus.OK)
+    public Page<CourrierEntity> getCourriersNonArchives(Pageable pageable) {
+        return courrierService.findNonArchives(pageable);
+    }
+
+    @Operation(summary = "Compter les courriers archivés", description = "Endpoint pour compter le nombre total de courriers archivés")
+    @GetMapping("/statistiques/archives/count")
+    @ResponseStatus(HttpStatus.OK)
+    public long countArchives() {
+        return courrierService.countArchives();
+    }
+
+    @Operation(summary = "Compter les courriers non archivés", description = "Endpoint pour compter le nombre total de courriers non archivés")
+    @GetMapping("/statistiques/non-archives/count")
+    @ResponseStatus(HttpStatus.OK)
+    public long countNonArchives() {
+        return courrierService.countNonArchives();
     }
 }
