@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.webgram.dgpsn.models.BudgetDgpsnDTO;
 import com.webgram.dgpsn.services.BudgetDgpsnService;
@@ -20,6 +21,7 @@ import com.webgram.dgpsn.services.BudgetDgpsnService;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequestMapping("/budgetGlobal")
@@ -88,18 +90,57 @@ public class BudgetDgpsnController {
         return budgetDgpsnService.readAll(pageable, code, libelle, montant, annee);
     }
 
-    @GetMapping("/{id}/synthese")
-    public Map<String, Object> getSynthese(
-            @Parameter(description = "ID du budget DGPSN à synthétiser", required = true, example = "1")
-            @PathVariable Long id) {
-        BudgetDgpsnDTO budget = budgetDgpsnService.read(id);
-        List<LigneBudgetaireDTO> lignes = ligneBudgetaireService.findByBudgetId(id);
-        List<RealisationDTO> realisations = realisationService.findByBudgetId(id);
+//    @GetMapping("/{id}/synthese")
+//    public Map<String, Object> getSynthese(
+//            @Parameter(description = "ID du budget DGPSN à synthétiser", required = true, example = "1")
+//            @PathVariable Long id) {
+//        BudgetDgpsnDTO budget = budgetDgpsnService.read(id);
+//        List<LigneBudgetaireDTO> lignes = ligneBudgetaireService.findByBudgetId(id);
+//        List<RealisationDTO> realisations = realisationService.findByBudgetId(id);
+//
+//        Map<String, Object> response = new HashMap<>();
+//        response.put("budget", budget);
+//        response.put("lignes", lignes);
+//        response.put("realisations", realisations);
+//        return response;
+//    }
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("budget", budget);
-        response.put("lignes", lignes);
-        response.put("realisations", realisations);
-        return response;
+    @GetMapping("/{id}/synthese")
+    @Operation(
+            summary = "Obtenir la synthèse budgétaire",
+            description = "Récupère la synthèse complète d'un budget avec filtrage optionnel par période (annuelle, trimestrielle ou mensuelle)"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Synthèse récupérée avec succès"),
+            @ApiResponse(responseCode = "404", description = "Budget non trouvé"),
+            @ApiResponse(responseCode = "400", description = "Paramètres de période invalides")
+    })
+    public ResponseEntity<Map<String, Object>> getSynthese(
+            @Parameter(description = "ID du budget DGPSN à synthétiser", required = true, example = "1") @PathVariable Long id,
+            @Parameter(description = "Type de période : annee, trimestre, mois", example = "annee")
+            @RequestParam(required = false, defaultValue = "annee") String periode,
+            @Parameter(description = "Numéro du trimestre (1-4), requis si periode=trimestre", example = "1")
+            @RequestParam(required = false) Integer trimestre,
+            @Parameter(description = "Numéro du mois (1-12), requis si periode=mois", example = "1")
+            @RequestParam(required = false) Integer mois) {
+
+        // Validation des paramètres
+        if ("trimestre".equals(periode) && (trimestre == null || trimestre < 1 || trimestre > 4)) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("error", "Pour la période 'trimestre', le paramètre 'trimestre' doit être entre 1 et 4"));
+        }
+
+        if ("mois".equals(periode) && (mois == null || mois < 1 || mois > 12)) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("error", "Pour la période 'mois', le paramètre 'mois' doit être entre 1 et 12"));
+        }
+
+        try {
+            Map<String, Object> synthese = budgetDgpsnService.getSyntheseBudgetaire(id, periode, trimestre, mois);
+            return ResponseEntity.ok(synthese);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError()
+                    .body(Map.of("error", "Erreur lors de la récupération de la synthèse : " + e.getMessage()));
+        }
     }
 }
