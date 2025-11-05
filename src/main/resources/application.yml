@@ -13,8 +13,8 @@ spring:
   datasource:
     name: ${DB_NAME:dgpsn-db}
     host: ${DB_HOST:127.0.0.1}
-    username: ${DB_USERNAME:admin}
-    password: ${DB_PASSWORD:secret123}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:root}
 
     url: jdbc:postgresql://${spring.datasource.host}:5432/${spring.datasource.name}?autoReconnect=true&useSSL=false&createDatabaseIfNotExist=true
   servlet:
@@ -25,7 +25,7 @@ spring:
     hibernate:
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-      ddl-auto: create-drop
+      ddl-auto: update
     show-sql: false
     properties:
       hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect

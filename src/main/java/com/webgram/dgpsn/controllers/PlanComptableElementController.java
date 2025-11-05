@@ -4,6 +4,9 @@ import com.webgram.dgpsn.exceptions.ResourceNotFoundException;
 import com.webgram.dgpsn.models.PlanComptableElementDTO;
 import com.webgram.dgpsn.services.PlanComptableElementService;
 import com.webgram.dgpsn.entities.enums.TypePlanComptable;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -79,6 +82,17 @@ public class PlanComptableElementController {
     public ResponseEntity<List<PlanComptableElementDTO>> getRubriquesByClasseId(@PathVariable Long id) {
         var rubriques = service.getRubriquesByClasseId(id);
         return ResponseEntity.ok(rubriques);
+    }
+
+    @Operation(summary = "Read all classes", description = "This endpoint retrieves all classes")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success"),
+            @ApiResponse(responseCode = "500", description = "Internal server error during request processing")
+    })
+    @GetMapping("/classes")
+    public ResponseEntity<Page<PlanComptableElementDTO>> getClasses(Pageable pageable) {
+        Page<PlanComptableElementDTO> classes = service.getClasses(pageable);
+        return ResponseEntity.ok(classes);
     }
 }
 
