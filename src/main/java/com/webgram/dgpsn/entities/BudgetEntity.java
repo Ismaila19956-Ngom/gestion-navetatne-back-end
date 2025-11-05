@@ -44,7 +44,7 @@ public class BudgetEntity extends Auditable<Long> implements Serializable {
     @Column(name = "act_comment" , columnDefinition = "TEXT")
     private String comment;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "management_linked_activity")
     private ManagementUnitEntity managementUnit;
 

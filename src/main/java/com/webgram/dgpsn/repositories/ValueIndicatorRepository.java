@@ -75,4 +75,10 @@ public interface ValueIndicatorRepository extends JpaRepository<ValueIndicatorEn
      */
     @Query("SELECT v FROM ValueIndicatorEntity v WHERE v.year = :year")
     List<ValueIndicatorEntity> findByYear(@Param("year") Integer year);
+
+    /**
+     * Trouve toutes les valeurs d'indicateur pour une liste d'activités en une seule requête.
+     */
+    @Query("SELECT v FROM ValueIndicatorEntity v WHERE v.activity.id IN :activityIds")
+    List<ValueIndicatorEntity> findByActivityIdIn(@Param("activityIds") List<Long> activityIds);
 }

@@ -34,4 +34,10 @@ public interface TacheRepository extends JpaRepository<TacheEntity, Long>, Query
      */
     @Query("SELECT t FROM TacheEntity t WHERE t.indicator.id = :indicatorId")
     List<TacheEntity> findByIndicatorId(@Param("indicatorId") Long indicatorId);
+
+    /**
+     * Trouve toutes les tâches pour une liste d'activités en une seule requête.
+     */
+    @Query("SELECT t FROM TacheEntity t WHERE t.activite.id IN :activiteIds")
+    List<TacheEntity> findByActiviteIdIn(@Param("activiteIds") List<Long> activiteIds);
 }

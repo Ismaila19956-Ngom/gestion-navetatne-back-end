@@ -33,7 +33,7 @@ public class ManagementUnitEntity extends Auditable<Long> implements Serializabl
     @Column(name = "prj_poids")
     private Long poids;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private AgentEntity responsible;
 
     @Column(name = "prj_name")
@@ -81,10 +81,10 @@ public class ManagementUnitEntity extends Auditable<Long> implements Serializabl
     @Column(name = "prj_publish")
     private boolean publish;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private LabelEntity axe;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private LabelEntity typeContrat;
 
     @Column(name = "prl_tag" , columnDefinition = "TEXT")
@@ -105,7 +105,7 @@ public class ManagementUnitEntity extends Auditable<Long> implements Serializabl
     @Column(name = "prj_nomenclature")
     private String nomenclature;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private ManagementUnitEntity parent;
 
 
@@ -139,7 +139,7 @@ public class ManagementUnitEntity extends Auditable<Long> implements Serializabl
             inverseJoinColumns = {@JoinColumn(name = "actorsInvolved_id")})
     private List<StructureEntity> actorsInvolved;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private StructureEntity structure;
 
 

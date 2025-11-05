@@ -199,4 +199,11 @@ Optional<Double> countTotalProjects();
      */
 //    @Query("SELECT m FROM ManagementUnitEntity m WHERE m.type = :type ORDER BY m.code ASC")
 //    List<ManagementUnitEntity> findByType(@Param("type") TypeProjet type);
+
+    /**
+     * Trouve tous les enfants de plusieurs parents par type.
+     * C'est la clé pour récupérer toutes les actions ou activités en une seule requête.
+     */
+    @Query("SELECT m FROM ManagementUnitEntity m WHERE m.parent.id IN :parentIds AND m.type = :type ORDER BY m.code ASC")
+    List<ManagementUnitEntity> findByParentIdInAndType(@Param("parentIds") List<Long> parentIds, @Param("type") TypeProjet type);
 }

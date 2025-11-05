@@ -46,11 +46,11 @@ public class TacheEntity extends Auditable<Long> implements Serializable {
     @Enumerated(EnumType.STRING)
     private StatutTache statut;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "activite_id")
     private ManagementUnitEntity activite;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "indicator_id")
     private ValueIndicatorEntity indicator;
 

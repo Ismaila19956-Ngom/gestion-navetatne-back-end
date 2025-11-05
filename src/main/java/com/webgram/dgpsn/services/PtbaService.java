@@ -2,7 +2,6 @@ package com.webgram.dgpsn.services;
 
 import com.webgram.dgpsn.entities.*;
 import com.webgram.dgpsn.entities.enums.TypeProjet;
-import com.webgram.dgpsn.models.*;
 import com.webgram.dgpsn.models.responses.ptba.PtbaActivityDTO;
 import com.webgram.dgpsn.models.responses.ptba.PtbaFundingSourcesDTO;
 import com.webgram.dgpsn.models.responses.ptba.PtbaResponseDTO;
@@ -14,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,10 +28,13 @@ public class PtbaService {
     private final ValueIndicatorRepository valueIndicatorRepository;
 
     /**
-     * Génère le PTBA complet pour un projet donné
+     * Génère le PTBA complet pour un projet donné de manière optimisée.
+     * Cette méthode utilise une stratégie de récupération par lots pour éviter le problème N+1.
      */
     public PtbaResponseDTO generatePtba(Long projetId, Integer annee) {
-        // Récupérer le projet
+        log.info("Début de la génération du PTBA pour le projet ID: {}", projetId);
+
+        // --- VALIDATION INITIALE ---
         ManagementUnitEntity projet = managementUnitRepository.findById(projetId)
                 .orElseThrow(() -> new RuntimeException("Projet non trouvé avec l'id : " + projetId));
 
@@ -39,67 +42,89 @@ public class PtbaService {
             throw new RuntimeException("L'entité doit être de type PROGRAMME ou PROJECT");
         }
 
-        // Set pour stocker tous les bailleurs uniques
+        // --- ÉTAPE 1 : RÉCUPÉRATION EFFICACE DE TOUTE LA HIÉRARCHIE ---
+        log.info("Étape 1: Récupération de la hiérarchie (Objectifs, Actions, Activités)");
+        List<ManagementUnitEntity> objectifs = managementUnitRepository.findByParentIdAndType(projet.getId(), TypeProjet.OBJECTIF);
+        if (objectifs.isEmpty()) {
+            return buildEmptyResponse(projet, annee); // Retourner une réponse vide si pas d'objectifs
+        }
+
+        List<Long> objectifIds = objectifs.stream().map(ManagementUnitEntity::getId).collect(Collectors.toList());
+        List<ManagementUnitEntity> actions = managementUnitRepository.findByParentIdInAndType(objectifIds, TypeProjet.ACTION);
+        Map<Long, List<ManagementUnitEntity>> actionsByObjectifId = actions.stream()
+                .collect(Collectors.groupingBy(action -> action.getParent().getId()));
+
+        List<Long> actionIds = actions.stream().map(ManagementUnitEntity::getId).collect(Collectors.toList());
+        List<ManagementUnitEntity> activites = !actionIds.isEmpty()
+                ? managementUnitRepository.findByParentIdInAndType(actionIds, TypeProjet.ACTIVITY)
+                : Collections.emptyList();
+        Map<Long, List<ManagementUnitEntity>> activitesByActionId = activites.stream()
+                .collect(Collectors.groupingBy(activite -> activite.getParent().getId()));
+
+
+        // --- ÉTAPE 2 : RÉCUPÉRATION PAR LOTS DES DONNÉES LIÉES AUX ACTIVITÉS ---
+        log.info("Étape 2: Récupération des données liées (Tâches, Indicateurs)");
+        List<Long> activiteIds = activites.stream().map(ManagementUnitEntity::getId).collect(Collectors.toList());
+        Map<Long, List<TacheEntity>> tachesByActiviteId = new HashMap<>();
+        Map<Long, List<ValueIndicatorEntity>> indicateursByActiviteId = new HashMap<>();
+
+        if (!activiteIds.isEmpty()) {
+            tachesByActiviteId = tacheRepository.findByActiviteIdIn(activiteIds)
+                    .stream().collect(Collectors.groupingBy(tache -> tache.getActivite().getId()));
+
+            indicateursByActiviteId = valueIndicatorRepository.findByActivityIdIn(activiteIds)
+                    .stream().collect(Collectors.groupingBy(ind -> ind.getActivity().getId()));
+        }
+
+        // --- ÉTAPE 3 : RÉCUPÉRATION PAR LOTS DE TOUTES LES SOURCES DE FINANCEMENT ---
+        log.info("Étape 3: Récupération de toutes les sources de financement");
+        List<Long> allTacheIds = tachesByActiviteId.values().stream().flatMap(List::stream).map(TacheEntity::getId).collect(Collectors.toList());
+        List<Long> allIndicateurIds = indicateursByActiviteId.values().stream().flatMap(List::stream).map(ValueIndicatorEntity::getId).collect(Collectors.toList());
+
+        Map<Long, List<FundingSourceEntity>> sourcesByActiviteId = getFundingSources(fundingSourceRepository::findByManagementUnitIdIn, activiteIds, fs -> fs.getManagementUnit().getId());
+        Map<Long, List<FundingSourceEntity>> sourcesByTacheId = getFundingSources(fundingSourceRepository::findByTacheIdIn, allTacheIds, fs -> fs.getTache().getId());
+        Map<Long, List<FundingSourceEntity>> sourcesByIndicateurId = getFundingSources(fundingSourceRepository::findByValueIndicatorIdIn, allIndicateurIds, fs -> fs.getValueIndicator().getId());
+
+        // --- ÉTAPE 4 : ASSEMBLAGE DES DTOS EN MÉMOIRE (AUCUN APPEL BD) ---
+        log.info("Étape 4: Assemblage des DTOs en mémoire");
         Set<String> allBailleurs = new HashSet<>();
-
-        // Construire la réponse
-        PtbaResponseDTO response = PtbaResponseDTO.builder()
-                .projetId(projet.getId())
-                .projetCode(projet.getCode())
-                .projetName(projet.getName())
-                .annee(annee != null ? annee : projet.getAnneeDebut())
-                .activities(new ArrayList<>())
-                .totauxParObjectif(new HashMap<>())
-                .totauxParAction(new HashMap<>())
-                .totauxSourcesFinancement(new HashMap<>())
-                .build();
-
-        // Récupérer tous les objectifs du projet
-        List<ManagementUnitEntity> objectifs = findChildrenByType(projet.getId(), TypeProjet.OBJECTIF);
-
-        List<PtbaActivityDTO> allActivities = new ArrayList<>();
+        List<PtbaActivityDTO> allActivitiesDTO = new ArrayList<>();
 
         for (ManagementUnitEntity objectif : objectifs) {
-            // Pour chaque objectif, récupérer ses actions
-            List<ManagementUnitEntity> actions = findChildrenByType(objectif.getId(), TypeProjet.ACTION);
+            for (ManagementUnitEntity action : actionsByObjectifId.getOrDefault(objectif.getId(), Collections.emptyList())) {
+                for (ManagementUnitEntity activite : activitesByActionId.getOrDefault(action.getId(), Collections.emptyList())) {
 
-            for (ManagementUnitEntity action : actions) {
-                // Pour chaque action, récupérer ses activités
-                List<ManagementUnitEntity> activites = findChildrenByType(action.getId(), TypeProjet.ACTIVITY);
+                    List<TacheEntity> relatedTaches = tachesByActiviteId.getOrDefault(activite.getId(), Collections.emptyList());
+                    List<ValueIndicatorEntity> relatedIndicateurs = indicateursByActiviteId.getOrDefault(activite.getId(), Collections.emptyList());
 
-                for (ManagementUnitEntity activite : activites) {
-                    // Construire l'activité PTBA
-                    PtbaActivityDTO activityDTO = buildPtbaActivity(objectif, action, activite, annee, allBailleurs);
-                    allActivities.add(activityDTO);
+                    PtbaActivityDTO activityDTO = buildPtbaActivityDTO(
+                            objectif, action, activite,
+                            relatedTaches, relatedIndicateurs,
+                            sourcesByActiviteId, sourcesByTacheId, sourcesByIndicateurId,
+                            allBailleurs
+                    );
+                    allActivitiesDTO.add(activityDTO);
                 }
             }
         }
 
-        response.setActivities(allActivities);
-        response.setBailleurs(allBailleurs);
-
-        // Calculer les totaux
-        calculateTotals(response);
-
-        // Informations supplémentaires
-        if (projet.getStructure() != null) {
-            response.setStructure(projet.getStructure().getNom());
-        }
-        if (projet.getResponsible() != null) {
-            response.setResponsable(projet.getResponsible().getPrenom() + " " + projet.getResponsible().getNom());
-        }
+        // --- ÉTAPE 5 : CONSTRUCTION DE LA RÉPONSE FINALE ET CALCUL DES TOTAUX ---
+        log.info("Étape 5: Calcul des totaux et finalisation de la réponse");
+        PtbaResponseDTO response = buildFinalResponse(projet, annee, allActivitiesDTO, allBailleurs);
+        calculateTotals(response); // Calcule les totaux à la fin
 
         return response;
     }
 
     /**
-     * Construit un PtbaActivityDTO à partir d'une activité
+     * Construit le DTO d'une activité PTBA à partir des données pré-chargées.
      */
-    private PtbaActivityDTO buildPtbaActivity(
-            ManagementUnitEntity objectif,
-            ManagementUnitEntity action,
-            ManagementUnitEntity activite,
-            Integer annee,
+    private PtbaActivityDTO buildPtbaActivityDTO(
+            ManagementUnitEntity objectif, ManagementUnitEntity action, ManagementUnitEntity activite,
+            List<TacheEntity> taches, List<ValueIndicatorEntity> indicateurs,
+            Map<Long, List<FundingSourceEntity>> sourcesByActiviteId,
+            Map<Long, List<FundingSourceEntity>> sourcesByTacheId,
+            Map<Long, List<FundingSourceEntity>> sourcesByIndicateurId,
             Set<String> allBailleurs) {
 
         PtbaActivityDTO dto = PtbaActivityDTO.builder()
@@ -112,110 +137,86 @@ public class PtbaService {
                 .activiteCode(activite.getCode())
                 .build();
 
-        // Récupérer les indicateurs
-        List<ManagementUnitEntity> indicateurs = findChildrenByType(activite.getId(), TypeProjet.INDICATOR);
-        if (!indicateurs.isEmpty()) {
-            String indicateursText = indicateurs.stream()
-                    .map(ManagementUnitEntity::getName)
-                    .collect(Collectors.joining("; "));
-            dto.setIndicateurs(indicateursText);
-        }
+        // Indicateurs et Tâches (textes concaténés)
+        dto.setIndicateurs(indicateurs.stream().map(ind -> ind.getIndicatorProjet().getIndicator().getLibelle()).collect(Collectors.joining("; ")));
+        dto.setTaches(taches.stream().map(TacheEntity::getCommentaire).filter(Objects::nonNull).collect(Collectors.joining("; "))); // Utilise le commentaire comme nom de la tâche
 
-        // Récupérer les tâches
-        List<ManagementUnitEntity> taches = findChildrenByType(activite.getId(), TypeProjet.TACHE);
-        if (!taches.isEmpty()) {
-            String tachesText = taches.stream()
-                    .map(ManagementUnitEntity::getName)
-                    .collect(Collectors.joining("; "));
-            dto.setTaches(tachesText);
-        }
+        // Planification mensuelle
+        buildMonthlyPlanning(dto, taches);
 
-        // Construire la planification mensuelle à partir des tâches
-        buildMonthlyPlanning(dto, activite.getId(), annee);
-
-        // Récupérer les acteurs
+        // Acteurs
         if (activite.getResponsible() != null) {
-            dto.setActeurResponsable(activite.getResponsible().getPrenom() + " " +
-                    activite.getResponsible().getNom());
+            dto.setActeurResponsable(activite.getResponsible().getPrenom() + " " + activite.getResponsible().getNom());
         }
-
         if (activite.getActorsInvolved() != null && !activite.getActorsInvolved().isEmpty()) {
-            String acteurs = activite.getActorsInvolved().stream()
-                    .map(StructureEntity::getNom)
-                    .collect(Collectors.joining(", "));
-            dto.setActeurImplique(acteurs);
+            dto.setActeurImplique(activite.getActorsInvolved().stream().map(StructureEntity::getNom).collect(Collectors.joining(", ")));
         }
 
-        // Récupérer les sources de financement pour l'activité + indicateurs + tâches
-        PtbaFundingSourcesDTO fundingSources = buildFundingSources(activite, indicateurs, taches, allBailleurs);
+        // Sources de financement
+        PtbaFundingSourcesDTO fundingSources = buildFundingSources(activite, taches, indicateurs, sourcesByActiviteId, sourcesByTacheId, sourcesByIndicateurId, allBailleurs);
         dto.setSourcesFinancement(fundingSources);
-
-        // Le coutCFA est la somme de toutes les sources de financement
         dto.setCoutCFA(fundingSources.getTotal());
 
-        // Sources de vérification
+        // Sources de vérification et observations
         if (activite.getVerificationSources() != null && !activite.getVerificationSources().isEmpty()) {
-            String sources = activite.getVerificationSources().stream()
-                    .map(LabelEntity::getLibelle)
-                    .collect(Collectors.joining(", "));
-            dto.setSourcesVerification(sources);
+            dto.setSourcesVerification(activite.getVerificationSources().stream().map(LabelEntity::getLibelle).collect(Collectors.joining(", ")));
         }
-
-        // Observations
         dto.setObservations(activite.getDescription());
 
         return dto;
     }
 
     /**
-     * Construit la planification mensuelle à partir des tâches
+     * Construit les sources de financement pour une activité à partir des données pré-chargées.
      */
-    private void buildMonthlyPlanning(PtbaActivityDTO dto, Long activiteId, Integer annee) {
-        // Récupérer toutes les tâches liées à l'activité
-        List<TacheEntity> taches = tacheRepository.findByActiviteIdPerso(activiteId);
+    private PtbaFundingSourcesDTO buildFundingSources(
+            ManagementUnitEntity activite, List<TacheEntity> taches, List<ValueIndicatorEntity> indicateurs,
+            Map<Long, List<FundingSourceEntity>> sourcesByActiviteId,
+            Map<Long, List<FundingSourceEntity>> sourcesByTacheId,
+            Map<Long, List<FundingSourceEntity>> sourcesByIndicateurId,
+            Set<String> allBailleurs) {
 
-        // Initialiser les trimestres
-        PtbaTrimesterDTO trim1 = initializeTrimester();
-        PtbaTrimesterDTO trim2 = initializeTrimester();
-        PtbaTrimesterDTO trim3 = initializeTrimester();
-        PtbaTrimesterDTO trim4 = initializeTrimester();
+        PtbaFundingSourcesDTO dto = new PtbaFundingSourcesDTO();
+
+        // Sources de l'activité elle-même
+        addFundingSourcesToDTO(sourcesByActiviteId.getOrDefault(activite.getId(), Collections.emptyList()), dto, allBailleurs);
+
+        // Sources des tâches liées
+        for (TacheEntity tache : taches) {
+            addFundingSourcesToDTO(sourcesByTacheId.getOrDefault(tache.getId(), Collections.emptyList()), dto, allBailleurs);
+        }
+
+        // Sources des indicateurs liés
+        for (ValueIndicatorEntity indicateur : indicateurs) {
+            addFundingSourcesToDTO(sourcesByIndicateurId.getOrDefault(indicateur.getId(), Collections.emptyList()), dto, allBailleurs);
+        }
+
+        return dto;
+    }
+
+    /**
+     * Construit la planification mensuelle à partir de la liste des tâches.
+     */
+    private void buildMonthlyPlanning(PtbaActivityDTO dto, List<TacheEntity> taches) {
+        dto.setTrimestre1(new PtbaTrimesterDTO());
+        dto.setTrimestre2(new PtbaTrimesterDTO());
+        dto.setTrimestre3(new PtbaTrimesterDTO());
+        dto.setTrimestre4(new PtbaTrimesterDTO());
 
         for (TacheEntity tache : taches) {
             if (tache.getTrimestre() != null && tache.getMois() != null) {
-                markMonthAsActive(tache.getTrimestre(), tache.getMois(), trim1, trim2, trim3, trim4);
+                markMonthAsActive(tache.getTrimestre(), tache.getMois(), dto);
             }
         }
-
-        dto.setTrimestre1(trim1);
-        dto.setTrimestre2(trim2);
-        dto.setTrimestre3(trim3);
-        dto.setTrimestre4(trim4);
     }
 
-    /**
-     * Initialise un trimestre avec tous les mois à false
-     */
-    private PtbaTrimesterDTO initializeTrimester() {
-        return PtbaTrimesterDTO.builder()
-                .janvier(false).fevrier(false).mars(false)
-                .avril(false).mai(false).juin(false)
-                .juillet(false).aout(false).septembre(false)
-                .octobre(false).novembre(false).decembre(false)
-                .build();
-    }
-
-    /**
-     * Marque un mois comme actif dans le bon trimestre
-     */
-    private void markMonthAsActive(Integer trimestre, Integer mois,
-                                   PtbaTrimesterDTO trim1, PtbaTrimesterDTO trim2,
-                                   PtbaTrimesterDTO trim3, PtbaTrimesterDTO trim4) {
+    private void markMonthAsActive(Integer trimestre, Integer mois, PtbaActivityDTO dto) {
         PtbaTrimesterDTO targetTrim;
         switch (trimestre) {
-            case 1: targetTrim = trim1; break;
-            case 2: targetTrim = trim2; break;
-            case 3: targetTrim = trim3; break;
-            case 4: targetTrim = trim4; break;
+            case 1: targetTrim = dto.getTrimestre1(); break;
+            case 2: targetTrim = dto.getTrimestre2(); break;
+            case 3: targetTrim = dto.getTrimestre3(); break;
+            case 4: targetTrim = dto.getTrimestre4(); break;
             default: return;
         }
 
@@ -236,86 +237,16 @@ public class PtbaService {
     }
 
     /**
-     * Construit les sources de financement pour une activité + indicateurs + tâches
-     * Le coutCFA est la somme de toutes ces sources
+     * Ajoute des sources de financement au DTO et met à jour l'ensemble global des bailleurs.
      */
-    private PtbaFundingSourcesDTO buildFundingSources(
-            ManagementUnitEntity activite,
-            List<ManagementUnitEntity> indicateurs,
-            List<ManagementUnitEntity> taches,
-            Set<String> allBailleurs) {
-
-        PtbaFundingSourcesDTO dto = new PtbaFundingSourcesDTO();
-        log.info("Début de construction des sources de financement pour l'activité ID: {}", activite.getId());
-
-        // 1. Sources de financement de l'activité
-        log.info("Récupération des sources de financement pour l'activité ID: {}", activite.getId());
-        List<FundingSourceEntity> sourcesActivite = fundingSourceRepository.findByManagementUnitIdPerso(activite.getId());
-        log.info("Nombre de sources trouvées pour l'activité : {}", sourcesActivite.size());
-        addFundingSourcesToDTO(sourcesActivite, dto, allBailleurs);
-
-        // 2. Sources de financement des indicateurs
-        log.info("Traitement des {} indicateur(s) lié(s) à l'activité", indicateurs.size());
-        for (ManagementUnitEntity indicateur : indicateurs) {
-            log.info("Récupération des ValueIndicator pour l'indicateur ID: {}", indicateur.getId());
-            List<ValueIndicatorEntity> valueIndicators = valueIndicatorRepository.findByActivityIdPerso(indicateur.getId());
-            log.info("Nombre de ValueIndicator trouvés pour l'indicateur {} : {}", indicateur.getId(), valueIndicators.size());
-
-            for (ValueIndicatorEntity valueIndicator : valueIndicators) {
-                log.info("Récupération des sources de financement pour ValueIndicator ID: {}", valueIndicator.getId());
-                List<FundingSourceEntity> sourcesIndicateur = fundingSourceRepository.findByValueIndicatorId(valueIndicator.getId());
-                log.info("Nombre de sources trouvées pour ValueIndicator {} : {}", valueIndicator.getId(), sourcesIndicateur.size());
-                addFundingSourcesToDTO(sourcesIndicateur, dto, allBailleurs);
-            }
-        }
-
-        // 3. Sources de financement des tâches
-        log.info("Traitement des {} tâche(s) liée(s) à l'activité", taches.size());
-        log.info("Récupération de toutes les TacheEntity pour l'activité ID: {}", activite.getId());
-        List<TacheEntity> tacheEntities = tacheRepository.findByActiviteIdPerso(activite.getId());
-        log.info("Nombre total de TacheEntity récupérées : {}", tacheEntities.size());
-
-        for (ManagementUnitEntity tache : taches) {
-            log.info("Recherche de la TacheEntity correspondant à la tâche ID: {}", tache.getId());
-            for (TacheEntity tacheEntity : tacheEntities) {
-                if (tacheEntity.getId().equals(tache.getId())) {
-                    log.info("TacheEntity trouvée pour ID: {}, récupération des sources de financement", tache.getId());
-                    List<FundingSourceEntity> sourcesTache = fundingSourceRepository.findByTacheId(tacheEntity.getId());
-                    log.info("Nombre de sources trouvées pour la tâche {} : {}", tache.getId(), sourcesTache.size());
-                    addFundingSourcesToDTO(sourcesTache, dto, allBailleurs);
-                    break; // Optionnel : sortir dès qu'on a trouvé
-                }
-            }
-        }
-
-        log.info("Construction des sources de financement terminée pour l'activité ID: {}", activite.getId());
-        return dto;
-    }
-
-    /**
-     * Ajoute des sources de financement au DTO et met à jour la liste des bailleurs
-     */
-    private void addFundingSourcesToDTO(
-            List<FundingSourceEntity> sources,
-            PtbaFundingSourcesDTO dto,
-            Set<String> allBailleurs) {
-
-        log.info("Début de l'ajout de {} source(s) de financement au DTO", sources.size());
-
+    private void addFundingSourcesToDTO(List<FundingSourceEntity> sources, PtbaFundingSourcesDTO dto, Set<String> allBailleurs) {
         for (FundingSourceEntity source : sources) {
             if (source.getStructure() != null && source.getMontant() != null && source.getMontant() > 0) {
                 String bailleurName = source.getStructure().getNom();
-                log.info("Ajout source : BAILLEUR='{}', MONTANT={} (ID source: {})",
-                        bailleurName, source.getMontant(), source.getId());
-
                 dto.addSource(bailleurName, source.getMontant());
-                allBailleurs.add(bailleurName);
-            } else {
-                log.info("Source ignorée (structure nulle, montant nul ou négatif) - ID: {}", source.getId());
+                allBailleurs.add(bailleurName); // Ajoute le bailleur à la liste globale
             }
         }
-
-        log.info("Fin de l'ajout des sources. Total bailleurs distincts mis à jour : {}", allBailleurs.size());
     }
 
     /**
@@ -356,10 +287,47 @@ public class PtbaService {
         response.setTotauxSourcesFinancement(totauxSourcesGlobal);
     }
 
-    /**
-     * Récupère les enfants d'une entité par type
-     */
-    private List<ManagementUnitEntity> findChildrenByType(Long parentId, TypeProjet type) {
-        return managementUnitRepository.findByParentIdAndType(parentId, type);
+
+    // --- MÉTHODES UTILITAIRES ---
+
+    private <T, K> Map<K, List<FundingSourceEntity>> getFundingSources(
+            Function<List<T>, List<FundingSourceEntity>> fetchFunction,
+            List<T> ids,
+            Function<FundingSourceEntity, K> keyExtractor) {
+        if (ids == null || ids.isEmpty()) {
+            return Collections.emptyMap();
+        }
+        return fetchFunction.apply(ids).stream().collect(Collectors.groupingBy(keyExtractor));
+    }
+
+    private PtbaResponseDTO buildEmptyResponse(ManagementUnitEntity projet, Integer annee) {
+        return PtbaResponseDTO.builder()
+                .projetId(projet.getId())
+                .projetCode(projet.getCode())
+                .projetName(projet.getName())
+                .annee(annee != null ? annee : projet.getAnneeDebut())
+                .activities(Collections.emptyList())
+                .bailleurs(Collections.emptySet())
+                .totalGeneral(0.0)
+                .build();
+    }
+
+    private PtbaResponseDTO buildFinalResponse(ManagementUnitEntity projet, Integer annee, List<PtbaActivityDTO> activities, Set<String> bailleurs) {
+        PtbaResponseDTO response = PtbaResponseDTO.builder()
+                .projetId(projet.getId())
+                .projetCode(projet.getCode())
+                .projetName(projet.getName())
+                .annee(annee != null ? annee : projet.getAnneeDebut())
+                .activities(activities)
+                .bailleurs(bailleurs)
+                .build();
+
+        if (projet.getStructure() != null) {
+            response.setStructure(projet.getStructure().getNom());
+        }
+        if (projet.getResponsible() != null) {
+            response.setResponsable(projet.getResponsible().getPrenom() + " " + projet.getResponsible().getNom());
+        }
+        return response;
     }
 }
