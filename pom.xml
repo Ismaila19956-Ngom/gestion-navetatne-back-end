@@ -177,17 +177,6 @@
             <version>2.3</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi</artifactId>
-            <version>5.2.4</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi-ooxml</artifactId>
-            <version>5.2.4</version>
-        </dependency>
-
         <!-- Jackson Datatype (pour Java 8 Date/Time) -->
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
@@ -218,6 +207,22 @@
             <artifactId>commons-beanutils</artifactId>
             <version>1.11.0</version>
         </dependency>
+
+        <!-- Apache POI pour Excel - VERSION CORRIGÉE -->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>5.2.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>5.2.3</version>
+        </dependency>
+
+
+
 
     </dependencies>
 
