@@ -3,7 +3,9 @@ package com.webgram.dgpsn.services;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import com.webgram.dgpsn.models.RealisationDTO;
+import com.webgram.dgpsn.models.RealisationExportDTO;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -27,4 +29,10 @@ public interface RealisationService {
             String description,
             Long ligneBudgetaireId
     );
+
+    // Nouvelles méthodes pour l'export Excel
+    byte[] exportRecettesToExcel(Integer annee, String trimestre, String typePeriode) throws IOException;
+    byte[] exportDepensesToExcel(Integer annee, String trimestre, String typePeriode) throws IOException;
+    List<RealisationExportDTO> getRecettesData(Integer annee, String trimestre, String typePeriode);
+    List<RealisationExportDTO> getDepensesData(Integer annee, String trimestre, String typePeriode);
 }
