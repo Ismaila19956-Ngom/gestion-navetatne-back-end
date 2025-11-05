@@ -18,11 +18,13 @@ public interface CourrierService {
 
     Page<CourrierEntity> readAll(Pageable pageable, String keyword,
                                  CourrierType type, ReferentielType nature,
-                                 ReferentielType statut);
+                                 ReferentielType statut, Boolean archive); // MODIFICATION : Ajout du filtre archive
 
     Optional<CourrierEntity> read(Long id);
 
     CourrierEntity archiver(Long id);
+
+    CourrierEntity desarchiver(Long id); // NOUVELLE MÉTHODE : Désarchiver
 
     CourrierEntity changerStatut(Long id, ReferentielType nouveauStatut);
 
@@ -36,4 +38,13 @@ public interface CourrierService {
     Page<CourrierEntity> findByNature(ReferentielType nature, Pageable pageable);
 
     long countByNature(ReferentielType nature);
+
+    // NOUVELLES MÉTHODES
+    Page<CourrierEntity> findArchives(Pageable pageable);
+
+    Page<CourrierEntity> findNonArchives(Pageable pageable);
+
+    long countArchives();
+
+    long countNonArchives();
 }

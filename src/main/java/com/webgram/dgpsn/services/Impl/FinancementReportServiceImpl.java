@@ -99,7 +99,7 @@ public class FinancementReportServiceImpl implements FinancementReportService {
         List<Long> ligneBudgetaireIds = ligneBudgetaireRepository.findByBudgetId(budgetId)
                 .stream()
                 .map(ligne -> ligne.getId())
-                .collect(Collectors.toList());
+                .toList();
 
         if (ligneBudgetaireIds.isEmpty()) {
             return new ArrayList<>();

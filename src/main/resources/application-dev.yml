@@ -8,14 +8,11 @@ server:
       include-stacktrace: never
       include-exception: false
 spring:
-  profiles:
-    active: default
   datasource:
     name: ${DB_NAME:dgpsn-db}
-    host: ${DB_HOST:127.0.0.1}
-    username: ${DB_USERNAME:admin}
-    password: ${DB_PASSWORD:secret123}
-
+    host: ${DB_HOST:185.166.39.101}
+    username: ${DB_USERNAME:webgram-pg}
+    password: ${DB_PASSWORD:Webgram2024#}
     url: jdbc:postgresql://${spring.datasource.host}:5432/${spring.datasource.name}?autoReconnect=true&useSSL=false&createDatabaseIfNotExist=true
   servlet:
     multipart:
@@ -25,7 +22,7 @@ spring:
     hibernate:
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-      ddl-auto: create-drop
+      ddl-auto: update
     show-sql: false
     properties:
       hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
@@ -43,9 +40,9 @@ security-jwt:
 
 dgpsn-cors:
   cors:
-    allowed-origins: "http://localhost:4200,http://localhost:4600,http://185.166.39.101,http://185.166.39.101/,http://localhost:4300"
-    allowed-methods: "*"
-    allowed-headers: "*"
-    exposed-headers: "Authorization,Link,Content-Disposition"
-    allow-credentials: true
-    max-age: 1800
+  allowed-origins: "http://185.166.39.101/,http://185.166.39.101,http://185.166.39.101/"
+  allowed-methods: "*"
+  allowed-headers: "*"
+  exposed-headers: "Authorization,Link,Content-Disposition"
+  allow-credentials: true
+  max-age: 1800
