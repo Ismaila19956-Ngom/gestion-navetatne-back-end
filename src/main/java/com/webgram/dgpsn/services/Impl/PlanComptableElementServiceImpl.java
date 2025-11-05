@@ -253,4 +253,11 @@ public class PlanComptableElementServiceImpl implements PlanComptableElementServ
                 .map(mapper::asDto)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    @Journal(actionType = ActionType.READ_CLASSE)
+    public Page<PlanComptableElementDTO> getClasses(Pageable pageable) {
+        log.info("Récupération de toutes les classes");
+        return readAll(pageable, null, null, null, TypePlanComptable.CLASSE, null, null, null);
+    }
 }
