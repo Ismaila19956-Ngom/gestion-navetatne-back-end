@@ -28,27 +28,27 @@ public class FundingSourceEntity extends Auditable<Long> implements Serializable
     @Column(name = "src_comment")
     private String comment;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "management_linked_source_financement")
     private ManagementUnitEntity managementUnit;
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tache_linked_source_financement")
     private TacheEntity tache;
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "value_indicator_linked_source_financement")
     private ValueIndicatorEntity valueIndicator;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "budget_linked_source_financement")
     private BudgetEntity budget;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "budget_global_linked_source_financement")
     private BudgetDgpsnEntity budgetGlobal;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "structure_linked_source_financement")
     private StructureEntity structure;
 }
