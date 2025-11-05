@@ -46,4 +46,42 @@ public interface CessationFonctionRepository extends JpaRepository<CessationFonc
             "FROM CongeEntity c WHERE c = :conge")
      boolean isDateCessationValidForConge(@Param("conge") CongeEntity conge, @Param("dateCessation") Date dateCessation);
 
+     /// export conge agent
+    /**
+     * Trouve toutes les cessations d'un agent pour une année donnée
+     */
+    @Query("SELECT c FROM CessationFonctionEntity c " +
+            "WHERE c.conge.agent.id = :agentId " +
+            "AND c.annee = :annee " +
+            "ORDER BY c.dateCessation ASC")
+    List<CessationFonctionEntity> findByAgentIdAndAnnee(@Param("agentId") Long agentId,
+                                                        @Param("annee") Integer annee);
+
+    /**
+     * Trouve toutes les cessations pour une année donnée
+     */
+    @Query("SELECT c FROM CessationFonctionEntity c " +
+            "WHERE c.annee = :annee " +
+            "ORDER BY c.conge.agent.direction.libelle, c.conge.agent.nom ASC")
+    List<CessationFonctionEntity> findByAnnee(@Param("annee") Integer annee);
+
+    /**
+     * Calcule le solde total d'un agent pour une année
+     */
+    @Query("SELECT SUM(c.nombreDeJoursdemande) FROM CessationFonctionEntity c " +
+            "WHERE c.conge.agent.id = :agentId " +
+            "AND c.annee = :annee")
+    Integer sumJoursDemandesByAgentAndAnnee(@Param("agentId") Long agentId,
+                                            @Param("annee") Integer annee);
+
+    /**
+     * Trouve le solde annuel le plus récent d'un agent
+     */
+    @Query("SELECT c.soldeAnnuel FROM CessationFonctionEntity c " +
+            "WHERE c.conge.agent.id = :agentId " +
+            "AND c.annee = :annee " +
+            "ORDER BY c.dateCessation DESC")
+    List<Integer> findSoldeAnnuelByAgentAndAnnee(@Param("agentId") Long agentId,@Param("annee") Integer annee);
+
+
 }
