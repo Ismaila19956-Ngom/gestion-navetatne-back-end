@@ -822,6 +822,7 @@ public enum SecurityPermissions {
 
     /* début fonctionnalités sur le Dashboard */
     READ_TDB_RESUME("Consulter resumé tableau de bord", Feature.TDB_RESUME),
+    READ_TDB_BUDGET("Consulter budget tableau de bord", Feature.TDB_BUDGET),
     READ_TDB_PROJETS("Consulter tableau de bord des projets", Feature.TDB_PROJETS),
     READ_TDB_FINANCMENTS("Consulter tableau de bord des financements", Feature.TDB_Financements),
     READ_TDB_PROBLEMES("Consulter tableau de bord des problèmes", Feature.TDB_PROBLEMES),
