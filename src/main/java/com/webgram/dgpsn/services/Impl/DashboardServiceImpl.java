@@ -536,6 +536,147 @@ public List<StatisticalFundingDTO> readTotalMobilisationByProjet() {
                 .map(result -> new StatisticalDTO((String) result[0], (Long) result[1]))
                 .collect(Collectors.toList());
     }
+    //budget
+     private final BudgetDgpsnRepository budgetDgpsnRepository;
+    private final LigneBudgetaireRepository ligneBudgetaireRepository;
+    private final RealisationRepository realisationRepository;
+
+
+
+    @Override
+    public Map<String, Object> getBudgetSummaryKpis() {
+        var budgets = budgetDgpsnRepository.findAll();
+
+        // Budget Total: Accès direct aux méthodes de BudgetDgpsnEntity
+        double totalBudget = budgets.stream()
+                .mapToDouble(BudgetDgpsnEntity::getMontant)
+                .sum();
+
+        // Budget Consommé: Somme des réalisations (RealisationEntity)
+        var allRealisations = realisationRepository.findAll();
+        double totalConsumed = allRealisations.stream()
+                .mapToDouble(RealisationEntity::getMontant)
+                .sum();
+
+        double totalRemaining = totalBudget - totalConsumed;
+        double tauxExecution = totalBudget > 0 ? (totalConsumed / totalBudget) * 100 : 0.0;
+
+        return Map.of(
+                "totalBudget", totalBudget,
+                "totalConsumed", totalConsumed,
+                "totalRemaining", totalRemaining,
+                "tauxExecution", Math.min(100.0, tauxExecution)
+        );
+    }
+
+    @Override
+    public List<StatisticalFundingDTO> getBudgetDistributionByYear() {
+        var budgets = budgetDgpsnRepository.findAll();
+
+        // Groupement par année (BudgetDgpsnEntity::getAnnee )
+        Map<Integer, Double> budgetByYear = budgets.stream()
+                .collect(Collectors.groupingBy(
+                        BudgetDgpsnEntity::getAnnee,
+                        Collectors.summingDouble(BudgetDgpsnEntity::getMontant)
+                ));
+
+        return budgetByYear.entrySet().stream()
+                .map(e -> StatisticalFundingDTO.builder()
+                        .label(e.getKey().toString())
+                        .value(e.getValue())
+                        .build())
+                .sorted(Comparator.comparing(StatisticalFundingDTO::getLabel))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<StatisticalFundingDTO> getTop5BudgetsByAmount() {
+        return budgetDgpsnRepository.findAll().stream()
+                .sorted(Comparator.comparing(BudgetDgpsnEntity::getMontant, Comparator.reverseOrder()))
+                .limit(5)
+                .map(budget -> StatisticalFundingDTO.builder()
+                        .label(budget.getCode() + " - " + budget.getLibelle())
+                        .value(budget.getMontant())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<StatisticalFundingDTO> getTop5BudgetExecutionRates() {
+        var budgets = budgetDgpsnRepository.findAll();
+        var allLignes = ligneBudgetaireRepository.findAll();
+        var allRealisations = realisationRepository.findAll();
+
+        Map<Long, Double> totalConsumedAmountByBudget = new HashMap<>();
+        Map<Long, Double> totalBudgetAmount = new HashMap<>();
+        Map<Long, String> budgetCodeById = new HashMap<>();
+
+        budgets.forEach(budget -> {
+            totalBudgetAmount.put(budget.getId(), budget.getMontant());
+            budgetCodeById.put(budget.getId(), budget.getCode());
+            totalConsumedAmountByBudget.put(budget.getId(), 0.0);
+        });
+
+        // Mapping LigneBudgetaire (qui a le budget [5]) aux Realisations (qui ont la ligne [6])
+        Map<Long, Long> budgetIdByLigneId = allLignes.stream()
+                .collect(Collectors.toMap(LigneBudgetaireEntity::getId, l -> l.getBudget().getId()));
+
+        allRealisations.forEach(realisation -> {
+            Long ligneId = realisation.getLigneBudgetaire().getId();
+            Long budgetId = budgetIdByLigneId.get(ligneId);
+            if (budgetId != null) {
+                totalConsumedAmountByBudget.merge(budgetId, realisation.getMontant(), Double::sum);
+            }
+        });
+
+        List<StatisticalFundingDTO> executionRates = budgets.stream()
+                .map(budget -> {
+                    double total = totalBudgetAmount.getOrDefault(budget.getId(), 0.0);
+                    double consumed = totalConsumedAmountByBudget.getOrDefault(budget.getId(), 0.0);
+                    double taux = total > 0 ? (consumed / total) * 100 : 0.0;
+
+                    return StatisticalFundingDTO.builder()
+                            .label(budgetCodeById.get(budget.getId()))
+                            .value(Math.min(100.0, taux))
+                            .build();
+                })
+                .sorted(Comparator.comparing(StatisticalFundingDTO::getValue).reversed())
+                .limit(5)
+                .collect(Collectors.toList());
+
+        return executionRates;
+    }
+
+    @Override
+    public List<Map<String, Object>> getMonthlyBudgetConsumption() {
+        // allRealisations est une liste de RealisationEntity [1]
+        var allRealisations = realisationRepository.findAll();
+
+        // Groupement par Année et Mois
+        Map<String, Double> monthlyConsumption = allRealisations.stream()
+                .collect(Collectors.groupingBy(
+                        r -> {
+                            // RealisationEntity contient un champ date de type LocalDate [2]
+                            LocalDate date = r.getDate();
+                            // Format AAAA-MM
+                            return date.getYear() + "-" + String.format("%02d", date.getMonthValue());
+                        },
+                        Collectors.summingDouble(RealisationEntity::getMontant) // RealisationEntity::getMontant [2]
+                ));
+
+        return monthlyConsumption.entrySet().stream()
+                .sorted(Map.Entry.comparingByKey())
+                // CORRECTION : Utilisation explicite d'une HashMap pour garantir Map<String, Object>
+                .map(e -> {
+                    Map<String, Object> result = new HashMap<>();
+                    result.put("monthYear", e.getKey()); // String
+                    result.put("amount", e.getValue());   // Double
+                    return result; // Retourne Map<String, Object>
+                })
+                .collect(Collectors.toList());
+    }
+
+
 
     @Override
     public List<StatisticalDTO> getProjectsByRegion() {
