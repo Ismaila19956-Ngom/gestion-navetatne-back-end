@@ -39,10 +39,18 @@ public class FundingSourceDTO implements Serializable {
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private BudgetDgpsnDTO budgetGlobal;
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private StructureDTO structure;
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private BudgetDTO budget;
-    private TacheEntity tache;
-    private ValueIndicatorEntity valueIndicator;
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private TacheDto tache;
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private ValueIndicatorDTO valueIndicator;
 
     @JournalAttribute
     @NotNull

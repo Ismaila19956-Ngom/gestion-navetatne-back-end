@@ -11,11 +11,10 @@ import com.webgram.dgpsn.models.FundingSourceDTO;
 import java.util.Objects;
 
 
-@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = "spring")
+@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = "spring",uses = {TacheMapper.class})
 public abstract class FundingSourceMapper implements EntityMapper<FundingSourceDTO, FundingSourceEntity> {
 
-    @Autowired
-//    private BudgetRepository budgetRepository;
+    public abstract FundingSourceDTO asDto(FundingSourceEntity entity);
 
     @Override
     @Mapping(target = "managementUnit", source = "managementUnitId", qualifiedByName = "getManagementUnit")
@@ -73,9 +72,4 @@ public abstract class FundingSourceMapper implements EntityMapper<FundingSourceD
         }
         return null;
     }
-
-
-/// public abstract FundingActivityEntity asEntity(FundingActivityDTO dto);
-
-//    public abstract FundingActivityDTO asExcelDto(FundingActivityEntity entity);
 }

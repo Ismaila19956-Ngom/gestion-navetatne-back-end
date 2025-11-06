@@ -105,4 +105,31 @@ public interface DashboardService {
     List<DataPoint<String, Long>> getIcpeParCategorie();
     List<DataPoint<String, Long>> getRepartitionNiveauConformite();
     /* Icpe Dashboard END*/
+
+    // ================= BUDGET DASHBOARD START =================
+    /**
+     * Récupère les KPI globaux du budget (Total, Consommé, Restant, Taux d'Exécution).
+     */
+    Map<String, Object> getBudgetSummaryKpis();
+
+    /**
+     * Récupère la répartition des budgets par année.
+     */
+    List<StatisticalFundingDTO> getBudgetDistributionByYear();
+
+    /**
+     * Récupère le Top 5 des budgets par montant total.
+     */
+    List<StatisticalFundingDTO> getTop5BudgetsByAmount();
+
+    /**
+     * Récupère le Top 5 des budgets par taux d'exécution.
+     */
+    List<StatisticalFundingDTO> getTop5BudgetExecutionRates();
+
+    /**
+     * Récupère l'évolution de la consommation budgétaire par mois.
+     */
+    List<Map<String, Object>> getMonthlyBudgetConsumption();
+    // ================= BUDGET DASHBOARD END =================
 }

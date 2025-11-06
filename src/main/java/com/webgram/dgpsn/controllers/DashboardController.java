@@ -463,4 +463,57 @@ public ResponseEntity<List<StatisticalBudgetActivityDTO>> getActivitiesAndBudget
         return dashboardService.getRepartitionNiveauConformite();
     }
     /* Icpe Dashboard END*/
+
+
+    // ================= BUDGET DASHBOARD ENDPOINTS =================
+
+    @Operation(summary = "Read global budget KPIs (Total, Consumed, Remaining, Rate)", description = "Calcule le budget total, consommé, restant et le taux d'exécution global.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success"),
+            @ApiResponse(responseCode = "500", description = "Internal server error during request processing")})
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/budget/kpis")
+    public Map<String, Object> getBudgetSummaryKpis() {
+        return dashboardService.getBudgetSummaryKpis();
+    }
+
+    @Operation(summary = "Read budget distribution by year", description = "Répartition des montants budgétaires par année.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success"),
+            @ApiResponse(responseCode = "500", description = "Internal server error during request processing")})
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/budget/distribution-by-year")
+    public List<StatisticalFundingDTO> getBudgetDistributionByYear() {
+        return dashboardService.getBudgetDistributionByYear();
+    }
+
+    @Operation(summary = "Read top 5 budgets by total amount", description = "Top 5 des budgets classés par montant total.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success"),
+            @ApiResponse(responseCode = "500", description = "Internal server error during request processing")})
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/budget/top5-by-amount")
+    public List<StatisticalFundingDTO> getTop5BudgetsByAmount() {
+        return dashboardService.getTop5BudgetsByAmount();
+    }
+
+    @Operation(summary = "Read top 5 budgets by execution rate", description = "Top 5 des budgets classés par taux d'exécution.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success"),
+            @ApiResponse(responseCode = "500", description = "Internal server error during request processing")})
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/budget/top5-by-execution")
+    public List<StatisticalFundingDTO> getTop5BudgetExecutionRates() {
+        return dashboardService.getTop5BudgetExecutionRates();
+    }
+
+    @Operation(summary = "Read monthly evolution of budget consumption", description = "Évolution de la consommation budgétaire (réalisations) par mois.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success"),
+            @ApiResponse(responseCode = "500", description = "Internal server error during request processing")})
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/budget/monthly-consumption")
+    public List<Map<String, Object>> getMonthlyBudgetConsumption() {
+        return dashboardService.getMonthlyBudgetConsumption();
+    }
 }

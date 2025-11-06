@@ -70,15 +70,15 @@ public class StructureEntity extends Auditable<Long> implements Serializable {
     @Column(name = "str_observation")
     private String observation;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "str_linked_country")
     private LabelEntity country;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "str_linked_partner_group")
     private LabelEntity partnerGroup;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "str_linked_structure_tutelle")
     private StructureEntity tutelle;
 

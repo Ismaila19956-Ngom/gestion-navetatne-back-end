@@ -95,4 +95,21 @@ List<StatisticalFundingDTO> avgAgeProjectByPartner();
     @Query("SELECT f FROM FundingSourceEntity f WHERE f.budget.id = :budgetId")
     List<FundingSourceEntity> findByBudgetId(@Param("budgetId") Long budgetId);
 
+    /**
+     * Trouve toutes les sources de financement pour une liste d'unités de gestion.
+     */
+    @Query("SELECT f FROM FundingSourceEntity f WHERE f.managementUnit.id IN :managementUnitIds")
+    List<FundingSourceEntity> findByManagementUnitIdIn(@Param("managementUnitIds") List<Long> managementUnitIds);
+
+    /**
+     * Trouve toutes les sources de financement pour une liste de tâches.
+     */
+    @Query("SELECT f FROM FundingSourceEntity f WHERE f.tache.id IN :tacheIds")
+    List<FundingSourceEntity> findByTacheIdIn(@Param("tacheIds") List<Long> tacheIds);
+
+    /**
+     * Trouve toutes les sources de financement pour une liste de valeurs d'indicateur.
+     */
+    @Query("SELECT f FROM FundingSourceEntity f WHERE f.valueIndicator.id IN :valueIndicatorIds")
+    List<FundingSourceEntity> findByValueIndicatorIdIn(@Param("valueIndicatorIds") List<Long> valueIndicatorIds);
 }
