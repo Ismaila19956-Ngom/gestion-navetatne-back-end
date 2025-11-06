@@ -81,7 +81,7 @@ public class ManagementUnitEntity extends Auditable<Long> implements Serializabl
     @Column(name = "prj_publish")
     private boolean publish;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private LabelEntity axe;
 
     @ManyToOne(fetch = FetchType.LAZY)
