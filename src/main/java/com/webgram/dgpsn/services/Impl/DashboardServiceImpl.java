@@ -3,9 +3,13 @@ package com.webgram.dgpsn.services.Impl;
 import com.webgram.dgpsn.entities.*;
 import com.webgram.dgpsn.entities.enums.*;
 import com.webgram.dgpsn.mappers.ManagementUnitMapper;
+import com.webgram.dgpsn.models.AgentCountByDirectionDTO;
+import com.webgram.dgpsn.models.AgentDashboardDTO;
 import com.webgram.dgpsn.models.responses.*;
 import com.webgram.dgpsn.repositories.*;
+import com.webgram.dgpsn.services.AgentService;
 import com.webgram.dgpsn.services.DashboardService;
+import com.webgram.dgpsn.services.DirectionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -55,6 +59,22 @@ public class DashboardServiceImpl implements DashboardService {
     private final RejetPollutionRepository rejetPollutionRepository;
     private final EtablissementClasseRepository etablissementClasseRepository;
     private final InspectionICPERepository inspectionICPERepository;
+    private final AgentService agentService;
+
+
+    /**
+     * Read all agents for card
+     * @return
+     */
+    @Override
+    public AgentDashboardDTO readAllAgents() {
+        return agentService.getAgentDashboard();
+    }
+
+    @Override
+    public List<AgentCountByDirectionDTO> readAgentCountByDirection() {
+        return agentService.AgentCountByDirection();
+    }
 
     @Override
     public List<StatisticalDTO> readStatProjectByStatus() {

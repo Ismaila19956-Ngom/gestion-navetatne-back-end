@@ -1,5 +1,7 @@
 package com.webgram.dgpsn.services;
 
+import com.webgram.dgpsn.models.AgentCountByDirectionDTO;
+import com.webgram.dgpsn.models.AgentDashboardDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
@@ -9,6 +11,7 @@ import com.webgram.dgpsn.models.DownloadFile;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Date;
 import java.util.List;
 
 public interface AgentService {
@@ -26,6 +29,7 @@ public interface AgentService {
             String adresse,
             String email,
             String telephone,
+            Date dateCreation,
             Long structureId,
             Long fonctionId,
             Long directionId,
@@ -35,4 +39,6 @@ public interface AgentService {
     void importAgent(MultipartFile file);
     void exportAgent(PrintWriter writer);
     List<AgentDTO> getAgentNotInUsers();
+    AgentDashboardDTO getAgentDashboard();
+    List<AgentCountByDirectionDTO> AgentCountByDirection();
 }
