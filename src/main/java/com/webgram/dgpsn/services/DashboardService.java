@@ -3,9 +3,6 @@ package com.webgram.dgpsn.services;
 import com.webgram.dgpsn.entities.FundingConfigEntity;
 import com.webgram.dgpsn.entities.IssueLogEntity;
 import com.webgram.dgpsn.entities.enums.TypeProjet;
-import com.webgram.dgpsn.models.AgentCountByDirectionDTO;
-import com.webgram.dgpsn.models.AgentDTO;
-import com.webgram.dgpsn.models.AgentDashboardDTO;
 import com.webgram.dgpsn.models.responses.*;
 
 import java.util.List;
@@ -14,10 +11,6 @@ import java.util.Date;
 
 
 public interface DashboardService {
-//    AGENT DASHBOARD
-    AgentDashboardDTO readAllAgents();
-    List<AgentCountByDirectionDTO> readAgentCountByDirection();
-
     List<StatisticalDTO> readStatProjectByStatus();
 
     List<StatisticalDTO> readStatProjectByFlag();
@@ -139,7 +132,4 @@ public interface DashboardService {
      */
     List<Map<String, Object>> getMonthlyBudgetConsumption();
     // ================= BUDGET DASHBOARD END =================
-   /// resumer dashboard conge
-    CongeDashboardSummaryDTO getDashboardSummary();
-    CongeDashboardDTO getFullDashboard();
 }

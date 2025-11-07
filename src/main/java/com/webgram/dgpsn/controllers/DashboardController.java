@@ -1,7 +1,5 @@
 package com.webgram.dgpsn.controllers;
 
-import com.webgram.dgpsn.models.AgentCountByDirectionDTO;
-import com.webgram.dgpsn.models.AgentDashboardDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -28,7 +26,6 @@ public class DashboardController {
     private final HistoryFlagService historyFlagService;
     private final HistoryStatusService historyStatusService;
     private final BudgetService budgetService;
-
 
     @Operation(summary = "Read stat project by status", description = "It take input param of the page and return this list related")
     @ApiResponses(value = {
@@ -441,26 +438,6 @@ public ResponseEntity<List<StatisticalBudgetActivityDTO>> getActivitiesAndBudget
         return dashboardService.getTendancePollutionEau();
     }
 
-    @Operation(summary = "Get agent statistics card", description = "Returns statistics card for agents")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Success"),
-            @ApiResponse(responseCode = "500", description = "Internal server error during request processing")})
-    @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/agent/card")
-    public ResponseEntity<?> getAgentStats() {
-        return ResponseEntity.ok(dashboardService.readAllAgents());
-    }
-
-    @Operation(summary = "Get agent statistics des qui sont dans les directions", description = "Returns statistics card for agents")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Success"),
-            @ApiResponse(responseCode = "500", description = "Internal server error during request processing")})
-    @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/direction/agents")
-    public ResponseEntity<List<AgentCountByDirectionDTO>> AgentCountByDirection() {
-        return ResponseEntity.ok(dashboardService.readAgentCountByDirection());
-    }
-
     /* Icpe Dashboard START*/
     @GetMapping("/icpe/kpis")
     @ResponseStatus(HttpStatus.OK)
@@ -538,26 +515,5 @@ public ResponseEntity<List<StatisticalBudgetActivityDTO>> getActivitiesAndBudget
     @GetMapping("/budget/monthly-consumption")
     public List<Map<String, Object>> getMonthlyBudgetConsumption() {
         return dashboardService.getMonthlyBudgetConsumption();
-    }
-
-    @Operation(summary = "summary of conge", description = "resumer  du conge.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Success"),
-            @ApiResponse(responseCode = "500", description = "Internal server error during request processing")})
-    @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/dashboard-summary")
-    public ResponseEntity<CongeDashboardSummaryDTO> getDashboardSummary() {
-        CongeDashboardSummaryDTO summary = dashboardService.getDashboardSummary();
-        return ResponseEntity.ok(summary);
-    }
-
-    @Operation(summary = "summary of conge", description = "resumer  du conge.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Success"),
-            @ApiResponse(responseCode = "500", description = "Internal server error during request processing")})
-    @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/dashboard-conge")
-    public ResponseEntity<CongeDashboardDTO> getDashboard() {
-        return ResponseEntity.ok(dashboardService.getFullDashboard());
     }
 }

@@ -48,21 +48,13 @@ public class DashboardRule {
     static final String ICPE_INSPECTIONS_MENSUELLES = "/icpe/inspections-mensuelles";
     static final String ICPE_REPARTITION_CATEGORIE = "/icpe/repartition-categories";
     static final String ICPE_REPARTITION_CONFORMITE = "/icpe/repartition-conformite";
-    // agents DGPSN
-    static final String AGENT_STAT_CARD = "/agent/card";
-    static final String AGENTS_FOR_DIRECTIONS = "/direction/agents";
 
-    //budget DGPSN
+    //budget
     static final String BUDGET_KPIS = "/budget/kpis";
     static final String BUDGET_DISTRIBUTION_BY_YEAR = "/budget/distribution-by-year";
     static final String BUDGET_TOP_5_BY_AMOUNT = "/budget/top5-by-amount";
     static final String BUDGET_TOP_5_EXECUTION= "/budget/top5-by-execution";
     static final String MONTHLY_BUDGET_CONSUMPTION = "/budget/monthly-consumption";
-
-
-    //Conge DGPSN
-//    static final String CONGE_SUMMARY ="/dashboard-summary";
-    static final String CONGE_SUMMARY ="/dashboard-conge";
 
     @Bean
     public SecurityRule getBudgetKpis() {
@@ -77,31 +69,58 @@ public class DashboardRule {
                 .end();
     }
 
-
-
     @Bean
-    public SecurityRule AgentCountByDirection() {
+    public SecurityRule getBudgetDistributionByYear() {
         return SecurityRule.builder()
                 .httpMethod(HttpMethod.GET)
-                .apiPattern(DASHBOARD_API_PREFIX + AGENTS_FOR_DIRECTIONS)
+                .apiPattern(DASHBOARD_API_PREFIX + BUDGET_DISTRIBUTION_BY_YEAR)
                 .build()
                 .condition()
-                .hasPermission(SecurityPermissions.AGENTS_FOR_DIRECTIONS)
+                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
+                .hasPermission(SecurityPermissions.READ_TDB_BUDGET)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
 
     @Bean
-    public SecurityRule getAgentStats() {
+    public SecurityRule getBudgetTop5ByAmount() {
         return SecurityRule.builder()
                 .httpMethod(HttpMethod.GET)
-                .apiPattern(DASHBOARD_API_PREFIX + AGENT_STAT_CARD)
+                .apiPattern(DASHBOARD_API_PREFIX + BUDGET_TOP_5_BY_AMOUNT)
                 .build()
                 .condition()
-                .hasPermission(SecurityPermissions.AGENT_STAT_CARD)
+                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
+                .hasPermission(SecurityPermissions.READ_TDB_BUDGET)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
+
+    @Bean
+    public SecurityRule getBudgetTop5ExecutionRates() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(DASHBOARD_API_PREFIX + BUDGET_TOP_5_EXECUTION)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
+                .hasPermission(SecurityPermissions.READ_TDB_BUDGET)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+
+    @Bean
+    public SecurityRule getMonthlyBudgetConsumption() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(DASHBOARD_API_PREFIX + MONTHLY_BUDGET_CONSUMPTION)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
+                .hasPermission(SecurityPermissions.READ_TDB_BUDGET)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+
     @Bean
     public SecurityRule getIcpeKpis() {
         return SecurityRule.builder()
@@ -377,60 +396,6 @@ public class DashboardRule {
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
-
-
-    @Bean
-    public SecurityRule getBudgetDistributionByYear() {
-        return SecurityRule.builder()
-                .httpMethod(HttpMethod.GET)
-                .apiPattern(DASHBOARD_API_PREFIX + BUDGET_DISTRIBUTION_BY_YEAR)
-                .build()
-                .condition()
-                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
-                .hasPermission(SecurityPermissions.READ_TDB_BUDGET)
-                .hasPermission(SecurityPermissions.ALL_ACCESS)
-                .end();
-    }
-
-    @Bean
-    public SecurityRule getBudgetTop5ByAmount() {
-        return SecurityRule.builder()
-                .httpMethod(HttpMethod.GET)
-                .apiPattern(DASHBOARD_API_PREFIX + BUDGET_TOP_5_BY_AMOUNT)
-                .build()
-                .condition()
-                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
-                .hasPermission(SecurityPermissions.READ_TDB_BUDGET)
-                .hasPermission(SecurityPermissions.ALL_ACCESS)
-                .end();
-    }
-
-    @Bean
-    public SecurityRule getBudgetTop5ExecutionRates() {
-        return SecurityRule.builder()
-                .httpMethod(HttpMethod.GET)
-                .apiPattern(DASHBOARD_API_PREFIX + BUDGET_TOP_5_EXECUTION)
-                .build()
-                .condition()
-                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
-                .hasPermission(SecurityPermissions.READ_TDB_BUDGET)
-                .hasPermission(SecurityPermissions.ALL_ACCESS)
-                .end();
-    }
-
-    @Bean
-    public SecurityRule getMonthlyBudgetConsumption() {
-        return SecurityRule.builder()
-                .httpMethod(HttpMethod.GET)
-                .apiPattern(DASHBOARD_API_PREFIX + MONTHLY_BUDGET_CONSUMPTION)
-                .build()
-                .condition()
-                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
-                .hasPermission(SecurityPermissions.READ_TDB_BUDGET)
-                .hasPermission(SecurityPermissions.ALL_ACCESS)
-                .end();
-    }
-
     @Bean
     public SecurityRule getProjectsByGeographicalLocation() {
         return SecurityRule.builder()
@@ -677,18 +642,4 @@ public class DashboardRule {
                 .end();
     }
 
-
-    //Conge DGPSN
-
-    @Bean
-    public SecurityRule getDashboardSummary() {
-        return SecurityRule.builder()
-                .httpMethod(HttpMethod.GET)
-                .apiPattern(DASHBOARD_API_PREFIX + CONGE_SUMMARY)
-                .build()
-                .condition()
-                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
-                .hasPermission(SecurityPermissions.ALL_ACCESS)
-                .end();
-    }
 }

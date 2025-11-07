@@ -17,6 +17,7 @@ public enum Feature {
     TDB_EVALUATION("Évaluation Environnementale", Module.DASHBOARD),
     TDB_RESUME("Resumé tableau de bord", Module.DASHBOARD),
     TDB_BUDGET("Budget tableau de bord", Module.DASHBOARD),
+    TDB_SERVICE_EXTERIEUR("Service exterieur tableau de bord", Module.DASHBOARD),
     TDB_PROJETS("tableau de bord des projets", Module.DASHBOARD),
     TDB_Financements("tableau de bord des financements", Module.DASHBOARD),
     TDB_PROBLEMES("tableau de bord des problèmes", Module.DASHBOARD),
