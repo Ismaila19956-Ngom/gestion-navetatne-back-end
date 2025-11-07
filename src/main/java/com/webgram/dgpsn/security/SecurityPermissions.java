@@ -831,7 +831,8 @@ public enum SecurityPermissions {
     READ_TDB_EVALUATION("Consulter tableau de bord de l'évaluation environnementale", Feature.TDB_EVALUATION),
     READ_TDB_POLLUTION("Consulter tableau de bord de la pollution", Feature.TDB_POLLUTION),
     READ_TDB_ICPE("Consulter tableau de bord ICPE", Feature.TDB_ICPE),
-
+    AGENT_STAT_CARD("", Feature.AGENT_READ_STAT_CARD),
+    AGENTS_FOR_DIRECTIONS("", Feature.AGENTS_FOR_DIRECTIONS),
     /* fin fonctionnalités sur le Dashboard */
 
 

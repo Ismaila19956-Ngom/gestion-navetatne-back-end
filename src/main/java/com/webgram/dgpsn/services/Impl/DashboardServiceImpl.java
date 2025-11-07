@@ -3,9 +3,13 @@ package com.webgram.dgpsn.services.Impl;
 import com.webgram.dgpsn.entities.*;
 import com.webgram.dgpsn.entities.enums.*;
 import com.webgram.dgpsn.mappers.ManagementUnitMapper;
+import com.webgram.dgpsn.models.AgentCountByDirectionDTO;
+import com.webgram.dgpsn.models.AgentDashboardDTO;
 import com.webgram.dgpsn.models.responses.*;
 import com.webgram.dgpsn.repositories.*;
+import com.webgram.dgpsn.services.AgentService;
 import com.webgram.dgpsn.services.DashboardService;
+import com.webgram.dgpsn.services.DirectionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -55,12 +59,31 @@ public class DashboardServiceImpl implements DashboardService {
     private final RejetPollutionRepository rejetPollutionRepository;
     private final EtablissementClasseRepository etablissementClasseRepository;
     private final InspectionICPERepository inspectionICPERepository;
+    private final AgentService agentService;
     private final CongeRepository congeRepository;
     private final CessationFonctionRepository cessationFonctionRepository;
     //budget
     private final BudgetDgpsnRepository budgetDgpsnRepository;
     private final LigneBudgetaireRepository ligneBudgetaireRepository;
     private final RealisationRepository realisationRepository;
+
+
+
+
+    /**
+     * Read all agents for card
+     * @return
+     */
+    @Override
+    public AgentDashboardDTO readAllAgents() {
+        return agentService.getAgentDashboard();
+    }
+
+    @Override
+    public List<AgentCountByDirectionDTO> readAgentCountByDirection() {
+        return agentService.AgentCountByDirection();
+    }
+
 
 
     @Override
@@ -89,25 +112,7 @@ public class DashboardServiceImpl implements DashboardService {
         );
     }
 
-    @Override
-    public List<StatisticalFundingDTO> getBudgetDistributionByYear() {
-        var budgets = budgetDgpsnRepository.findAll();
 
-        // Groupement par année (BudgetDgpsnEntity::getAnnee )
-        Map<Integer, Double> budgetByYear = budgets.stream()
-                .collect(Collectors.groupingBy(
-                        BudgetDgpsnEntity::getAnnee,
-                        Collectors.summingDouble(BudgetDgpsnEntity::getMontant)
-                ));
-
-        return budgetByYear.entrySet().stream()
-                .map(e -> StatisticalFundingDTO.builder()
-                        .label(e.getKey().toString())
-                        .value(e.getValue())
-                        .build())
-                .sorted(Comparator.comparing(StatisticalFundingDTO::getLabel))
-                .collect(Collectors.toList());
-    }
 
     @Override
     public List<StatisticalFundingDTO> getTop5BudgetsByAmount() {
@@ -669,6 +674,31 @@ public class DashboardServiceImpl implements DashboardService {
                 .map(result -> new StatisticalDTO((String) result[0], (Long) result[1]))
                 .collect(Collectors.toList());
     }
+
+
+
+    @Override
+    public List<StatisticalFundingDTO> getBudgetDistributionByYear() {
+        var budgets = budgetDgpsnRepository.findAll();
+
+        // Groupement par année (BudgetDgpsnEntity::getAnnee )
+        Map<Integer, Double> budgetByYear = budgets.stream()
+                .collect(Collectors.groupingBy(
+                        BudgetDgpsnEntity::getAnnee,
+                        Collectors.summingDouble(BudgetDgpsnEntity::getMontant)
+                ));
+
+        return budgetByYear.entrySet().stream()
+                .map(e -> StatisticalFundingDTO.builder()
+                        .label(e.getKey().toString())
+                        .value(e.getValue())
+                        .build())
+                .sorted(Comparator.comparing(StatisticalFundingDTO::getLabel))
+                .collect(Collectors.toList());
+    }
+
+
+
 
     @Override
     public List<StatisticalDTO> getProjectsByRegion() {
