@@ -25,6 +25,8 @@ public enum Feature {
     LIST_PROGRAMME("Liste programme", Module.PROGRAMME),
     CONFIG_PROGRAMME("Configuration programme", Module.PROGRAMME),
     PROJECT_LIST("Liste projets", Module.PROJECT_LIST),
+    AGENT_READ_STAT_CARD("Statistiques des agents (cards )", Module.DASHBOARD),
+    AGENTS_FOR_DIRECTIONS("", Module.DASHBOARD),
 
 //    FORMULAIRE_GENERALE("Formulaire generale", Module.FORMULAIRE),
 //    INSPECTION_ICPE("Inspection ICPE", Module.FORMULAIRE),

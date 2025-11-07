@@ -39,6 +39,8 @@ public class AgentDTO implements Serializable {
     private String email;
     private String telephone;
     private String photoProfil;
+    private Date dateCreation;
+
 
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
