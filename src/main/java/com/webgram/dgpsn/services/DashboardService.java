@@ -132,4 +132,7 @@ public interface DashboardService {
      */
     List<Map<String, Object>> getMonthlyBudgetConsumption();
     // ================= BUDGET DASHBOARD END =================
+   /// resumer dashboard conge
+    CongeDashboardSummaryDTO getDashboardSummary();
+    CongeDashboardDTO getFullDashboard();
 }

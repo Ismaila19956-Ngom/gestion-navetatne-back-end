@@ -49,12 +49,15 @@ public class DashboardRule {
     static final String ICPE_REPARTITION_CATEGORIE = "/icpe/repartition-categories";
     static final String ICPE_REPARTITION_CONFORMITE = "/icpe/repartition-conformite";
 
-    //budget
+    //budget DGPSN
     static final String BUDGET_KPIS = "/budget/kpis";
     static final String BUDGET_DISTRIBUTION_BY_YEAR = "/budget/distribution-by-year";
     static final String BUDGET_TOP_5_BY_AMOUNT = "/budget/top5-by-amount";
     static final String BUDGET_TOP_5_EXECUTION= "/budget/top5-by-execution";
     static final String MONTHLY_BUDGET_CONSUMPTION = "/budget/monthly-consumption";
+    //Conge DGPSN
+//    static final String CONGE_SUMMARY ="/dashboard-summary";
+    static final String CONGE_SUMMARY ="/dashboard-conge";
 
     @Bean
     public SecurityRule getBudgetKpis() {
@@ -642,4 +645,18 @@ public class DashboardRule {
                 .end();
     }
 
+
+    //Conge DGPSN
+
+    @Bean
+    public SecurityRule getDashboardSummary() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(DASHBOARD_API_PREFIX + CONGE_SUMMARY)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
 }

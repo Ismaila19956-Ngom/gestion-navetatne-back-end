@@ -10,17 +10,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-//budget
-import com.webgram.dgpsn.entities.BudgetDgpsnEntity;
-import com.webgram.dgpsn.entities.RealisationEntity;
-import com.webgram.dgpsn.entities.LigneBudgetaireEntity;
-import com.webgram.dgpsn.models.responses.StatisticalFundingDTO;
-import com.webgram.dgpsn.repositories.BudgetDgpsnRepository;
-import com.webgram.dgpsn.repositories.LigneBudgetaireRepository;
-import com.webgram.dgpsn.repositories.RealisationRepository;
-import java.time.LocalDate;
-import java.util.*;
-import java.util.stream.Collectors;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -38,7 +27,7 @@ public class DashboardServiceImpl implements DashboardService {
 
     private final StructureProjectRepository structureProjectRepository;
     private final StatusRepository statusRepository;
-//    private final FlagRepository flagRepository;
+    //    private final FlagRepository flagRepository;
     private final FundingRepository fundingRepository;
 
     private final FundingConfigRepository fundingConfigRepository;
@@ -48,12 +37,12 @@ public class DashboardServiceImpl implements DashboardService {
 
     private final BudgetActivityRepository budgetActivityRepository;
 
-    private final  ExpenseActivityRepository expenseActivityRepository;
+    private final ExpenseActivityRepository expenseActivityRepository;
 
     private final SubSectorRepository subSectorRepository;
 
     private final LabelRepository labelRepository;
-    private final FundingSourceRepository  fundingSourceRepository;
+    private final FundingSourceRepository fundingSourceRepository;
 
     private final ManagementUnitMapper managementUnitMapper;
 
@@ -66,11 +55,12 @@ public class DashboardServiceImpl implements DashboardService {
     private final RejetPollutionRepository rejetPollutionRepository;
     private final EtablissementClasseRepository etablissementClasseRepository;
     private final InspectionICPERepository inspectionICPERepository;
+    private final CongeRepository congeRepository;
+    private final CessationFonctionRepository cessationFonctionRepository;
     //budget
-     private final BudgetDgpsnRepository budgetDgpsnRepository;
+    private final BudgetDgpsnRepository budgetDgpsnRepository;
     private final LigneBudgetaireRepository ligneBudgetaireRepository;
     private final RealisationRepository realisationRepository;
-
 
 
     @Override
@@ -207,7 +197,6 @@ public class DashboardServiceImpl implements DashboardService {
     }
 
 
-
     @Override
     public List<StatisticalDTO> readStatProjectByStatus() {
 
@@ -257,44 +246,44 @@ public class DashboardServiceImpl implements DashboardService {
         var statSectorDTOS = managementUnitRepository.findStatBySectors();
         subSectorRepository.findAll()
                 .forEach(sector -> {
-                    if(statSectorDTOS.stream().noneMatch(statSectorDTO -> sector.getLibelle().equals(statSectorDTO.getLabel()))){
+                    if (statSectorDTOS.stream().noneMatch(statSectorDTO -> sector.getLibelle().equals(statSectorDTO.getLabel()))) {
                         statSectorDTOS.add(StatisticalDTO.builder().label(sector.getLibelle()).value(0L).build());
                     }
                 });
-        log.info("stat {}",statSectorDTOS.size());
+        log.info("stat {}", statSectorDTOS.size());
         return statSectorDTOS;
 //        return null;
     }
 
-        @Override
-        public List<StatisticalDTO> readCountProjectsByProgramme() {
-            var programs = managementUnitRepository.countProjectsByProgramme();
-            var result = new ArrayList<StatisticalDTO>();
-            managementUnitRepository.findAll().forEach(project -> {
-                if (project.getParent() != null) {
-                    boolean programExists = false;
-                    for (StatisticalDTO dto : result) {
-                        if (dto.getLabel().equals(project.getParent().getName())) {
-                            dto.setValue(dto.getValue() + 1);
-                            programExists = true;
-                            break;
-                        }
-                    }
-                    if (!programExists) {
-                        result.add(StatisticalDTO.builder().label(project.getParent().getName()).value(1L).build());
+    @Override
+    public List<StatisticalDTO> readCountProjectsByProgramme() {
+        var programs = managementUnitRepository.countProjectsByProgramme();
+        var result = new ArrayList<StatisticalDTO>();
+        managementUnitRepository.findAll().forEach(project -> {
+            if (project.getParent() != null) {
+                boolean programExists = false;
+                for (StatisticalDTO dto : result) {
+                    if (dto.getLabel().equals(project.getParent().getName())) {
+                        dto.setValue(dto.getValue() + 1);
+                        programExists = true;
+                        break;
                     }
                 }
-            });
-            log.info("stat {}", result.size());
-            return result;
-        }
+                if (!programExists) {
+                    result.add(StatisticalDTO.builder().label(project.getParent().getName()).value(1L).build());
+                }
+            }
+        });
+        log.info("stat {}", result.size());
+        return result;
+    }
 
     @Override
     public List<StatisticalFundingDTO> readAverageFundingBySector() {
         var statAverageFundingSectorDTOS = budgetRepository.findAverageFundingBySector();
         subSectorRepository.findAll()
                 .forEach(sector -> {
-                    if(statAverageFundingSectorDTOS.stream().noneMatch(statSectorDTO -> sector.getLibelle().equals(statSectorDTO.getLabel()))){
+                    if (statAverageFundingSectorDTOS.stream().noneMatch(statSectorDTO -> sector.getLibelle().equals(statSectorDTO.getLabel()))) {
                         statAverageFundingSectorDTOS.add(StatisticalFundingDTO.builder().label(sector.getLibelle()).value(0.0).build());
                     }
                 });
@@ -320,7 +309,7 @@ public class DashboardServiceImpl implements DashboardService {
         var statStatusDTOS = issueLogRepository.findStatIssueLogByStatus();
         statusRepository.findByStatusType(StatusType.ISSUELOG)
                 .forEach(status -> {
-                    if(statStatusDTOS.stream().noneMatch(statStatusDTO -> status.getLibelle().equals(statStatusDTO.getLabel()))){
+                    if (statStatusDTOS.stream().noneMatch(statStatusDTO -> status.getLibelle().equals(statStatusDTO.getLabel()))) {
                         statStatusDTOS.add(StatisticalDTO.builder().label(status.getLibelle()).value(0L).build());
                     }
                 });
@@ -388,6 +377,7 @@ public class DashboardServiceImpl implements DashboardService {
 
         return statNbrProjectByPartnerDTOS;
     }
+
     @Override
     public List<StatisticalDTO> readStatNumberProjectByStructure() {
         StructureProjectType structureProjectType = StructureProjectType.EXECUTION;
@@ -395,9 +385,10 @@ public class DashboardServiceImpl implements DashboardService {
         return structureProjectRepository.countDistinctProjectsByStructure(structureProjectType, typeProjet);
 
     }
+
     @Override
     public List<StatisticalFundingDTO> readTotalFundingtByPartner() {
-          var statTotalFundingByPartenerDTOS = fundingSourceRepository.findTotalFundingByPartner();
+        var statTotalFundingByPartenerDTOS = fundingSourceRepository.findTotalFundingByPartner();
         return statTotalFundingByPartenerDTOS;
     }
 
@@ -424,6 +415,7 @@ public class DashboardServiceImpl implements DashboardService {
 
         return result;
     }
+
     @Override
     public List<StatisticalFundingDTO> readAverageAgeByPertner() {
         return fundingSourceRepository.avgAgeProjectByPartner();
@@ -436,58 +428,60 @@ public class DashboardServiceImpl implements DashboardService {
     }
 
 
-public List<StatisticalDTO> readStatProjectByZonesExecution() {
-  var statLabelDTOS = managementUnitRepository.findStatByExecutionZoneAndReferentielType(TypeProjet.PROJECT, ReferentielType.ZONE_EXECUTION);
-    labelRepository.findAll().forEach(executionZone -> {
-        if (executionZone.getReferentielType() == ReferentielType.ZONE_EXECUTION &&
-                statLabelDTOS.stream().noneMatch(statZoneDTO -> executionZone.getLibelle().equals(statZoneDTO.getLabel()))) {
-            statLabelDTOS.add(StatisticalDTO.builder().label(executionZone.getLibelle()).value(0L).build());
-        }
-    });
-    log.info("stat {}", statLabelDTOS.size());
-    return statLabelDTOS;
-}
-@Override
-public List<StatisticalFundingDTO> readTotalNeedByProjet() {
-    var statBesoinDTOS = fundingConfigRepository.totalBesoinsByProjects();
-    List<ManagementUnitEntity> allProjects = managementUnitRepository.findAll();
-    List<StatisticalFundingDTO> filteredDTOS = allProjects.stream()
-            .filter(project -> statBesoinDTOS.stream()
-                    .anyMatch(statDTO -> project.getName().equals(statDTO.getLabel())))
-            .map(project -> {
-                Optional<StatisticalFundingDTO> matchingDTO = statBesoinDTOS.stream()
-                        .filter(statDTO -> project.getName().equals(statDTO.getLabel()))
-                        .findFirst();
-                return matchingDTO.orElse(StatisticalFundingDTO.builder()
-                        .label(project.getName())
-                        .value(0.0)
-                        .build());
-            })
-            .collect(Collectors.toList());
-    log.info("stat {}", filteredDTOS.size());
-    return filteredDTOS;
-}
+    public List<StatisticalDTO> readStatProjectByZonesExecution() {
+        var statLabelDTOS = managementUnitRepository.findStatByExecutionZoneAndReferentielType(TypeProjet.PROJECT, ReferentielType.ZONE_EXECUTION);
+        labelRepository.findAll().forEach(executionZone -> {
+            if (executionZone.getReferentielType() == ReferentielType.ZONE_EXECUTION &&
+                    statLabelDTOS.stream().noneMatch(statZoneDTO -> executionZone.getLibelle().equals(statZoneDTO.getLabel()))) {
+                statLabelDTOS.add(StatisticalDTO.builder().label(executionZone.getLibelle()).value(0L).build());
+            }
+        });
+        log.info("stat {}", statLabelDTOS.size());
+        return statLabelDTOS;
+    }
 
     @Override
-public List<StatisticalFundingDTO> readTotalMobilisationByProjet() {
-    var statMobilisationDTOS = fundingConfigRepository.totalMobilisationsByProjects();
-    List<ManagementUnitEntity> allProjects = managementUnitRepository.findAll();
-    List<StatisticalFundingDTO> filteredDTOS = allProjects.stream()
-            .filter(project -> statMobilisationDTOS.stream()
-                    .anyMatch(statDTO -> project.getName().equals(statDTO.getLabel())))
-            .map(project -> {
-                Optional<StatisticalFundingDTO> matchingDTO = statMobilisationDTOS.stream()
-                        .filter(statDTO -> project.getName().equals(statDTO.getLabel()))
-                        .findFirst();
-                return matchingDTO.orElse(StatisticalFundingDTO.builder()
-                        .label(project.getName())
-                        .value(0.0)
-                        .build());
-            })
-            .collect(Collectors.toList());
-    log.info("stat {}", filteredDTOS.size());
-    return filteredDTOS;
-}
+    public List<StatisticalFundingDTO> readTotalNeedByProjet() {
+        var statBesoinDTOS = fundingConfigRepository.totalBesoinsByProjects();
+        List<ManagementUnitEntity> allProjects = managementUnitRepository.findAll();
+        List<StatisticalFundingDTO> filteredDTOS = allProjects.stream()
+                .filter(project -> statBesoinDTOS.stream()
+                        .anyMatch(statDTO -> project.getName().equals(statDTO.getLabel())))
+                .map(project -> {
+                    Optional<StatisticalFundingDTO> matchingDTO = statBesoinDTOS.stream()
+                            .filter(statDTO -> project.getName().equals(statDTO.getLabel()))
+                            .findFirst();
+                    return matchingDTO.orElse(StatisticalFundingDTO.builder()
+                            .label(project.getName())
+                            .value(0.0)
+                            .build());
+                })
+                .collect(Collectors.toList());
+        log.info("stat {}", filteredDTOS.size());
+        return filteredDTOS;
+    }
+
+    @Override
+    public List<StatisticalFundingDTO> readTotalMobilisationByProjet() {
+        var statMobilisationDTOS = fundingConfigRepository.totalMobilisationsByProjects();
+        List<ManagementUnitEntity> allProjects = managementUnitRepository.findAll();
+        List<StatisticalFundingDTO> filteredDTOS = allProjects.stream()
+                .filter(project -> statMobilisationDTOS.stream()
+                        .anyMatch(statDTO -> project.getName().equals(statDTO.getLabel())))
+                .map(project -> {
+                    Optional<StatisticalFundingDTO> matchingDTO = statMobilisationDTOS.stream()
+                            .filter(statDTO -> project.getName().equals(statDTO.getLabel()))
+                            .findFirst();
+                    return matchingDTO.orElse(StatisticalFundingDTO.builder()
+                            .label(project.getName())
+                            .value(0.0)
+                            .build());
+                })
+                .collect(Collectors.toList());
+        log.info("stat {}", filteredDTOS.size());
+        return filteredDTOS;
+    }
+
     @Override
     public List<StatisticalFundingDTO> readTotalExecutiontionByProjet() {
         var statExecutiontionDTOS = fundingConfigRepository.totalExecutionByProjects();
@@ -508,18 +502,22 @@ public List<StatisticalFundingDTO> readTotalMobilisationByProjet() {
         log.info("stat {}", filteredDTOS.size());
         return filteredDTOS;
     }
+
     @Override
     public List<StatisticalBudgetActivityDTO> readTotalBudgetByActivity() {
         return budgetActivityRepository.findTotalBudgetByActivity(TypeProjet.ACTIVITY);
     }
+
     @Override
     public List<StatisticalBudgetActivityDTO> getActivitiesAndBudgetsByProject(Long projectId, TypeProjet typeProjet) {
         return budgetActivityRepository.findActivitiesAndBudgetsByProject(projectId, typeProjet);
     }
+
     @Override
     public List<StatisticalBudgetActivityDTO> readTotalExpanseByActivity() {
         return expenseActivityRepository.findTotalExpanseByActivity(TypeProjet.ACTIVITY);
     }
+
     @Override
     public List<StatisticalBudgetActivityDTO> getActivitiesAndExpansesByProject(Long projectId, TypeProjet typeProjet) {
         return expenseActivityRepository.findActivitiesAndExpensesByProject(projectId, typeProjet);
@@ -557,7 +555,7 @@ public List<StatisticalFundingDTO> readTotalMobilisationByProjet() {
                 var tauxExecutionFinanciere = 0.00;
                 var totalExecute = fundingConfigRepository.totalFundingConfigByProject(FundingTypeConfig.EXECUTION, unit.getId());
                 var totalBudget = budgetRepository.getTotalBudgetByProject(unit.getId());
-                if(Objects.nonNull(totalExecute) && Objects.nonNull(totalBudget)) {
+                if (Objects.nonNull(totalExecute) && Objects.nonNull(totalBudget)) {
                     tauxExecutionFinanciere = (totalExecute * 100) / totalBudget;
                 }
 
@@ -588,6 +586,7 @@ public List<StatisticalFundingDTO> readTotalMobilisationByProjet() {
     public List<RisqueFinancierDto> getFinancialRisksByProject() {
         return issueLogRepository.getFinancialRiskByProject(TypeProjet.PROJECT);
     }
+
     @Override
     public List<GeographicDTO> getProjectsByGeographicalLocation(TypeProjet type) {
         List<Object[]> results = geographicalLocationRepository.findProjectsByGeographicalLocation(type);
@@ -610,6 +609,7 @@ public List<StatisticalFundingDTO> readTotalMobilisationByProjet() {
         Date endDate = dates[1];
         return issueLogRepository.findOpenIssues(projetId, annee, startDate, endDate);
     }
+
     @Override
     public List<IssueLogEntity> getClosedIssues(Long projetId, Integer annee, String trimestre) {
         Date[] dates = getStartAndEndDateForTrimestre(annee, trimestre);
@@ -625,6 +625,7 @@ public List<StatisticalFundingDTO> readTotalMobilisationByProjet() {
         Date endDate = dates[1];
         return fundingConfigRepository.findFundingConfigs(projetId, annee, startDate, endDate);
     }
+
     private Date[] getStartAndEndDateForTrimestre(Integer annee, String trimestre) {
         Calendar cal = Calendar.getInstance();
         Date startDate = null;
@@ -712,7 +713,7 @@ public List<StatisticalFundingDTO> readTotalMobilisationByProjet() {
 
     private List<Integer> getListLast4Years() {
         var listLast4years = new ArrayList<Integer>();
-        for(int i=3; i>0; i--) {
+        for (int i = 3; i > 0; i--) {
             var year = LocalDate.now().getYear() - i;
             listLast4years.add(year);
         }
@@ -858,4 +859,53 @@ public List<StatisticalFundingDTO> readTotalMobilisationByProjet() {
         return inspectionICPERepository.countByComplianceLevel();
     }
     /* Icpe Dashboard END*/
+
+    @Override
+    public CongeDashboardSummaryDTO getDashboardSummary() {
+        return congeRepository.getDashboardSummary();
+    }
+
+    @Override
+    public CongeDashboardDTO getFullDashboard() {
+        return CongeDashboardDTO.builder()
+                // 1. Résumé (4 cartes)
+                .summary(congeRepository.getDashboardSummary())
+                // 2. Répartition types congé
+                .typeCongeRepartition(congeRepository.countByTypeConge())
+                // 3. Répartition statuts
+                .statutRepartition(congeRepository.countByStatut())
+                // 4. Évolution mensuelle (12 mois complétés)
+//                .evolutionMensuelle(padEvolutionMensuelle(congeRepository.evolutionMensuelleThisYear()))
+                // 5. Répartition durées
+                .dureeRepartition(cessationFonctionRepository.countCessationDureeRange())
+                // 6. Top 5 agents
+                .topAgents(congeRepository.findTop5Agents().stream().limit(5).collect(Collectors.toList()))
+
+                // 7. Taux approbation par type
+                .tauxApprobationParType(
+                        congeRepository.approvalRateByType().stream()
+                                .collect(Collectors.toMap(
+                                        arr -> ((TypeConge) arr[0]).name(),
+                                        arr -> (Double) arr[1]
+                                ))
+                )
+                .build();
+    }
+
+    /**
+     * Complète les 12 mois (même ceux à 0 demandes)
+     */
+    private List<MoisCountsDTO> padEvolutionMensuelle(List<MoisCountsDTO> src) {
+        String[] mois = {"Jan", "Fév", "Mar", "Avr", "Mai", "Jun",
+                "Jul", "Aoû", "Sep", "Oct", "Nov", "Déc"};
+        Map<String, Long> mapDemandes = src.stream()
+                .collect(Collectors.toMap(MoisCountsDTO::getMois, MoisCountsDTO::getDemandes));
+
+        return Arrays.stream(mois)
+                .map(m -> MoisCountsDTO.builder()
+                        .mois(m)
+                        .demandes(mapDemandes.getOrDefault(m, 0L))
+                        .build())
+                .collect(Collectors.toList());
+    }
 }
