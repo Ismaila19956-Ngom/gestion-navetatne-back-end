@@ -44,10 +44,10 @@ public class FormationExterieurEntity implements Serializable {
 
     @Column(name = "date_Fin")
     private LocalDateTime dateFin;
-/*
+
     @ManyToOne
     @JoinColumn(name = "agent_Id")
-    private AgentEntity agent;*/
+    private AgentEntity agent;
 
 
     @Enumerated(EnumType.STRING)

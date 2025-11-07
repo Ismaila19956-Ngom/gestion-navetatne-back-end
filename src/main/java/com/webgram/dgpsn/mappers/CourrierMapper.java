@@ -15,9 +15,13 @@ public interface CourrierMapper {
     @Mapping(source = "statut.id", target = "statutId")
     @Mapping(source = "nature.id", target = "natureId")
     @Mapping(source = "urgence.id", target = "urgenceId")
+    @Mapping(source = "modeEnvoi.id", target = "modeEnvoiId")
     CourrierDTO asDto(CourrierEntity entity);
 
     // Conversion DTO → Entity
-
+    @Mapping(source = "statutId", target = "statut.id")
+    @Mapping(source = "natureId", target = "nature.id")
+    @Mapping(source = "urgenceId", target = "urgence.id")
+    @Mapping(source = "modeEnvoiId", target = "modeEnvoi.id")
     CourrierEntity asEntity(CourrierDTO dto);
 }

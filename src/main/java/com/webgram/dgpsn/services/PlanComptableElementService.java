@@ -29,4 +29,5 @@ public interface PlanComptableElementService {
 
     List<PlanComptableElementDTO> getRealisationsByRubriqueId(Long rubriqueId);
     List<PlanComptableElementDTO> getRubriquesByClasseId(Long classeId);
+    Page<PlanComptableElementDTO> getClasses(Pageable pageable);
 }

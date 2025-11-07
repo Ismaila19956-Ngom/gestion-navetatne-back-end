@@ -31,7 +31,7 @@
         private String registreCommerce; // Facultatif
 
         @Column(name = "frn_type", length = 50)
-        private TypeFournisseur typeFournisseur;
+        private String typeFournisseur;
         @Column(name = "frn_telephone", length = 20)
         private String telephone;
 

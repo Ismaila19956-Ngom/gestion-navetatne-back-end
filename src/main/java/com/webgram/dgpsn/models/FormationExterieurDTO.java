@@ -43,9 +43,5 @@ public class FormationExterieurDTO implements Serializable {
     private Statut statut;
 
     private String objectifs;
-
-
-
-
-    //private Long agentId;
+    private Long agentId;
 }

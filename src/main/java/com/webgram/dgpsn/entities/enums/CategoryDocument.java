@@ -8,24 +8,15 @@ import java.text.MessageFormat;
 import java.util.Map;
 
 public enum CategoryDocument {
-//    PROGRAMME("Programmes", "Paramétrage des types de document pour les programmes"),
-//    PROJECT("Projets", "Paramétrage des types de document pour les projets"),
-//     ACTIVITY("Activités", "Paramétrage des types de document pour les activités"),
-      RH("Ressources Humaines", "Paramétrage des types de document pour les Ressources Humaines"),
-//    ENTREPRISE("Entreprises", "Paramétrage des types de document pour les entreprises"),
-    AVIS_PROJET("Avis de Projets", "Paramétrage des types de document pour les avis de projets"),
-    SUIVI_SURVEILLANCE("Suivi Surveillance", "Paramétrage des types de document pour les suivi surveillance"),
-    AGREMENT("Agréments", "Paramétrage des types de document pour les agréments"),
-    TDR("Termes de Référence (TDR)", "Paramétrage des types de document pour les TDR"),
-    ORDRE_DE_MISSION_DOCUMENT("Document Ordre de mission", "Paramétrage des types de documents pour les ordres de mission"),
-    TYPE_DOCUMENT("Type Document", "Paramétrage des types de documents"),
 
-    ADMINISTRATIF("Document Conge administratif", "Paramétrage des types de documents pour les congés administratif"),
+//    ENTREPRISE("Entreprises", "Paramétrage des types de document pour les entreprises"),
+    PROJECT("Document Projet", "Paramétrage des types de document pour les Projet"),
+    ORDRE_DE_MISSION_DOCUMENT("Document Ordre de mission", "Paramétrage des types de documents pour les ordres de mission"),
+//    TYPE_DOCUMENT("Type Document", "Paramétrage des types de documents"),
+    ADMINISTRATIF("Document Conge Annuel", "Paramétrage des types de documents pour les congés Annuel"),
     MATERNITE("Document Conge maternite", "Paramétrage des types de documents pour les congés de maternite"),
-    MALADIE("Document Conge maladie", "Paramétrage des types de documents pour les congés maladie"),
-    AUTRES("Document Conge Longue duree", "Paramétrage des types de documents pour les congés longue duree"),
-    CATEGORIE("Categorie Document", "Paramétrage de type Categorie Document"),
-    SORTIE_TERRITOIRE("Sortie du territoire", "Paramétrage des types de documents pour les sorties du territoire");
+    MALADIE("Document Conge Absence", "Paramétrage des types de documents pour les congés Absence"),
+    AUTRES("Document Absence", "Paramétrage des types de documents pour lesAbsence");
 
 
 

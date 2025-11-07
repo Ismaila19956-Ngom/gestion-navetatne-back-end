@@ -4,6 +4,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import com.webgram.dgpsn.models.BudgetDgpsnDTO;
 
+import java.util.Map;
+
 public interface BudgetDgpsnService {
     BudgetDgpsnDTO create(BudgetDgpsnDTO budgetDgpsnDTO);
     BudgetDgpsnDTO update(BudgetDgpsnDTO budgetDgpsnDTO);
@@ -16,4 +18,5 @@ public interface BudgetDgpsnService {
             Double montant,
             Integer annee
     );
+    Map<String, Object> getSyntheseBudgetaire(Long budgetId, String periode, Integer trimestre, Integer mois);
 }

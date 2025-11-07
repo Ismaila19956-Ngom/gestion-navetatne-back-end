@@ -74,7 +74,7 @@ public class WebgramDgpsnApplication {
         if (directionDG.isEmpty()) {
             var dgpsn = DirectionEntity.builder()
                     .code("DGPSN")
-                    .libelle("Direction General à la Protection Social et a la Solidarite National")
+                    .libelle("CONSEIL D'ORIENTATION")
                     .parent(null)
                     .build();
 
@@ -92,7 +92,6 @@ public class WebgramDgpsnApplication {
                             .libelle("Conseil Technique en charges des Politiques de Protection Social")
                             .build()
             ));
-
 
             directionRepository.save(dgpsn);
         }
