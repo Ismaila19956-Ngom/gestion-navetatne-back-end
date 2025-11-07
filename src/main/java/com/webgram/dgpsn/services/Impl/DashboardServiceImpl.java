@@ -891,21 +891,4 @@ public class DashboardServiceImpl implements DashboardService {
                 )
                 .build();
     }
-
-    /**
-     * Complète les 12 mois (même ceux à 0 demandes)
-     */
-    private List<MoisCountsDTO> padEvolutionMensuelle(List<MoisCountsDTO> src) {
-        String[] mois = {"Jan", "Fév", "Mar", "Avr", "Mai", "Jun",
-                "Jul", "Aoû", "Sep", "Oct", "Nov", "Déc"};
-        Map<String, Long> mapDemandes = src.stream()
-                .collect(Collectors.toMap(MoisCountsDTO::getMois, MoisCountsDTO::getDemandes));
-
-        return Arrays.stream(mois)
-                .map(m -> MoisCountsDTO.builder()
-                        .mois(m)
-                        .demandes(mapDemandes.getOrDefault(m, 0L))
-                        .build())
-                .collect(Collectors.toList());
-    }
 }
