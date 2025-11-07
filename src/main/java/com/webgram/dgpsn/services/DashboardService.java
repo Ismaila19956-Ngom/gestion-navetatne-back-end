@@ -36,6 +36,7 @@ public interface DashboardService {
     List<StatisticalDTO> getIssuesCountByNature();
 
     List<StatisticalBudgetDTO> getBudgetDistributionByProject();
+
     List<StatisticalDTO> getProjectsByRegion();
 
     StatResolveDTO readStatResolved();
@@ -69,44 +70,60 @@ public interface DashboardService {
 
 
     List<StatisticalBudgetActivityDTO> getActivitiesAndBudgetsByProject(Long projectId, TypeProjet typeProjet);
+
     List<StatisticalBudgetActivityDTO> getActivitiesAndExpansesByProject(Long projectId, TypeProjet typeProjet);
 
     List<IssueLogEntity> getOpenIssues(Long projetId, Integer annee, String trimestre);
+
     List<IssueLogEntity> getClosedIssues(Long projetId, Integer annee, String trimestre);
 
     List<FundingConfigEntity> getFundingConfigs(Long projetId, String annee, String trimestre);
-//    List<StatisticalProjectDTO> getProjectCountByStructure(TypeProjet typeProjet, StructureProjectType structureProjectType);
+
+    //    List<StatisticalProjectDTO> getProjectCountByStructure(TypeProjet typeProjet, StructureProjectType structureProjectType);
     List<Object> buildDashboardResumeFinancement();
 
     /* Qualité de l'air Dashboard START*/
     EnvironmentalKpiResponse getEnvironmentalKpis();
+
     List<DataPoint<Date, Double>> getIqaTrend();
+
     List<DataPoint<String, Double>> getIqaByRegion();
+
     List<DataPoint<String, Long>> getPollutantDistribution();
     /* Qualité de l'air Dashboard END*/
 
     /* Evaluation Environmental Dashboard START*/
     EvaluationKpiResponse getEvaluationKpis();
+
     List<DataPoint<String, Long>> getFluxDossiersMensuel();
+
     List<DataPoint<String, Long>> getProjetsParRegion();
+
     List<DataPoint<String, Long>> getStatutInstructions();
     /* Evaluation Environmental Dashboard END*/
 
     /* Pollution Dashboard START*/
     PollutionKpiResponse getPollutionKpis();
+
     List<DataPoint<String, Double>> getVolumeDechetsMensuel();
+
     List<DataPoint<String, Long>> getRepartitionTypePollution();
+
     List<DataPoint<String, Double>> getTendancePollutionEau();
     /* Pollution Dashboard END*/
 
     /* Icpe Dashboard START*/
     IcpeKpiResponse getIcpeKpis();
+
     List<DataPoint<String, Long>> getInspectionsMensuelles();
+
     List<DataPoint<String, Long>> getIcpeParCategorie();
+
     List<DataPoint<String, Long>> getRepartitionNiveauConformite();
     /* Icpe Dashboard END*/
 
     // ================= BUDGET DASHBOARD START =================
+
     /**
      * Récupère les KPI globaux du budget (Total, Consommé, Restant, Taux d'Exécution).
      */
@@ -132,4 +149,42 @@ public interface DashboardService {
      */
     List<Map<String, Object>> getMonthlyBudgetConsumption();
     // ================= BUDGET DASHBOARD END =================
+
+
+    // ================= SERVICE EXTERIEUR DASHBOARD START =================
+    /**
+     * Récupère les KPI globaux des services extérieurs (Formations, Missions, Ateliers, Budget, Participants).
+     */
+    ServiceExterieurKpiResponse getServiceExterieurKpis();
+
+    /**
+     * Récupère la répartition par type d'activité (Formations, Missions, Ateliers).
+     */
+    List<StatisticalDTO> getActivitiesByType();
+
+    /**
+     * Récupère le budget par type d'activité.
+     */
+    List<StatisticalFundingDTO> getBudgetByActivityType();
+
+    /**
+     * Récupère l'évolution des activités par mois (12 derniers mois).
+     */
+    List<Map<String, Object>> getMonthlyActivitiesEvolution();
+
+    /**
+     * Récupère la répartition des activités par statut.
+     */
+    List<StatisticalDTO> getActivitiesByStatus();
+
+    /**
+     * Récupère le Top 5 des activités par budget.
+     */
+    List<StatisticalFundingDTO> getTop5ActivitiesByBudget();
+
+    /**
+     * Récupère le nombre de participants par type d'activité.
+     */
+    List<StatisticalDTO> getParticipantsByActivityType();
+// ================= SERVICE EXTERIEUR DASHBOARD END =================
 }

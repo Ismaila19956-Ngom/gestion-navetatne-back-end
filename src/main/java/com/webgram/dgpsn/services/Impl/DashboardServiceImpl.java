@@ -71,6 +71,230 @@ public class DashboardServiceImpl implements DashboardService {
     private final LigneBudgetaireRepository ligneBudgetaireRepository;
     private final RealisationRepository realisationRepository;
 
+    //service exterieur
+    private final FormationExterieurRepository formationExterieurRepository;
+    private final OrdreMissionRepository ordreMissionRepository;
+    private final AtelierRepository atelierRepository;
+
+
+    @Override
+    public ServiceExterieurKpiResponse getServiceExterieurKpis() {
+        // Compter les formations
+        Long totalFormations = formationExterieurRepository.count();
+
+        // Compter les missions
+        Long totalMissions = ordreMissionRepository.count();
+
+        // Compter les ateliers
+        Long totalAteliers = atelierRepository.count();
+
+        // Calculer le budget total
+        Double budgetFormations = formationExterieurRepository.findAll().stream()
+                .mapToDouble(f -> f.getCoutTotal() != null ? f.getCoutTotal() : 0.0)
+                .sum();
+
+        Double budgetAteliers = atelierRepository.findAll().stream()
+                .mapToDouble(a -> a.getCoutOrganisation() != null ? a.getCoutOrganisation() : 0.0)
+                .sum();
+
+        Double totalBudget = budgetFormations + budgetAteliers;
+
+        // Calculer le nombre total de participants (estimé pour les missions à 0)
+        Long participantsAteliers = atelierRepository.findAll().stream()
+                .mapToLong(a -> a.getNombreParticipantsMax() != null ? a.getNombreParticipantsMax() : 0L)
+                .sum();
+
+        Long totalParticipants = participantsAteliers;
+
+        return ServiceExterieurKpiResponse.builder()
+                .totalFormations(totalFormations)
+                .totalMissions(totalMissions)
+                .totalAteliers(totalAteliers)
+                .totalBudget(totalBudget)
+                .totalParticipants(totalParticipants)
+                .build();
+    }
+
+    @Override
+    public List<StatisticalDTO> getActivitiesByType() {
+        Long countFormations = formationExterieurRepository.count();
+        Long countMissions = ordreMissionRepository.count();
+        Long countAteliers = atelierRepository.count();
+
+        return List.of(
+                StatisticalDTO.builder().label("Formations").value(countFormations).build(),
+                StatisticalDTO.builder().label("Missions").value(countMissions).build(),
+                StatisticalDTO.builder().label("Ateliers").value(countAteliers).build()
+        );
+    }
+
+    @Override
+    public List<StatisticalFundingDTO> getBudgetByActivityType() {
+        Double budgetFormations = formationExterieurRepository.findAll().stream()
+                .mapToDouble(f -> f.getCoutTotal() != null ? f.getCoutTotal() : 0.0)
+                .sum();
+
+        Double budgetAteliers = atelierRepository.findAll().stream()
+                .mapToDouble(a -> a.getCoutOrganisation() != null ? a.getCoutOrganisation() : 0.0)
+                .sum();
+
+        return List.of(
+                StatisticalFundingDTO.builder().label("Formations").value(budgetFormations).build(),
+                StatisticalFundingDTO.builder().label("Missions").value(0.0).build(),
+                StatisticalFundingDTO.builder().label("Ateliers").value(budgetAteliers).build()
+        );
+    }
+
+    @Override
+    public List<Map<String, Object>> getMonthlyActivitiesEvolution() {
+        LocalDate now = LocalDate.now();
+        Map<String, Long> formationsByMonth = new HashMap<>();
+        Map<String, Long> missionsByMonth = new HashMap<>();
+        Map<String, Long> ateliersByMonth = new HashMap<>();
+
+        // Initialiser les 12 derniers mois
+        for (int i = 11; i >= 0; i--) {
+            LocalDate monthDate = now.minusMonths(i);
+            String monthKey = monthDate.getYear() + "-" + String.format("%02d", monthDate.getMonthValue());
+            formationsByMonth.put(monthKey, 0L);
+            missionsByMonth.put(monthKey, 0L);
+            ateliersByMonth.put(monthKey, 0L);
+        }
+
+        // Compter les formations par mois
+        formationExterieurRepository.findAll().forEach(formation -> {
+            if (formation.getDateDebut() != null) {
+                LocalDate date = formation.getDateDebut().toLocalDate();
+                if (date.isAfter(now.minusMonths(12))) {
+                    String monthKey = date.getYear() + "-" + String.format("%02d", date.getMonthValue());
+                    formationsByMonth.merge(monthKey, 1L, Long::sum);
+                }
+            }
+        });
+
+        // Compter les missions par mois
+        ordreMissionRepository.findAll().forEach(mission -> {
+            if (mission.getDateDepartOrdre() != null) {
+                LocalDate date = mission.getDateDepartOrdre().toInstant()
+                        .atZone(java.time.ZoneId.systemDefault()).toLocalDate();
+                if (date.isAfter(now.minusMonths(12))) {
+                    String monthKey = date.getYear() + "-" + String.format("%02d", date.getMonthValue());
+                    missionsByMonth.merge(monthKey, 1L, Long::sum);
+                }
+            }
+        });
+
+        // Compter les ateliers par mois
+        atelierRepository.findAll().forEach(atelier -> {
+            if (atelier.getDateAtelier() != null) {
+                LocalDate date = atelier.getDateAtelier().toLocalDate();
+                if (date.isAfter(now.minusMonths(12))) {
+                    String monthKey = date.getYear() + "-" + String.format("%02d", date.getMonthValue());
+                    ateliersByMonth.merge(monthKey, 1L, Long::sum);
+                }
+            }
+        });
+
+        List<Map<String, Object>> result = new ArrayList<>();
+        for (int i = 11; i >= 0; i--) {
+            LocalDate monthDate = now.minusMonths(i);
+            String monthKey = monthDate.getYear() + "-" + String.format("%02d", monthDate.getMonthValue());
+
+            Map<String, Object> monthData = new HashMap<>();
+            monthData.put("month", monthKey);
+            monthData.put("formations", formationsByMonth.getOrDefault(monthKey, 0L));
+            monthData.put("missions", missionsByMonth.getOrDefault(monthKey, 0L));
+            monthData.put("ateliers", ateliersByMonth.getOrDefault(monthKey, 0L));
+            result.add(monthData);
+        }
+
+        return result;
+    }
+
+    @Override
+    public List<StatisticalDTO> getActivitiesByStatus() {
+        Map<String, Long> statusCount = new HashMap<>();
+
+        // Compter par statut pour formations
+        formationExterieurRepository.findAll().forEach(f -> {
+            String statut = f.getStatut() != null ? f.getStatut().name() : "NON_DEFINI";
+            statusCount.merge(statut, 1L, Long::sum);
+        });
+
+        // Compter par statut pour missions
+        ordreMissionRepository.findAll().forEach(m -> {
+            String statut = m.getStatut() != null ? m.getStatut().name() : "NON_DEFINI";
+            statusCount.merge(statut, 1L, Long::sum);
+        });
+
+        // Compter par statut pour ateliers
+        atelierRepository.findAll().forEach(a -> {
+            String statut = a.getStatut() != null ? a.getStatut().name() : "NON_DEFINI";
+            statusCount.merge(statut, 1L, Long::sum);
+        });
+
+        return statusCount.entrySet().stream()
+                .map(entry -> StatisticalDTO.builder()
+                        .label(entry.getKey())
+                        .value(entry.getValue())
+                        .build())
+                .sorted(Comparator.comparing(StatisticalDTO::getValue).reversed())
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<StatisticalFundingDTO> getTop5ActivitiesByBudget() {
+        List<StatisticalFundingDTO> allActivities = new ArrayList<>();
+
+        // Ajouter les formations
+        formationExterieurRepository.findAll().forEach(f -> {
+            if (f.getCoutTotal() != null && f.getCoutTotal() > 0) {
+                allActivities.add(StatisticalFundingDTO.builder()
+                        .label(f.getTitreFormation())
+                        .value(f.getCoutTotal())
+                        .build());
+            }
+        });
+
+        // Ajouter les ateliers
+        atelierRepository.findAll().forEach(a -> {
+            if (a.getCoutOrganisation() != null && a.getCoutOrganisation() > 0) {
+                allActivities.add(StatisticalFundingDTO.builder()
+                        .label(a.getTitreAtelier())
+                        .value(a.getCoutOrganisation())
+                        .build());
+            }
+        });
+
+        return allActivities.stream()
+                .sorted(Comparator.comparing(StatisticalFundingDTO::getValue).reversed())
+                .limit(5)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<StatisticalDTO> getParticipantsByActivityType() {
+        // Pour les formations, on compte le nombre de formations (1 agent par formation)
+        Long participantsFormations = formationExterieurRepository.count();
+
+        // Pour les missions, on compte le nombre d'agents dans toutes les missions
+        Long participantsMissions = ordreMissionRepository.findAll().stream()
+                .mapToLong(m -> m.getAgent() != null ? m.getAgent().size() : 0L)
+                .sum();
+
+        // Pour les ateliers, on utilise le nombre max de participants
+        Long participantsAteliers = atelierRepository.findAll().stream()
+                .mapToLong(a -> a.getNombreParticipantsMax() != null ? a.getNombreParticipantsMax() : 0L)
+                .sum();
+
+        return List.of(
+                StatisticalDTO.builder().label("Formations").value(participantsFormations).build(),
+                StatisticalDTO.builder().label("Missions").value(participantsMissions).build(),
+                StatisticalDTO.builder().label("Ateliers").value(participantsAteliers).build()
+        );
+    }
+
+
 
 
     @Override
