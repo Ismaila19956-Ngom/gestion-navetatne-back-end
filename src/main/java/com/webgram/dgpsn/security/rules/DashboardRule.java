@@ -48,11 +48,9 @@ public class DashboardRule {
     static final String ICPE_INSPECTIONS_MENSUELLES = "/icpe/inspections-mensuelles";
     static final String ICPE_REPARTITION_CATEGORIE = "/icpe/repartition-categories";
     static final String ICPE_REPARTITION_CONFORMITE = "/icpe/repartition-conformite";
+    // agents DGPSN
     static final String AGENT_STAT_CARD = "/agent/card";
     static final String AGENTS_FOR_DIRECTIONS = "/direction/agents";
-
-
-
 
     //budget DGPSN
     static final String BUDGET_KPIS = "/budget/kpis";
