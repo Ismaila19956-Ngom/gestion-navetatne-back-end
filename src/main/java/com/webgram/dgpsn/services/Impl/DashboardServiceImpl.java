@@ -215,7 +215,7 @@ public class DashboardServiceImpl implements DashboardService {
     public List<StatisticalDTO> getActivitiesByStatus() {
         Map<String, Long> statusCount = new HashMap<>();
 
-        // Compter par statut pour formations
+
         formationExterieurRepository.findAll().forEach(f -> {
             String statut = f.getStatut() != null ? f.getStatut().name() : "NON_DEFINI";
             statusCount.merge(statut, 1L, Long::sum);
