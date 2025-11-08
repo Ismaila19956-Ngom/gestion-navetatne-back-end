@@ -4,7 +4,6 @@ import com.webgram.dgpsn.entities.FundingConfigEntity;
 import com.webgram.dgpsn.entities.IssueLogEntity;
 import com.webgram.dgpsn.entities.enums.TypeProjet;
 import com.webgram.dgpsn.models.AgentCountByDirectionDTO;
-import com.webgram.dgpsn.models.AgentDTO;
 import com.webgram.dgpsn.models.AgentDashboardDTO;
 import com.webgram.dgpsn.models.responses.*;
 
@@ -14,10 +13,6 @@ import java.util.Date;
 
 
 public interface DashboardService {
-//    AGENT DASHBOARD
-    AgentDashboardDTO readAllAgents();
-    List<AgentCountByDirectionDTO> readAgentCountByDirection();
-
     List<StatisticalDTO> readStatProjectByStatus();
 
     List<StatisticalDTO> readStatProjectByFlag();
@@ -35,6 +30,17 @@ public interface DashboardService {
     List<StatisticalFundingDTO> readTotalFundingtByPartner();
 
     List<StatisticalDTO> readStatNumberProjectByStructure();
+
+    List <StatisticalFundingDTO> getBudgetByActivityType();
+    List<Map<String, Object>> getMonthlyActivitiesEvolution();
+    List<StatisticalDTO> getActivitiesByStatus();
+    List<StatisticalDTO> getParticipantsByActivityType();
+    AgentDashboardDTO readAllAgents();
+    List<StatisticalFundingDTO> getTop5ActivitiesByBudget();
+    CongeDashboardSummaryDTO getDashboardSummary();
+    CongeDashboardDTO getFullDashboard();
+    ServiceExterieurKpiResponse getServiceExterieurKpis();
+    List<AgentCountByDirectionDTO> readAgentCountByDirection();
 
     List<StatisticalDTO> readStatIssueLogByStatus();
 
@@ -54,6 +60,8 @@ public interface DashboardService {
     List<StatisticalFundingDTO> readAverageAgeByPertner();
 
     List<StatisticalDTO> readCountProjectsByProgramme();
+
+    List<StatisticalDTO> getActivitiesByType();
 
     List<StatisticalFundingDTO> readTotalNeedByProjet();
 
@@ -139,7 +147,4 @@ public interface DashboardService {
      */
     List<Map<String, Object>> getMonthlyBudgetConsumption();
     // ================= BUDGET DASHBOARD END =================
-   /// resumer dashboard conge
-    CongeDashboardSummaryDTO getDashboardSummary();
-    CongeDashboardDTO getFullDashboard();
 }
