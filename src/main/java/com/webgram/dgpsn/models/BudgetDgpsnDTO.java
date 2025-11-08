@@ -39,4 +39,6 @@ public class BudgetDgpsnDTO implements Serializable {
 
     @JournalAttribute
     private Integer annee;
+    private Double montantEngage;
+
 }

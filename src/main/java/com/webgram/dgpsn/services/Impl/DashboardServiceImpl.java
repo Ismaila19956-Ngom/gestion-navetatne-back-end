@@ -8,6 +8,7 @@ import com.webgram.dgpsn.models.AgentDashboardDTO;
 import com.webgram.dgpsn.models.responses.*;
 import com.webgram.dgpsn.repositories.*;
 import com.webgram.dgpsn.services.AgentService;
+import com.webgram.dgpsn.services.CongeService;
 import com.webgram.dgpsn.services.DashboardService;
 import com.webgram.dgpsn.services.DirectionService;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +39,7 @@ public class DashboardServiceImpl implements DashboardService {
     private final IssueLogRepository issueLogRepository;
     private final GeographicalLocationRepository geographicalLocationRepository;
     private final BudgetRepository budgetRepository;
+    private final AgentRepository agentRepository;
 
     private final BudgetActivityRepository budgetActivityRepository;
 
@@ -66,6 +68,8 @@ public class DashboardServiceImpl implements DashboardService {
     private final BudgetDgpsnRepository budgetDgpsnRepository;
     private final LigneBudgetaireRepository ligneBudgetaireRepository;
     private final RealisationRepository realisationRepository;
+    private final CongeService congeService;
+
 
 
 
@@ -74,17 +78,6 @@ public class DashboardServiceImpl implements DashboardService {
      * Read all agents for card
      * @return
      */
-    @Override
-    public AgentDashboardDTO readAllAgents() {
-        return agentService.getAgentDashboard();
-    }
-
-    @Override
-    public List<AgentCountByDirectionDTO> readAgentCountByDirection() {
-        return agentService.AgentCountByDirection();
-    }
-
-
 
     @Override
     public Map<String, Object> getBudgetSummaryKpis() {
@@ -885,6 +878,22 @@ public class DashboardServiceImpl implements DashboardService {
     }
 
     @Override
+    public List<AgentCountByDirectionDTO> AgentCountByDirection() {
+        return agentRepository.countAgentsByDirection();
+    }
+
+    @Override
+    public AgentDashboardDTO getAgentDashboard() {
+        Long totalAgents = agentRepository.count();
+        Long totalAgentsEnConges = (long) congeService.readAll().size();
+        Long totalAgentsParDirection = agentRepository.countAgentsByDirection()
+                .stream()
+                .mapToLong(AgentCountByDirectionDTO::getTotalAgents)
+                .sum();
+        return new AgentDashboardDTO(totalAgents, totalAgentsEnConges, totalAgentsParDirection);
+    }
+
+    @Override
     public List<DataPoint<String, Long>> getRepartitionNiveauConformite() {
         return inspectionICPERepository.countByComplianceLevel();
     }
@@ -920,5 +929,30 @@ public class DashboardServiceImpl implements DashboardService {
                                 ))
                 )
                 .build();
+    }
+
+    @Override
+    public AgentDashboardDTO readAllAgents() {
+        return null;
+    }
+    @Override
+    public List<AgentCountByDirectionDTO> readAgentCountByDirection() {
+        return List.of();
+    }
+
+    @Override
+    public AgentDashboardDTO getAgentsDashboard() {
+        Long totalAgents = agentRepository.count();
+        Long totalAgentsEnConges = (long) congeService.readAll().size();
+        Long totalAgentsParDirection = agentRepository.countAgentsByDirection()
+                .stream()
+                .mapToLong(AgentCountByDirectionDTO::getTotalAgents)
+                .sum();
+        return new AgentDashboardDTO(totalAgents, totalAgentsEnConges, totalAgentsParDirection);
+    }
+
+    @Override
+    public List<AgentCountByDirectionDTO> AgentCountByDirections() {
+        return agentRepository.countAgentsByDirection();
     }
 }

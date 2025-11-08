@@ -17,6 +17,11 @@ public interface DashboardService {
 //    AGENT DASHBOARD
     AgentDashboardDTO readAllAgents();
     List<AgentCountByDirectionDTO> readAgentCountByDirection();
+     AgentDashboardDTO getAgentDashboard();
+    AgentDashboardDTO getAgentsDashboard();
+     List<AgentCountByDirectionDTO> AgentCountByDirection();
+//    AgentDashboardDTO getAgentsDashboard();
+    List<AgentCountByDirectionDTO> AgentCountByDirections();
 
     List<StatisticalDTO> readStatProjectByStatus();
 
