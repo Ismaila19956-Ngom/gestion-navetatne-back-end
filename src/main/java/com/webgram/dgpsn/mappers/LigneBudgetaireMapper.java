@@ -21,12 +21,10 @@ public abstract class LigneBudgetaireMapper implements EntityMapper<LigneBudgeta
     public abstract LigneBudgetaireEntity asEntity(LigneBudgetaireDTO dto);
 
     @Named("getBudget")
-    public BudgetDgpsnEntity getBudget(Long budgetDgpsnId) {
-        return BudgetDgpsnEntity.builder().id(budgetDgpsnId).build();
+    public BudgetDgpsnEntity getBudget(Long budgetId) {
+        return BudgetDgpsnEntity.builder().id(budgetId).build();
 
     }
-
-
     @Named("getRubrique")
     public PlanComptableElementEntity getRubrique(Long planComptableElementId) {
         return PlanComptableElementEntity.builder().id(planComptableElementId).build();

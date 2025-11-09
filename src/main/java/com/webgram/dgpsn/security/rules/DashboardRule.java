@@ -27,7 +27,7 @@ public class DashboardRule {
     static final String FILTER_ACTIVITY_BY_PROJECT = "/activities";
     static final String FILTER_ACTIVITY_DEPENSE_BY_PROJECT = "/activitiesExpense";
     static final String PROJECT_ID = "/{projectId}";
-  static final String GEO_PROJECT_ID = "/projects-by-geo";
+    static final String GEO_PROJECT_ID = "/projects-by-geo";
 
     static final String ISSUE_LOG_OPEN = "/open";
     static final String ISSUE_LOG_CLOSE = "/closed";
@@ -55,7 +55,8 @@ public class DashboardRule {
     static final String BUDGET_TOP_5_BY_AMOUNT = "/budget/top5-by-amount";
     static final String BUDGET_TOP_5_EXECUTION= "/budget/top5-by-execution";
     static final String MONTHLY_BUDGET_CONSUMPTION = "/budget/monthly-consumption";
-
+    //Conge DGPSN
+    static final String CONGE_SUMMARY ="/dashboard-conge";
     // service exterieur
     static final String SERVICE_EXTERIEUR_KPIS = "/service-exterieur/kpis";
     static final String SERVICE_EXTERIEUR_ACTIVITIES_BY_TYPE = "/service-exterieur/activities-by-type";
@@ -73,7 +74,7 @@ public class DashboardRule {
                 .build()
                 .condition()
                 .hasPermission(SecurityPermissions.READ_TDB_RESUME)
-                .hasPermission(SecurityPermissions.READ_TDB_SERVICE_EXTERIEUR)
+                .hasPermission(SecurityPermissions. READ_TDB_SERVICE)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
@@ -86,7 +87,7 @@ public class DashboardRule {
                 .build()
                 .condition()
                 .hasPermission(SecurityPermissions.READ_TDB_RESUME)
-                .hasPermission(SecurityPermissions.READ_TDB_SERVICE_EXTERIEUR)
+                .hasPermission(SecurityPermissions. READ_TDB_SERVICE)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
@@ -99,7 +100,7 @@ public class DashboardRule {
                 .build()
                 .condition()
                 .hasPermission(SecurityPermissions.READ_TDB_RESUME)
-                .hasPermission(SecurityPermissions.READ_TDB_SERVICE_EXTERIEUR)
+                .hasPermission(SecurityPermissions. READ_TDB_SERVICE)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
@@ -112,7 +113,7 @@ public class DashboardRule {
                 .build()
                 .condition()
                 .hasPermission(SecurityPermissions.READ_TDB_RESUME)
-                .hasPermission(SecurityPermissions.READ_TDB_SERVICE_EXTERIEUR)
+                .hasPermission(SecurityPermissions. READ_TDB_SERVICE)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
@@ -125,7 +126,7 @@ public class DashboardRule {
                 .build()
                 .condition()
                 .hasPermission(SecurityPermissions.READ_TDB_RESUME)
-                .hasPermission(SecurityPermissions.READ_TDB_SERVICE_EXTERIEUR)
+                .hasPermission(SecurityPermissions. READ_TDB_SERVICE)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
@@ -138,7 +139,7 @@ public class DashboardRule {
                 .build()
                 .condition()
                 .hasPermission(SecurityPermissions.READ_TDB_RESUME)
-                .hasPermission(SecurityPermissions.READ_TDB_SERVICE_EXTERIEUR)
+                .hasPermission(SecurityPermissions. READ_TDB_SERVICE)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
@@ -151,7 +152,7 @@ public class DashboardRule {
                 .build()
                 .condition()
                 .hasPermission(SecurityPermissions.READ_TDB_RESUME)
-                .hasPermission(SecurityPermissions.READ_TDB_SERVICE_EXTERIEUR)
+                .hasPermission(SecurityPermissions. READ_TDB_SERVICE)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
@@ -164,7 +165,6 @@ public class DashboardRule {
                 .apiPattern(DASHBOARD_API_PREFIX + BUDGET_KPIS)
                 .build()
                 .condition()
-                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
                 .hasPermission(SecurityPermissions.READ_TDB_BUDGET)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
@@ -177,7 +177,6 @@ public class DashboardRule {
                 .apiPattern(DASHBOARD_API_PREFIX + BUDGET_DISTRIBUTION_BY_YEAR)
                 .build()
                 .condition()
-                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
                 .hasPermission(SecurityPermissions.READ_TDB_BUDGET)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
@@ -190,7 +189,6 @@ public class DashboardRule {
                 .apiPattern(DASHBOARD_API_PREFIX + BUDGET_TOP_5_BY_AMOUNT)
                 .build()
                 .condition()
-                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
                 .hasPermission(SecurityPermissions.READ_TDB_BUDGET)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
@@ -203,7 +201,6 @@ public class DashboardRule {
                 .apiPattern(DASHBOARD_API_PREFIX + BUDGET_TOP_5_EXECUTION)
                 .build()
                 .condition()
-                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
                 .hasPermission(SecurityPermissions.READ_TDB_BUDGET)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
@@ -216,7 +213,6 @@ public class DashboardRule {
                 .apiPattern(DASHBOARD_API_PREFIX + MONTHLY_BUDGET_CONSUMPTION)
                 .build()
                 .condition()
-                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
                 .hasPermission(SecurityPermissions.READ_TDB_BUDGET)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
@@ -230,7 +226,6 @@ public class DashboardRule {
                 .build()
                 .condition()
                 .hasPermission(SecurityPermissions.READ_TDB_RESUME)
-                .hasPermission(SecurityPermissions.READ_TDB_ICPE)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
@@ -243,7 +238,6 @@ public class DashboardRule {
                 .build()
                 .condition()
                 .hasPermission(SecurityPermissions.READ_TDB_RESUME)
-                .hasPermission(SecurityPermissions.READ_TDB_ICPE)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
@@ -256,7 +250,6 @@ public class DashboardRule {
                 .build()
                 .condition()
                 .hasPermission(SecurityPermissions.READ_TDB_RESUME)
-                .hasPermission(SecurityPermissions.READ_TDB_ICPE)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
@@ -269,7 +262,6 @@ public class DashboardRule {
                 .build()
                 .condition()
                 .hasPermission(SecurityPermissions.READ_TDB_RESUME)
-                .hasPermission(SecurityPermissions.READ_TDB_ICPE)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
@@ -282,7 +274,6 @@ public class DashboardRule {
                 .build()
                 .condition()
                 .hasPermission(SecurityPermissions.READ_TDB_RESUME)
-                .hasPermission(SecurityPermissions.READ_TDB_POLLUTION)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
@@ -295,33 +286,6 @@ public class DashboardRule {
                 .build()
                 .condition()
                 .hasPermission(SecurityPermissions.READ_TDB_RESUME)
-                .hasPermission(SecurityPermissions.READ_TDB_POLLUTION)
-                .hasPermission(SecurityPermissions.ALL_ACCESS)
-                .end();
-    }
-
-    @Bean
-    public SecurityRule getPollutionRepartitionTypes() {
-        return SecurityRule.builder()
-                .httpMethod(HttpMethod.GET)
-                .apiPattern(DASHBOARD_API_PREFIX + POLLUTION_REPARTITION_TYPES)
-                .build()
-                .condition()
-                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
-                .hasPermission(SecurityPermissions.READ_TDB_POLLUTION)
-                .hasPermission(SecurityPermissions.ALL_ACCESS)
-                .end();
-    }
-
-    @Bean
-    public SecurityRule getPollutionTendanceEau() {
-        return SecurityRule.builder()
-                .httpMethod(HttpMethod.GET)
-                .apiPattern(DASHBOARD_API_PREFIX + POLLUTION_TENDANCE_EAU)
-                .build()
-                .condition()
-                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
-                .hasPermission(SecurityPermissions.READ_TDB_POLLUTION)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
@@ -334,10 +298,9 @@ public class DashboardRule {
                 .build()
                 .condition()
                 .hasPermission(SecurityPermissions.READ_TDB_RESUME)
-                .hasPermission(SecurityPermissions.READ_TDB_EVALUATION)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
-        }
+    }
 
     @Bean
     public SecurityRule getEvaluationFluxDossiers() {
@@ -347,7 +310,6 @@ public class DashboardRule {
                 .build()
                 .condition()
                 .hasPermission(SecurityPermissions.READ_TDB_RESUME)
-                .hasPermission(SecurityPermissions.READ_TDB_EVALUATION)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
@@ -360,7 +322,6 @@ public class DashboardRule {
                 .build()
                 .condition()
                 .hasPermission(SecurityPermissions.READ_TDB_RESUME)
-                .hasPermission(SecurityPermissions.READ_TDB_EVALUATION)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
@@ -373,7 +334,6 @@ public class DashboardRule {
                 .build()
                 .condition()
                 .hasPermission(SecurityPermissions.READ_TDB_RESUME)
-                .hasPermission(SecurityPermissions.READ_TDB_EVALUATION)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
@@ -386,7 +346,6 @@ public class DashboardRule {
                 .build()
                 .condition()
                 .hasPermission(SecurityPermissions.READ_TDB_RESUME)
-                .hasPermission(SecurityPermissions.READ_TDB_QUALITE_AIR)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
@@ -399,7 +358,6 @@ public class DashboardRule {
                 .build()
                 .condition()
                 .hasPermission(SecurityPermissions.READ_TDB_RESUME)
-                .hasPermission(SecurityPermissions.READ_TDB_QUALITE_AIR)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
@@ -412,7 +370,6 @@ public class DashboardRule {
                 .build()
                 .condition()
                 .hasPermission(SecurityPermissions.READ_TDB_RESUME)
-                .hasPermission(SecurityPermissions.READ_TDB_QUALITE_AIR)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
@@ -425,7 +382,6 @@ public class DashboardRule {
                 .build()
                 .condition()
                 .hasPermission(SecurityPermissions.READ_TDB_RESUME)
-                .hasPermission(SecurityPermissions.READ_TDB_QUALITE_AIR)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
@@ -438,10 +394,6 @@ public class DashboardRule {
                 .build()
                 .condition()
                 .hasPermission(SecurityPermissions.READ_TDB_RESUME)
-                .hasPermission(SecurityPermissions.READ_TDB_PROJETS)
-                .hasPermission(SecurityPermissions.READ_TDB_FINANCMENTS)
-                .hasPermission(SecurityPermissions.READ_TDB_PROBLEMES)
-                .hasPermission(SecurityPermissions.READ_TDB_ENTREPRISE)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
@@ -454,10 +406,6 @@ public class DashboardRule {
                 .build()
                 .condition()
                 .hasPermission(SecurityPermissions.READ_TDB_RESUME)
-                .hasPermission(SecurityPermissions.READ_TDB_PROJETS)
-                .hasPermission(SecurityPermissions.READ_TDB_FINANCMENTS)
-                .hasPermission(SecurityPermissions.READ_TDB_PROBLEMES)
-                .hasPermission(SecurityPermissions.READ_TDB_ENTREPRISE)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
@@ -470,15 +418,10 @@ public class DashboardRule {
                 .build()
                 .condition()
                 .hasPermission(SecurityPermissions.READ_TDB_RESUME)
-                .hasPermission(SecurityPermissions.READ_TDB_PROJETS)
-                .hasPermission(SecurityPermissions.READ_TDB_FINANCMENTS)
-                .hasPermission(SecurityPermissions.READ_TDB_PROBLEMES)
-                .hasPermission(SecurityPermissions.READ_TDB_ENTREPRISE)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
 
-//    static final String EXPANSE_PROJECT_ID = "/{expanseprojectId}";
     static final String STAT_RESUME = "/resume";
     static final String FINANCEMENT = "/financement";
 
@@ -490,13 +433,10 @@ public class DashboardRule {
                 .build()
                 .condition()
                 .hasPermission(SecurityPermissions.READ_TDB_RESUME)
-                .hasPermission(SecurityPermissions.READ_TDB_PROJETS)
-                .hasPermission(SecurityPermissions.READ_TDB_FINANCMENTS)
-                .hasPermission(SecurityPermissions.READ_TDB_PROBLEMES)
-                .hasPermission(SecurityPermissions.READ_TDB_ENTREPRISE)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
+
     @Bean
     public SecurityRule getProjectsByGeographicalLocation() {
         return SecurityRule.builder()
@@ -505,10 +445,6 @@ public class DashboardRule {
                 .build()
                 .condition()
                 .hasPermission(SecurityPermissions.READ_TDB_RESUME)
-                .hasPermission(SecurityPermissions.READ_TDB_PROJETS)
-                .hasPermission(SecurityPermissions.READ_TDB_FINANCMENTS)
-                .hasPermission(SecurityPermissions.READ_TDB_PROBLEMES)
-                .hasPermission(SecurityPermissions.READ_TDB_ENTREPRISE)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
@@ -517,29 +453,22 @@ public class DashboardRule {
     public SecurityRule getActivitiesAndBudgetsByProject() {
         return SecurityRule.builder()
                 .httpMethod(HttpMethod.GET)
-                .apiPattern(DASHBOARD_API_PREFIX + FILTER_ACTIVITY_BY_PROJECT +PROJECT_ID)
+                .apiPattern(DASHBOARD_API_PREFIX + FILTER_ACTIVITY_BY_PROJECT + PROJECT_ID)
                 .build()
                 .condition()
                 .hasPermission(SecurityPermissions.READ_TDB_RESUME)
-                .hasPermission(SecurityPermissions.READ_TDB_PROJETS)
-                .hasPermission(SecurityPermissions.READ_TDB_FINANCMENTS)
-                .hasPermission(SecurityPermissions.READ_TDB_PROBLEMES)
-                .hasPermission(SecurityPermissions.READ_TDB_ENTREPRISE)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
+
     @Bean
     public SecurityRule getActivitiesAndExpanseByProject() {
         return SecurityRule.builder()
                 .httpMethod(HttpMethod.GET)
-                .apiPattern(DASHBOARD_API_PREFIX + FILTER_ACTIVITY_DEPENSE_BY_PROJECT + PROJECT_ID  )
+                .apiPattern(DASHBOARD_API_PREFIX + FILTER_ACTIVITY_DEPENSE_BY_PROJECT + PROJECT_ID)
                 .build()
                 .condition()
                 .hasPermission(SecurityPermissions.READ_TDB_RESUME)
-                .hasPermission(SecurityPermissions.READ_TDB_PROJETS)
-                .hasPermission(SecurityPermissions.READ_TDB_FINANCMENTS)
-                .hasPermission(SecurityPermissions.READ_TDB_PROBLEMES)
-                .hasPermission(SecurityPermissions.READ_TDB_ENTREPRISE)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
@@ -552,13 +481,10 @@ public class DashboardRule {
                 .build()
                 .condition()
                 .hasPermission(SecurityPermissions.READ_TDB_RESUME)
-                .hasPermission(SecurityPermissions.READ_TDB_PROJETS)
-                .hasPermission(SecurityPermissions.READ_TDB_FINANCMENTS)
-                .hasPermission(SecurityPermissions.READ_TDB_PROBLEMES)
-                .hasPermission(SecurityPermissions.READ_TDB_ENTREPRISE)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
+
     @Bean
     public SecurityRule readStatProjectByFlag() {
         return SecurityRule.builder()
@@ -567,13 +493,10 @@ public class DashboardRule {
                 .build()
                 .condition()
                 .hasPermission(SecurityPermissions.READ_TDB_RESUME)
-                .hasPermission(SecurityPermissions.READ_TDB_PROJETS)
-                .hasPermission(SecurityPermissions.READ_TDB_FINANCMENTS)
-                .hasPermission(SecurityPermissions.READ_TDB_PROBLEMES)
-                .hasPermission(SecurityPermissions.READ_TDB_ENTREPRISE)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
+
     @Bean
     public SecurityRule getTotalBudgetByActivity() {
         return SecurityRule.builder()
@@ -582,13 +505,10 @@ public class DashboardRule {
                 .build()
                 .condition()
                 .hasPermission(SecurityPermissions.READ_TDB_RESUME)
-                .hasPermission(SecurityPermissions.READ_TDB_PROJETS)
-                .hasPermission(SecurityPermissions.READ_TDB_FINANCMENTS)
-                .hasPermission(SecurityPermissions.READ_TDB_PROBLEMES)
-                .hasPermission(SecurityPermissions.READ_TDB_ENTREPRISE)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
+
     @Bean
     public SecurityRule getFinancialRisksByProject() {
         return SecurityRule.builder()
@@ -597,10 +517,6 @@ public class DashboardRule {
                 .build()
                 .condition()
                 .hasPermission(SecurityPermissions.READ_TDB_RESUME)
-                .hasPermission(SecurityPermissions.READ_TDB_PROJETS)
-                .hasPermission(SecurityPermissions.READ_TDB_FINANCMENTS)
-                .hasPermission(SecurityPermissions.READ_TDB_PROBLEMES)
-                .hasPermission(SecurityPermissions.READ_TDB_ENTREPRISE)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
@@ -613,13 +529,10 @@ public class DashboardRule {
                 .build()
                 .condition()
                 .hasPermission(SecurityPermissions.READ_TDB_RESUME)
-                .hasPermission(SecurityPermissions.READ_TDB_PROJETS)
-                .hasPermission(SecurityPermissions.READ_TDB_FINANCMENTS)
-                .hasPermission(SecurityPermissions.READ_TDB_PROBLEMES)
-                .hasPermission(SecurityPermissions.READ_TDB_ENTREPRISE)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
+
     @Bean
     public SecurityRule readStatFunding() {
         return SecurityRule.builder()
@@ -628,13 +541,10 @@ public class DashboardRule {
                 .build()
                 .condition()
                 .hasPermission(SecurityPermissions.READ_TDB_RESUME)
-                .hasPermission(SecurityPermissions.READ_TDB_PROJETS)
-                .hasPermission(SecurityPermissions.READ_TDB_FINANCMENTS)
-                .hasPermission(SecurityPermissions.READ_TDB_PROBLEMES)
-                .hasPermission(SecurityPermissions.READ_TDB_ENTREPRISE)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
+
     @Bean
     public SecurityRule getIssueLogCountBySupervisor() {
         return SecurityRule.builder()
@@ -643,13 +553,10 @@ public class DashboardRule {
                 .build()
                 .condition()
                 .hasPermission(SecurityPermissions.READ_TDB_RESUME)
-                .hasPermission(SecurityPermissions.READ_TDB_PROJETS)
-                .hasPermission(SecurityPermissions.READ_TDB_FINANCMENTS)
-                .hasPermission(SecurityPermissions.READ_TDB_PROBLEMES)
-                .hasPermission(SecurityPermissions.READ_TDB_ENTREPRISE)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
+
     @Bean
     public SecurityRule getStatIssueLogByYear() {
         return SecurityRule.builder()
@@ -658,13 +565,10 @@ public class DashboardRule {
                 .build()
                 .condition()
                 .hasPermission(SecurityPermissions.READ_TDB_RESUME)
-                .hasPermission(SecurityPermissions.READ_TDB_PROJETS)
-                .hasPermission(SecurityPermissions.READ_TDB_FINANCMENTS)
-                .hasPermission(SecurityPermissions.READ_TDB_PROBLEMES)
-                .hasPermission(SecurityPermissions.READ_TDB_ENTREPRISE)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
+
     @Bean
     public SecurityRule getIssuesCountByNature() {
         return SecurityRule.builder()
@@ -673,13 +577,10 @@ public class DashboardRule {
                 .build()
                 .condition()
                 .hasPermission(SecurityPermissions.READ_TDB_RESUME)
-                .hasPermission(SecurityPermissions.READ_TDB_PROJETS)
-                .hasPermission(SecurityPermissions.READ_TDB_FINANCMENTS)
-                .hasPermission(SecurityPermissions.READ_TDB_PROBLEMES)
-                .hasPermission(SecurityPermissions.READ_TDB_ENTREPRISE)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
+
     @Bean
     public SecurityRule getProjectsByRegion() {
         return SecurityRule.builder()
@@ -688,13 +589,10 @@ public class DashboardRule {
                 .build()
                 .condition()
                 .hasPermission(SecurityPermissions.READ_TDB_RESUME)
-                .hasPermission(SecurityPermissions.READ_TDB_PROJETS)
-                .hasPermission(SecurityPermissions.READ_TDB_FINANCMENTS)
-                .hasPermission(SecurityPermissions.READ_TDB_PROBLEMES)
-                .hasPermission(SecurityPermissions.READ_TDB_ENTREPRISE)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
+
     @Bean
     public SecurityRule getBudgetsByRegion() {
         return SecurityRule.builder()
@@ -703,26 +601,18 @@ public class DashboardRule {
                 .build()
                 .condition()
                 .hasPermission(SecurityPermissions.READ_TDB_RESUME)
-                .hasPermission(SecurityPermissions.READ_TDB_PROJETS)
-                .hasPermission(SecurityPermissions.READ_TDB_FINANCMENTS)
-                .hasPermission(SecurityPermissions.READ_TDB_PROBLEMES)
-                .hasPermission(SecurityPermissions.READ_TDB_ENTREPRISE)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
 
     @Bean
-    public SecurityRule getStatResume() {
+    public SecurityRule getStatRAPPORT() {
         return SecurityRule.builder()
                 .httpMethod(HttpMethod.GET)
                 .apiPattern(DASHBOARD_API_PREFIX + STAT_RESUME)
                 .build()
                 .condition()
                 .hasPermission(SecurityPermissions.READ_TDB_RESUME)
-                .hasPermission(SecurityPermissions.READ_TDB_PROJETS)
-                .hasPermission(SecurityPermissions.READ_TDB_FINANCMENTS)
-                .hasPermission(SecurityPermissions.READ_TDB_PROBLEMES)
-                .hasPermission(SecurityPermissions.READ_TDB_ENTREPRISE)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
@@ -735,12 +625,34 @@ public class DashboardRule {
                 .build()
                 .condition()
                 .hasPermission(SecurityPermissions.READ_TDB_RESUME)
-                .hasPermission(SecurityPermissions.READ_TDB_PROJETS)
-                .hasPermission(SecurityPermissions.READ_TDB_FINANCMENTS)
-                .hasPermission(SecurityPermissions.READ_TDB_PROBLEMES)
-                .hasPermission(SecurityPermissions.READ_TDB_ENTREPRISE)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
+
+    @Bean
+    public SecurityRule getDashboardSummary() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(DASHBOARD_API_PREFIX + CONGE_SUMMARY)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.READ_TDB_CONGE)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+
+    // === Endpoints manquants ajoutés avec READ_TDB_SERVICE ===
+    @Bean
+    public SecurityRule getPollutionRepartitionTypes() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(DASHBOARD_API_PREFIX + POLLUTION_REPARTITION_TYPES)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.READ_TDB_SERVICE)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+
 
 }

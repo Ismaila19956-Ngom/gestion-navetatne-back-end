@@ -1,11 +1,11 @@
 package com.webgram.dgpsn.controllers;
 
+import com.webgram.dgpsn.entities.enums.Feature;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import com.webgram.dgpsn.entities.enums.Module;
-import com.webgram.dgpsn.models.Feature;
 import com.webgram.dgpsn.security.SecurityPermissions;
 
 import java.util.Set;

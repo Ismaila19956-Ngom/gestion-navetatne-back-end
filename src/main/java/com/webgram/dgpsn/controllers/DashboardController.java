@@ -517,6 +517,17 @@ public ResponseEntity<List<StatisticalBudgetActivityDTO>> getActivitiesAndBudget
         return dashboardService.getMonthlyBudgetConsumption();
     }
 
+
+    @Operation(summary = "summary of conge", description = "resumer  du conge.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success"),
+            @ApiResponse(responseCode = "500", description = "Internal server error during request processing")})
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/dashboard-conge")
+    public ResponseEntity<CongeDashboardDTO> getDashboard() {
+        return ResponseEntity.ok(dashboardService.getFullDashboard());
+
+    }
     // ================= SERVICE EXTERIEUR DASHBOARD ENDPOINTS =================
 
     @Operation(summary = "Read Service Exterieur KPIs", description = "Récupère les indicateurs globaux des services extérieurs")
@@ -587,5 +598,6 @@ public ResponseEntity<List<StatisticalBudgetActivityDTO>> getActivitiesAndBudget
     @GetMapping("/service-exterieur/participants-by-type")
     public List<StatisticalDTO> getParticipantsByActivityType() {
         return dashboardService.getParticipantsByActivityType();
+
     }
 }

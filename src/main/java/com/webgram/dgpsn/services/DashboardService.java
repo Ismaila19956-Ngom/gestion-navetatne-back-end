@@ -13,6 +13,14 @@ import java.util.Date;
 
 
 public interface DashboardService {
+
+//    AGENT DASHBOARD
+     AgentDashboardDTO getAgentDashboard();
+    AgentDashboardDTO getAgentsDashboard();
+     List<AgentCountByDirectionDTO> AgentCountByDirection();
+//    AgentDashboardDTO getAgentsDashboard();
+    List<AgentCountByDirectionDTO> AgentCountByDirections();
+
     List<StatisticalDTO> readStatProjectByStatus();
 
     List<StatisticalDTO> readStatProjectByFlag();
@@ -31,11 +39,8 @@ public interface DashboardService {
 
     List<StatisticalDTO> readStatNumberProjectByStructure();
     AgentDashboardDTO readAllAgents();
-    CongeDashboardSummaryDTO getDashboardSummary();
-    CongeDashboardDTO getFullDashboard();
     List<AgentCountByDirectionDTO> readAgentCountByDirection();
     List<StatisticalDTO> readStatIssueLogByStatus();
-
     List<Map<String, Object>> readStatIssueLogByYear(Integer year);
 
     List<StatisticalDTO> getIssuesCountByNature();
@@ -136,11 +141,12 @@ public interface DashboardService {
      */
     List<Map<String, Object>> getMonthlyBudgetConsumption();
     // ================= BUDGET DASHBOARD END =================
+    /// resumer dashboard conge
+    CongeDashboardSummaryDTO getDashboardSummary();
+    CongeDashboardDTO getFullDashboard();
 
     // ================= SERVICE EXTERIEUR DASHBOARD START =================
-    /**
-     * Récupère les KPI globaux des services extérieurs (Formations, Missions, Ateliers, Budget, Participants).
-     */
+
     ServiceExterieurKpiResponse getServiceExterieurKpis();
 
     /**
@@ -173,4 +179,5 @@ public interface DashboardService {
      */
     List<StatisticalDTO> getParticipantsByActivityType();
 // ============ SERVICE EXTERIEUR DASHBOARD END =================
+
 }

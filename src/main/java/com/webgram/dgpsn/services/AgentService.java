@@ -39,6 +39,6 @@ public interface AgentService {
     void importAgent(MultipartFile file);
     void exportAgent(PrintWriter writer);
     List<AgentDTO> getAgentNotInUsers();
-    AgentDashboardDTO getAgentDashboard();
-    List<AgentCountByDirectionDTO> AgentCountByDirection();
+//    AgentDashboardDTO getAgentDashboard();
+//    List<AgentCountByDirectionDTO> AgentCountByDirection();
 }

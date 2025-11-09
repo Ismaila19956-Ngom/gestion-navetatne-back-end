@@ -30,18 +30,22 @@ public class LigneBudgetaireDTO implements Serializable {
     @JournalAttribute
     private Double montant;
     @JournalAttribute
+    private Double primitif;
+    @JournalAttribute
+    private Double modification;
+    @JournalAttribute
+    private Double budgetModifie;
+    @JournalAttribute
     private TypeLigneBugetaire typeLigneBugetaire;
     @JournalAttribute
     private String commentaire;
 
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private BudgetDgpsnDTO budgetDgpsn;
-
+    private BudgetDgpsnDTO budget;
     @JournalAttribute
     @NotNull
     private Long budgetId;
-
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private PlanComptableElementDTO rubrique;
