@@ -80,7 +80,6 @@ public interface DashboardService {
     List<IssueLogEntity> getClosedIssues(Long projetId, Integer annee, String trimestre);
 
     List<FundingConfigEntity> getFundingConfigs(Long projetId, String annee, String trimestre);
-//    List<StatisticalProjectDTO> getProjectCountByStructure(TypeProjet typeProjet, StructureProjectType structureProjectType);
     List<Object> buildDashboardResumeFinancement();
 
     /* Qualité de l'air Dashboard START*/
@@ -173,5 +172,5 @@ public interface DashboardService {
      * Récupère le nombre de participants par type d'activité.
      */
     List<StatisticalDTO> getParticipantsByActivityType();
-// ================= SERVICE EXTERIEUR DASHBOARD END =================
+// ============ SERVICE EXTERIEUR DASHBOARD END =================
 }
