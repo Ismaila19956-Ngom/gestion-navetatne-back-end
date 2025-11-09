@@ -1124,6 +1124,31 @@ public class DashboardServiceImpl implements DashboardService {
     /* Icpe Dashboard END*/
 
     @Override
+    public AgentDashboardDTO readAllAgents() {
+        return null;
+    }
+    @Override
+    public List<AgentCountByDirectionDTO> readAgentCountByDirection() {
+        return List.of();
+    }
+
+    @Override
+    public AgentDashboardDTO getAgentsDashboard() {
+        Long totalAgents = agentRepository.count();
+        Long totalAgentsEnConges = (long) congeService.readAll().size();
+        Long totalAgentsParDirection = agentRepository.countAgentsByDirection()
+                .stream()
+                .mapToLong(AgentCountByDirectionDTO::getTotalAgents)
+                .sum();
+        return new AgentDashboardDTO(totalAgents, totalAgentsEnConges, totalAgentsParDirection);
+    }
+
+    @Override
+    public List<AgentCountByDirectionDTO> AgentCountByDirections() {
+        return agentRepository.countAgentsByDirection();
+    }
+
+    @Override
     public CongeDashboardSummaryDTO getDashboardSummary() {
         return congeRepository.getDashboardSummary();
     }
@@ -1155,28 +1180,20 @@ public class DashboardServiceImpl implements DashboardService {
                 .build();
     }
 
-    @Override
-    public AgentDashboardDTO readAllAgents() {
-        return null;
-    }
-    @Override
-    public List<AgentCountByDirectionDTO> readAgentCountByDirection() {
-        return List.of();
-    }
+    /**
+     * Complète les 12 mois (même ceux à 0 demandes)
+     */
+    private List<MoisCountsDTO> padEvolutionMensuelle(List<MoisCountsDTO> src) {
+        String[] mois = {"Jan", "Fév", "Mar", "Avr", "Mai", "Jun",
+                "Jul", "Aoû", "Sep", "Oct", "Nov", "Déc"};
+        Map<String, Long> mapDemandes = src.stream()
+                .collect(Collectors.toMap(MoisCountsDTO::getMois, MoisCountsDTO::getDemandes));
 
-    @Override
-    public AgentDashboardDTO getAgentsDashboard() {
-        Long totalAgents = agentRepository.count();
-        Long totalAgentsEnConges = (long) congeService.readAll().size();
-        Long totalAgentsParDirection = agentRepository.countAgentsByDirection()
-                .stream()
-                .mapToLong(AgentCountByDirectionDTO::getTotalAgents)
-                .sum();
-        return new AgentDashboardDTO(totalAgents, totalAgentsEnConges, totalAgentsParDirection);
-    }
-
-    @Override
-    public List<AgentCountByDirectionDTO> AgentCountByDirections() {
-        return agentRepository.countAgentsByDirection();
+        return Arrays.stream(mois)
+                .map(m -> MoisCountsDTO.builder()
+                        .mois(m)
+                        .demandes(mapDemandes.getOrDefault(m, 0L))
+                        .build())
+                .collect(Collectors.toList());
     }
 }

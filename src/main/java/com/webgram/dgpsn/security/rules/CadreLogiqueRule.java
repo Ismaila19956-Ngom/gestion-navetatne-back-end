@@ -41,7 +41,6 @@ public class CadreLogiqueRule {
                 .hasPermission(SecurityPermissions.EDIT_CADRE_LOGIQUE)
                 .hasPermission(SecurityPermissions.DELETE_CADRE_LOGIQUE)
                 .hasPermission(SecurityPermissions.READ_PROJECT_SETTINGS)
-                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
@@ -58,7 +57,6 @@ public class CadreLogiqueRule {
                 .hasPermission(SecurityPermissions.EDIT_CADRE_LOGIQUE)
                 .hasPermission(SecurityPermissions.DELETE_CADRE_LOGIQUE)
                 .hasPermission(SecurityPermissions.READ_PROJECT_SETTINGS)
-                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
@@ -74,7 +72,6 @@ public class CadreLogiqueRule {
                 .hasPermission(SecurityPermissions.EDIT_CADRE_LOGIQUE)
                 .hasPermission(SecurityPermissions.DELETE_CADRE_LOGIQUE)
                 .hasPermission(SecurityPermissions.READ_PROJECT_SETTINGS)
-                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
@@ -116,7 +113,6 @@ public class CadreLogiqueRule {
                 .hasPermission(SecurityPermissions.EDIT_CADRE_LOGIQUE)
                 .hasPermission(SecurityPermissions.DELETE_CADRE_LOGIQUE)
                 .hasPermission(SecurityPermissions.READ_PROJECT_SETTINGS)
-                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
@@ -133,7 +129,6 @@ public class CadreLogiqueRule {
                 .hasPermission(SecurityPermissions.EDIT_CADRE_LOGIQUE)
                 .hasPermission(SecurityPermissions.DELETE_CADRE_LOGIQUE)
                 .hasPermission(SecurityPermissions.READ_PROJECT_SETTINGS)
-                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }

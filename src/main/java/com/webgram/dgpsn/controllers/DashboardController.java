@@ -516,4 +516,14 @@ public ResponseEntity<List<StatisticalBudgetActivityDTO>> getActivitiesAndBudget
     public List<Map<String, Object>> getMonthlyBudgetConsumption() {
         return dashboardService.getMonthlyBudgetConsumption();
     }
+
+    @Operation(summary = "summary of conge", description = "resumer  du conge.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success"),
+            @ApiResponse(responseCode = "500", description = "Internal server error during request processing")})
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/dashboard-conge")
+    public ResponseEntity<CongeDashboardDTO> getDashboard() {
+        return ResponseEntity.ok(dashboardService.getFullDashboard());
+    }
 }

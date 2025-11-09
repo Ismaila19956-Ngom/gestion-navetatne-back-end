@@ -27,7 +27,7 @@ public class SectorRule {
                 .apiPattern(SECTOR_PREFIX)
                 .build()
                 .condition()
-                .hasPermission(SecurityPermissions.ADD_REVIEW)
+//                .hasPermission(SecurityPermissions.ADD_REVIEW)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }

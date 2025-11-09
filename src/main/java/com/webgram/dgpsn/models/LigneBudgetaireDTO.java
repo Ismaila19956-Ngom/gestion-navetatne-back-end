@@ -30,6 +30,12 @@ public class LigneBudgetaireDTO implements Serializable {
     @JournalAttribute
     private Double montant;
     @JournalAttribute
+    private Double primitif;
+    @JournalAttribute
+    private Double modification;
+    @JournalAttribute
+    private Double budgetModifie;
+    @JournalAttribute
     private TypeLigneBugetaire typeLigneBugetaire;
     @JournalAttribute
     private String commentaire;

@@ -4,34 +4,23 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public enum Module {
     DASHBOARD("Tableau de bord"),
-    PROJECT_LIST("Liste projets"),
-    PROJECT_SETTINGS("Paramétrage"),
-    ORDRE_MISSION("Ordre de mission"),
-//    FORMULAIRE("Gestion des courriers"),
-    FINANCEMENT_SETTINGS("Financement"),
     ACTES_GESTION("Gestion Administrative"),
-    PROJECT_DETAILED_PROGRESS_TRACKING("Avancement détaillé"),
-
-    Gestion_Administrative("Gestion Administrative des Missions, Formations et Ateliers"),
-
-    SERVICES_EXTERIEURS("Suivi détaillé des services externes"),
-
-    PROJECT_ACTIVITY_MONITORING("Suivi des activités"),
-    PROGRAMME("Programme"),
-    ACTIVITY_SETTINGS("Suivi des activités"),
-//    SITE_STATION("Sites et stations"),
-    SETTINGS_ACTIVITE_MISSION("Suivi des mission"),
-    REFERENTIEL("Référentiel"),
-    ALERTE("Alerte"),
-    DOCUMENT("Document"),
+    PROJECT_LIST("Gestion des projets"),
+    GESTION_COURRIER("Gestion courrier"),
+    FINANCEMENT_SETTINGS("Financement"),
+    DOCUMENT("Gestion Documentaires"),
     ORGANIGRAMMER("Organigramme"),
-    SECURITY("Sécurité"),
-    COURRIER("Courrier");
+    PARAMETRAGE("Parametrage"),
+    ALERTE("Alerte"),
+    SECURITY("Sécurité");
 
 
     @Getter

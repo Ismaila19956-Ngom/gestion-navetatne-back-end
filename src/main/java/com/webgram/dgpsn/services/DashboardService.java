@@ -45,8 +45,6 @@ public interface DashboardService {
     List<StatisticalDTO> getParticipantsByActivityType();
     AgentDashboardDTO readAllAgents();
     List<StatisticalFundingDTO> getTop5ActivitiesByBudget();
-    CongeDashboardSummaryDTO getDashboardSummary();
-    CongeDashboardDTO getFullDashboard();
     ServiceExterieurKpiResponse getServiceExterieurKpis();
     List<AgentCountByDirectionDTO> readAgentCountByDirection();
 
@@ -155,4 +153,7 @@ public interface DashboardService {
      */
     List<Map<String, Object>> getMonthlyBudgetConsumption();
     // ================= BUDGET DASHBOARD END =================
+    /// resumer dashboard conge
+    CongeDashboardSummaryDTO getDashboardSummary();
+    CongeDashboardDTO getFullDashboard();
 }
