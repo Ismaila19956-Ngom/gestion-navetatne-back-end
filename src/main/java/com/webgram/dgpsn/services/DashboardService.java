@@ -38,18 +38,9 @@ public interface DashboardService {
     List<StatisticalFundingDTO> readTotalFundingtByPartner();
 
     List<StatisticalDTO> readStatNumberProjectByStructure();
-
-    List <StatisticalFundingDTO> getBudgetByActivityType();
-    List<Map<String, Object>> getMonthlyActivitiesEvolution();
-    List<StatisticalDTO> getActivitiesByStatus();
-    List<StatisticalDTO> getParticipantsByActivityType();
     AgentDashboardDTO readAllAgents();
-    List<StatisticalFundingDTO> getTop5ActivitiesByBudget();
-    ServiceExterieurKpiResponse getServiceExterieurKpis();
     List<AgentCountByDirectionDTO> readAgentCountByDirection();
-
     List<StatisticalDTO> readStatIssueLogByStatus();
-
     List<Map<String, Object>> readStatIssueLogByYear(Integer year);
 
     List<StatisticalDTO> getIssuesCountByNature();
@@ -66,8 +57,6 @@ public interface DashboardService {
     List<StatisticalFundingDTO> readAverageAgeByPertner();
 
     List<StatisticalDTO> readCountProjectsByProgramme();
-
-    List<StatisticalDTO> getActivitiesByType();
 
     List<StatisticalFundingDTO> readTotalNeedByProjet();
 
@@ -96,7 +85,6 @@ public interface DashboardService {
     List<IssueLogEntity> getClosedIssues(Long projetId, Integer annee, String trimestre);
 
     List<FundingConfigEntity> getFundingConfigs(Long projetId, String annee, String trimestre);
-//    List<StatisticalProjectDTO> getProjectCountByStructure(TypeProjet typeProjet, StructureProjectType structureProjectType);
     List<Object> buildDashboardResumeFinancement();
 
     /* Qualité de l'air Dashboard START*/
@@ -156,4 +144,40 @@ public interface DashboardService {
     /// resumer dashboard conge
     CongeDashboardSummaryDTO getDashboardSummary();
     CongeDashboardDTO getFullDashboard();
+
+    // ================= SERVICE EXTERIEUR DASHBOARD START =================
+
+    ServiceExterieurKpiResponse getServiceExterieurKpis();
+
+    /**
+     * Récupère la répartition par type d'activité (Formations, Missions, Ateliers).
+     */
+    List<StatisticalDTO> getActivitiesByType();
+
+    /**
+     * Récupère le budget par type d'activité.
+     */
+    List<StatisticalFundingDTO> getBudgetByActivityType();
+
+    /**
+     * Récupère l'évolution des activités par mois (12 derniers mois).
+     */
+    List<Map<String, Object>> getMonthlyActivitiesEvolution();
+
+    /**
+     * Récupère la répartition des activités par statut.
+     */
+    List<StatisticalDTO> getActivitiesByStatus();
+
+    /**
+     * Récupère le Top 5 des activités par budget.
+     */
+    List<StatisticalFundingDTO> getTop5ActivitiesByBudget();
+
+    /**
+     * Récupère le nombre de participants par type d'activité.
+     */
+    List<StatisticalDTO> getParticipantsByActivityType();
+// ============ SERVICE EXTERIEUR DASHBOARD END =================
+
 }

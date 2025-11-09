@@ -55,9 +55,108 @@ public class DashboardRule {
     static final String BUDGET_TOP_5_BY_AMOUNT = "/budget/top5-by-amount";
     static final String BUDGET_TOP_5_EXECUTION= "/budget/top5-by-execution";
     static final String MONTHLY_BUDGET_CONSUMPTION = "/budget/monthly-consumption";
-
     //Conge DGPSN
     static final String CONGE_SUMMARY ="/dashboard-conge";
+    // service exterieur
+    static final String SERVICE_EXTERIEUR_KPIS = "/service-exterieur/kpis";
+    static final String SERVICE_EXTERIEUR_ACTIVITIES_BY_TYPE = "/service-exterieur/activities-by-type";
+    static final String SERVICE_EXTERIEUR_BUDGET_BY_TYPE = "/service-exterieur/budget-by-type";
+    static final String SERVICE_EXTERIEUR_MONTHLY_EVOLUTION= "/service-exterieur/monthly-evolution";
+    static final String MONTHLY_SERVICE_EXTERIEUR_ACTIVITIES_BY_STATUS = "/service-exterieur/activities-by-status";
+    static final String SERVICE_EXTERIEUR_TOP_5_BY_BUDGET = "/service-exterieur/top5-by-budget";
+    static final String SERVICE_EXTERIEUR_PARTICIPANTS_BY_TYPE = "/service-exterieur/participants-by-type";
+
+    @Bean
+    public SecurityRule getServiceExterieurKpis() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(DASHBOARD_API_PREFIX + SERVICE_EXTERIEUR_KPIS)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
+                .hasPermission(SecurityPermissions. READ_TDB_SERVICE)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+
+    @Bean
+    public SecurityRule getServiceExterieurActivitiesByType() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(DASHBOARD_API_PREFIX + SERVICE_EXTERIEUR_ACTIVITIES_BY_TYPE)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
+                .hasPermission(SecurityPermissions. READ_TDB_SERVICE)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+
+    @Bean
+    public SecurityRule getServiceExterieurBudgetByType() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(DASHBOARD_API_PREFIX + SERVICE_EXTERIEUR_BUDGET_BY_TYPE)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
+                .hasPermission(SecurityPermissions. READ_TDB_SERVICE)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+
+    @Bean
+    public SecurityRule getServiceExterieurMonthlyEvolution() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(DASHBOARD_API_PREFIX + SERVICE_EXTERIEUR_MONTHLY_EVOLUTION)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
+                .hasPermission(SecurityPermissions. READ_TDB_SERVICE)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+
+    @Bean
+    public SecurityRule getServiceExterieurActivitiesByStatus() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(DASHBOARD_API_PREFIX + MONTHLY_SERVICE_EXTERIEUR_ACTIVITIES_BY_STATUS)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
+                .hasPermission(SecurityPermissions. READ_TDB_SERVICE)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+
+    @Bean
+    public SecurityRule getServiceExterieurTop5ByBudget() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(DASHBOARD_API_PREFIX + SERVICE_EXTERIEUR_TOP_5_BY_BUDGET)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
+                .hasPermission(SecurityPermissions. READ_TDB_SERVICE)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+
+    @Bean
+    public SecurityRule getServiceExterieurParticipantsByType() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(DASHBOARD_API_PREFIX + SERVICE_EXTERIEUR_PARTICIPANTS_BY_TYPE)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.READ_TDB_RESUME)
+                .hasPermission(SecurityPermissions. READ_TDB_SERVICE)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+
 
     @Bean
     public SecurityRule getBudgetKpis() {
