@@ -1,5 +1,6 @@
 package com.webgram.dgpsn.mappers;
 
+import com.webgram.dgpsn.entities.FournisseurEntity;
 import com.webgram.dgpsn.entities.PlanComptableElementEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -17,7 +18,15 @@ public abstract class RealisationMapper implements EntityMapper<RealisationDTO, 
     @Override
     @Mapping(target = "ligneBudgetaire", source = "ligneBudgetaireId", qualifiedByName = "getLigneBudgetaire")
     @Mapping(target = "realisations", source = "realisationsId", qualifiedByName = "getRealisations")
+    @Mapping(target = "fournisseur", source = "fournisseurId", qualifiedByName = "getFournisseur")
     public abstract RealisationEntity asEntity(RealisationDTO dto);
+
+    @Override
+    @Mapping(source = "fournisseur", target = "fournisseur")
+    @Mapping(source = "fournisseur.id", target = "fournisseurId")
+    @Mapping(source = "ligneBudgetaire.id", target = "ligneBudgetaireId")
+    @Mapping(source = "realisations.id", target = "realisationsId")
+    public abstract RealisationDTO asDto(RealisationEntity entity);
 
     @Named("getLigneBudgetaire")
     public LigneBudgetaireEntity getLigneBudgetaire(Long ligneBudgetaireId) {
@@ -27,5 +36,12 @@ public abstract class RealisationMapper implements EntityMapper<RealisationDTO, 
     @Named("getRealisations")
     public PlanComptableElementEntity getRealisations(Long realisationsId) {
         return PlanComptableElementEntity.builder().id(realisationsId).build();
+    }
+    @Named("getFournisseur")
+    public FournisseurEntity getFournisseur(Long fournisseurId) {
+        if (fournisseurId == null) {
+            return null;
+        }
+        return FournisseurEntity.builder().id(fournisseurId).build();
     }
 }
