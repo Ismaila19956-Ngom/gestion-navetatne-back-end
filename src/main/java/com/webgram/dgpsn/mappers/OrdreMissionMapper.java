@@ -22,6 +22,7 @@ public interface OrdreMissionMapper extends EntityMapper<OrdreMissionDTO, OrdreM
 
     @Mapping(target = "agent", source = "agentIds",qualifiedByName ="getAgent")
     @Mapping(target = "frais", source = "fraisId",qualifiedByName ="getFrais")
+    @Mapping(target = "moyenTranport", source = "moyenTranportId",qualifiedByName ="getMoyenTranport")
     @Mapping(target = "priseEnCharge", source = "priseEnChargeId",qualifiedByName ="getPriseEnCharge")
     @Mapping(target = "document", source = "documentIds",qualifiedByName ="mapDocument")
     OrdreMissionEntity asEntity(OrdreMissionDTO dto);
@@ -74,6 +75,14 @@ public interface OrdreMissionMapper extends EntityMapper<OrdreMissionDTO, OrdreM
     default LabelEntity builtFrais(Long fraisId) {
         if(Objects.nonNull(fraisId)){
             return LabelEntity.builder().id(fraisId).build();
+        }
+        return null;
+    }
+
+    @Named("getMoyenTranport")
+    default LabelEntity getMoyenTranport(Long moyenTranportd) {
+        if(Objects.nonNull(moyenTranportd)){
+            return LabelEntity.builder().id(moyenTranportd).build();
         }
         return null;
     }

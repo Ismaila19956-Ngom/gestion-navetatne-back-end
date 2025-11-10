@@ -96,6 +96,7 @@ public enum ReferentielType {
     NATURE_COURRIER("nature courrier", "Parametrage nature"),
     STATUT_COURRIER("statut courrier", "Parametrage statut"),
     CATEGORIE_FOURNISSEUR("categorie fournisseur", "Parametrage categorie fournisseur"),
+    MOYEN_TRANSPORT("moyen transport", "moyen transport"),
     MODE_ENVOIE_COURRIER("mode envoie courrier", "Parametrage mode envoie");
 //    STARTUP("Startup", "Paramétrage startup"),;
 
