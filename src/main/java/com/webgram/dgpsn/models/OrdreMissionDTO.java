@@ -3,6 +3,7 @@ package com.webgram.dgpsn.models;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.webgram.dgpsn.entities.enums.ResponsableMission;
 import com.webgram.dgpsn.entities.enums.StatutType;
 import com.webgram.dgpsn.entities.enums.TypeGroupe;
 import com.webgram.dgpsn.entities.enums.TypeOrdreMission;
@@ -41,6 +42,7 @@ public class OrdreMissionDTO implements Serializable {
     private Date dateRetourOrdre;
     private Date dateDepartMission;
     private Date dateRetourMission;
+    private ResponsableMission structure;
 
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
@@ -54,10 +56,15 @@ public class OrdreMissionDTO implements Serializable {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private List<DocumentDto> document;
 
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private LabelDTO moyenTranport;
+
     private Long fraisId;
     private List<Long> priseEnChargeId;
     private List<Long> agentIds;
     private List<Long> documentIds;
+    private Long moyenTranportId;
 
 
 }

@@ -7,6 +7,7 @@ import com.webgram.dgpsn.models.BudgetDgpsnDTO;
 import com.webgram.dgpsn.models.LigneBudgetaireDTO;
 import com.webgram.dgpsn.models.RealisationDTO;
 import com.webgram.dgpsn.repositories.BudgetDgpsnRepository;
+import com.webgram.dgpsn.repositories.LigneBudgetaireRepository;
 import com.webgram.dgpsn.services.BudgetDgpsnService;
 import com.webgram.dgpsn.services.LigneBudgetaireService;
 import com.webgram.dgpsn.services.RealisationService;
@@ -33,30 +34,79 @@ public class BudgetDgpsnServiceImpl implements BudgetDgpsnService {
     private final BudgetDgpsnMapper budgetDgpsnMapper;
     private final LigneBudgetaireService ligneBudgetaireService;
     private final RealisationService realisationService;
+    private final LigneBudgetaireRepository ligneBudgetaireRepository;
 
-    @Override
-    @Journal(actionType = ActionType.ADD_DATES_IMPORTANTE)
-    public BudgetDgpsnDTO create(BudgetDgpsnDTO budgetDgpsnDTO) {
-        var savedBudget = budgetDgpsnRepository.save(budgetDgpsnMapper.asEntity(budgetDgpsnDTO));
-        log.info("BudgetDgpsn successfully added {}", savedBudget);
-        return budgetDgpsnMapper.asDto(savedBudget);
+//    @Override
+//    @Journal(actionType = ActionType.ADD_DATES_IMPORTANTE)
+//    public BudgetDgpsnDTO create(BudgetDgpsnDTO budgetDgpsnDTO) {
+//        var savedBudget = budgetDgpsnRepository.save(budgetDgpsnMapper.asEntity(budgetDgpsnDTO));
+//        log.info("BudgetDgpsn successfully added {}", savedBudget);
+//        return budgetDgpsnMapper.asDto(savedBudget);
+//    }
+//
+//    @Override
+//    @Journal(actionType = ActionType.UPDATE_DATES_IMPORTANTE)
+//    public BudgetDgpsnDTO update(BudgetDgpsnDTO budgetDgpsnDTO) {
+//        try {
+//            if (budgetDgpsnRepository.existsById(budgetDgpsnDTO.getId())) {
+//                var budgetEntity = budgetDgpsnMapper.asEntity(budgetDgpsnDTO);
+//                var updatedBudget = budgetDgpsnMapper.asDto(budgetDgpsnRepository.save(budgetEntity));
+//                log.info("BudgetDgpsn successfully updated {}", updatedBudget.getId());
+//                return updatedBudget;
+//            } else {
+//                throw new ResourceNotFoundException("BudgetDgpsn", budgetDgpsnDTO.getId());
+//            }
+//        } catch (IllegalArgumentException ex) {
+//            throw new ResourceNotFoundException("BudgetDgpsn", budgetDgpsnDTO.getId());
+//        }
+//    }
+@Override
+@Journal(actionType = ActionType.ADD_BUDGET)
+public BudgetDgpsnDTO create(BudgetDgpsnDTO budgetDgpsnDTO) {
+    var budgetEntity = budgetDgpsnMapper.asEntity(budgetDgpsnDTO);
+    // Sauvegarder d'abord le budget
+    var savedBudget = budgetDgpsnRepository.save(budgetEntity);
+    // Calculer le montant total des lignes budgétaires existantes pour ce budget
+    Double montantTotalLignes = ligneBudgetaireRepository.findByBudgetId(savedBudget.getId())
+            .stream()
+            .mapToDouble(ligne -> ligne.getMontant() != null ? ligne.getMontant() : 0.0)
+            .sum();
+    // Mettre à jour le montantEngage avec le total calculé (sans les 0)
+    if (montantTotalLignes > 0) {
+        savedBudget.setMontantEngage(montantTotalLignes);
+        savedBudget = budgetDgpsnRepository.save(savedBudget);
+        log.info("Budget créé avec montantEngage calculé: {}/{}",
+                savedBudget.getMontantEngage(), savedBudget.getMontant());
+    } else {
+        savedBudget.setMontantEngage(0.0);
+        log.info("Budget créé sans lignes budgétaires existantes");
     }
 
+    return budgetDgpsnMapper.asDto(savedBudget);
+}
+
     @Override
-    @Journal(actionType = ActionType.UPDATE_DATES_IMPORTANTE)
+    @Journal(actionType = ActionType.UPDATE_BUDGET)
     public BudgetDgpsnDTO update(BudgetDgpsnDTO budgetDgpsnDTO) {
-        try {
-            if (budgetDgpsnRepository.existsById(budgetDgpsnDTO.getId())) {
-                var budgetEntity = budgetDgpsnMapper.asEntity(budgetDgpsnDTO);
-                var updatedBudget = budgetDgpsnMapper.asDto(budgetDgpsnRepository.save(budgetEntity));
-                log.info("BudgetDgpsn successfully updated {}", updatedBudget.getId());
-                return updatedBudget;
-            } else {
-                throw new ResourceNotFoundException("BudgetDgpsn", budgetDgpsnDTO.getId());
-            }
-        } catch (IllegalArgumentException ex) {
+        if (!budgetDgpsnRepository.existsById(budgetDgpsnDTO.getId())) {
             throw new ResourceNotFoundException("BudgetDgpsn", budgetDgpsnDTO.getId());
         }
+
+        var budgetEntity = budgetDgpsnMapper.asEntity(budgetDgpsnDTO);
+
+        // Recalculer le montantEngage lors de la mise à jour
+        Double montantTotalLignes = ligneBudgetaireRepository.findByBudgetId(budgetEntity.getId())
+                .stream()
+                .mapToDouble(ligne -> ligne.getMontant() != null ? ligne.getMontant() : 0.0)
+                .sum();
+
+        budgetEntity.setMontantEngage(montantTotalLignes);
+
+        var updatedBudget = budgetDgpsnRepository.save(budgetEntity);
+        log.info("Budget mis à jour avec montantEngage recalculé: {}/{}",
+                updatedBudget.getMontantEngage(), updatedBudget.getMontant());
+
+        return budgetDgpsnMapper.asDto(updatedBudget);
     }
 
     @Override
