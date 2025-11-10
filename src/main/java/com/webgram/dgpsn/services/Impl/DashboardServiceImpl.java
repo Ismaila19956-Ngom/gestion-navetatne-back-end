@@ -5,6 +5,7 @@ import com.webgram.dgpsn.entities.enums.*;
 import com.webgram.dgpsn.mappers.ManagementUnitMapper;
 import com.webgram.dgpsn.models.AgentCountByDirectionDTO;
 import com.webgram.dgpsn.models.AgentDashboardDTO;
+import com.webgram.dgpsn.models.AgentGroupingDTO;
 import com.webgram.dgpsn.models.responses.*;
 import com.webgram.dgpsn.repositories.*;
 import com.webgram.dgpsn.services.AgentService;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -337,12 +339,78 @@ public class DashboardServiceImpl implements DashboardService {
 
 
 
+//    /**
+//     * Read all agents for card
+//     * @return
+//     */
+//    @Override
+//    public AgentDashboardDTO readAllAgents() {
+//        return agentService.getAgentDashboard();
+//    }
 
+//    @Override
+//    public List<AgentCountByDirectionDTO> readAgentCountByDirection() {
+//        return agentService.AgentCountByDirection();
+//    }
 
-    /**
-     * Read all agents for card
-     * @return
-     */
+    @Override
+    public AgentGroupingDTO getAgentGrouping() {
+        List<AgentEntity> agents = agentRepository.findAll();
+
+        Map<String, Map<String, Long>> grouped = new LinkedHashMap<>();
+        List<String> tranches = List.of("18-25", "26-35", "36-45", "46-55", "56-60", "60+");
+
+        // Initialiser les tranches avec 0
+        for (String tranche : tranches) {
+            grouped.put(tranche, new HashMap<>(Map.of("masculin", 0L, "feminin", 0L)));
+        }
+
+        long totalHommes = 0;
+        long totalFemmes = 0;
+
+        for (AgentEntity agent : agents) {
+            if (agent.getDateNaissance() == null || agent.getSexe() == null) continue;
+
+            LocalDate naissance = (agent.getDateNaissance() instanceof java.sql.Date sqlDate)
+                    ? sqlDate.toLocalDate()
+                    : agent.getDateNaissance().toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
+
+            int age = LocalDate.now().getYear() - naissance.getYear();
+
+            String tranche;
+            if (age >= 18 && age <= 25) {
+                tranche = "18-25";
+            } else if (age >= 26 && age <= 35) {
+                tranche = "26-35";
+            } else if (age >= 36 && age <= 45) {
+                tranche = "36-45";
+            } else if (age >= 46 && age <= 55) {
+                tranche = "46-55";
+            } else if (age >= 56 && age <= 60) {
+                tranche = "56-60";
+            } else {
+                tranche = "60+";
+            }
+
+            String sexeKey = (agent.getSexe() == Sexe.MASCULIN) ? "masculin" : "feminin";
+
+            Map<String, Long> counts = grouped.get(tranche);
+            counts.put(sexeKey, counts.get(sexeKey) + 1);
+            grouped.put(tranche, counts);
+
+            if (agent.getSexe() == Sexe.MASCULIN) totalHommes++;
+            else totalFemmes++;
+        }
+
+        return AgentGroupingDTO.builder()
+                .ageGroups(grouped)
+                .totalHommes(totalHommes)
+                .totalFemmes(totalFemmes)
+                .build();
+    }
+
 
     @Override
     public Map<String, Object> getBudgetSummaryKpis() {
@@ -1148,7 +1216,7 @@ public class DashboardServiceImpl implements DashboardService {
     }
 
     @Override
-    public AgentDashboardDTO getAgentDashboard() {
+    public AgentDashboardDTO getAgentsDashboard() {
         Long totalAgents = agentRepository.count();
         Long totalAgentsEnConges = (long) congeService.readAll().size();
         Long totalAgentsParDirection = agentRepository.countAgentsByDirection()
@@ -1164,25 +1232,6 @@ public class DashboardServiceImpl implements DashboardService {
     }
     /* Icpe Dashboard END*/
 
-    @Override
-    public AgentDashboardDTO readAllAgents() {
-        return null;
-    }
-    @Override
-    public List<AgentCountByDirectionDTO> readAgentCountByDirection() {
-        return List.of();
-    }
-
-    @Override
-    public AgentDashboardDTO getAgentsDashboard() {
-        Long totalAgents = agentRepository.count();
-        Long totalAgentsEnConges = (long) congeService.readAll().size();
-        Long totalAgentsParDirection = agentRepository.countAgentsByDirection()
-                .stream()
-                .mapToLong(AgentCountByDirectionDTO::getTotalAgents)
-                .sum();
-        return new AgentDashboardDTO(totalAgents, totalAgentsEnConges, totalAgentsParDirection);
-    }
 
     @Override
     public List<AgentCountByDirectionDTO> AgentCountByDirections() {
