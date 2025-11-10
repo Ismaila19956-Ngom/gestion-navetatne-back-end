@@ -21,6 +21,7 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.Calendar;
 
 @Service
 @Transactional
@@ -32,7 +33,6 @@ public class DashboardServiceImpl implements DashboardService {
 
     private final StructureProjectRepository structureProjectRepository;
     private final StatusRepository statusRepository;
-    //    private final FlagRepository flagRepository;
     private final FundingRepository fundingRepository;
 
     private final FundingConfigRepository fundingConfigRepository;
@@ -172,14 +172,18 @@ public class DashboardServiceImpl implements DashboardService {
             }
         });
 
-        // Compter les missions par mois
+        // Compter les missions par mois - CORRECTION POUR java.sql.Date
         ordreMissionRepository.findAll().forEach(mission -> {
             if (mission.getDateDepartOrdre() != null) {
-                LocalDate date = mission.getDateDepartOrdre().toInstant()
-                        .atZone(java.time.ZoneId.systemDefault()).toLocalDate();
-                if (date.isAfter(now.minusMonths(12))) {
-                    String monthKey = date.getYear() + "-" + String.format("%02d", date.getMonthValue());
-                    missionsByMonth.merge(monthKey, 1L, Long::sum);
+                try {
+                    LocalDate date = convertDateToLocalDate(mission.getDateDepartOrdre());
+                    if (date != null && date.isAfter(now.minusMonths(12))) {
+                        String monthKey = date.getYear() + "-" + String.format("%02d", date.getMonthValue());
+                        missionsByMonth.merge(monthKey, 1L, Long::sum);
+                    }
+                } catch (Exception e) {
+                    log.warn("Impossible de convertir la date pour la mission ID {}: {}",
+                            mission.getId(), e.getMessage());
                 }
             }
         });
@@ -211,6 +215,43 @@ public class DashboardServiceImpl implements DashboardService {
         return result;
     }
 
+    /**
+     * Méthode utilitaire pour convertir java.util.Date ou java.sql.Date en LocalDate
+     * Cette méthode gère les deux types de dates utilisés dans l'application
+     *
+     * @param date la date à convertir (peut être java.util.Date ou java.sql.Date)
+     * @return LocalDate ou null si la conversion échoue
+     */
+    private LocalDate convertDateToLocalDate(Date date) {
+        if (date == null) {
+            return null;
+        }
+
+        try {
+            // Si c'est java.sql.Date, utiliser toLocalDate() directement
+            if (date instanceof java.sql.Date) {
+                return ((java.sql.Date) date).toLocalDate();
+            }
+
+            // Pour java.util.Date, utiliser toInstant()
+            return date.toInstant()
+                    .atZone(java.time.ZoneId.systemDefault())
+                    .toLocalDate();
+        } catch (UnsupportedOperationException e) {
+            // Fallback pour les cas edge
+            log.warn("Conversion via toInstant() non supportée, utilisation de Calendar");
+            java.util.Calendar cal = java.util.Calendar.getInstance();
+            cal.setTime(date);
+            return LocalDate.of(
+                    cal.get(java.util.Calendar.YEAR),
+                    cal.get(java.util.Calendar.MONTH) + 1,
+                    cal.get(java.util.Calendar.DAY_OF_MONTH)
+            );
+        } catch (Exception e) {
+            log.error("Erreur lors de la conversion de la date: {}", e.getMessage());
+            return null;
+        }
+    }
     @Override
     public List<StatisticalDTO> getActivitiesByStatus() {
         Map<String, Long> statusCount = new HashMap<>();
