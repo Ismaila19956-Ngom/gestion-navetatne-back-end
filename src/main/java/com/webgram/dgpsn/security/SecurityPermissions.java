@@ -833,6 +833,7 @@ public enum SecurityPermissions {
     READ_TDB_ICPE("Consulter tableau de bord ICPE", Feature.TDB_ICPE),
     AGENT_STAT_CARD("", Feature.AGENT_READ_STAT_CARD),
     AGENTS_FOR_DIRECTIONS("", Feature.AGENTS_FOR_DIRECTIONS),
+    AGENT_GROUPING("", Feature.AGENT_GROUPING),
     /* fin fonctionnalités sur le Dashboard */
 
 

@@ -51,6 +51,7 @@ public class DashboardRule {
     // agents DGPSN
     static final String AGENT_STAT_CARD = "/agent/card";
     static final String AGENTS_FOR_DIRECTIONS = "/direction/agents";
+    static final String AGENT_GROUPING = "/agent/groups";
 
     //budget DGPSN
     static final String BUDGET_KPIS = "/budget/kpis";
@@ -63,6 +64,20 @@ public class DashboardRule {
     //Conge DGPSN
 //    static final String CONGE_SUMMARY ="/dashboard-summary";
     static final String CONGE_SUMMARY ="/dashboard-conge";
+
+
+    @Bean
+    public SecurityRule getGroupingAgent() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(DASHBOARD_API_PREFIX + AGENT_GROUPING)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.AGENT_GROUPING)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+
 
     @Bean
     public SecurityRule getBudgetKpis() {

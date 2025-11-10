@@ -6,6 +6,7 @@ import com.webgram.dgpsn.entities.enums.TypeProjet;
 import com.webgram.dgpsn.models.AgentCountByDirectionDTO;
 import com.webgram.dgpsn.models.AgentDTO;
 import com.webgram.dgpsn.models.AgentDashboardDTO;
+import com.webgram.dgpsn.models.AgentGroupingDTO;
 import com.webgram.dgpsn.models.responses.*;
 
 import java.util.List;
@@ -18,6 +19,7 @@ public interface DashboardService {
     AgentDashboardDTO readAllAgents();
     List<AgentCountByDirectionDTO> readAgentCountByDirection();
 
+    AgentGroupingDTO getAgentGrouping();
     List<StatisticalDTO> readStatProjectByStatus();
 
     List<StatisticalDTO> readStatProjectByFlag();

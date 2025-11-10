@@ -2,6 +2,7 @@ package com.webgram.dgpsn.controllers;
 
 import com.webgram.dgpsn.models.AgentCountByDirectionDTO;
 import com.webgram.dgpsn.models.AgentDashboardDTO;
+import com.webgram.dgpsn.models.AgentGroupingDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -559,5 +560,15 @@ public ResponseEntity<List<StatisticalBudgetActivityDTO>> getActivitiesAndBudget
     @GetMapping("/dashboard-conge")
     public ResponseEntity<CongeDashboardDTO> getDashboard() {
         return ResponseEntity.ok(dashboardService.getFullDashboard());
+    }
+
+    @Operation(summary = "Get Grouping Agent Sexe / lenght", description = "")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success"),
+            @ApiResponse(responseCode = "500", description = "Internal server error during request processing")})
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/agent/groups")
+    public ResponseEntity<AgentGroupingDTO> getGroupingAgent() {
+        return ResponseEntity.ok(dashboardService.getAgentGrouping());
     }
 }
