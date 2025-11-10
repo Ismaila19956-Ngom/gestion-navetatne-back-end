@@ -12,6 +12,8 @@ public class ActionType {
     public static final String UPDATE_CLASSE = " Modification  de parametre:Parametrage/ parametre  list classe action";
     public static final String DELETE_CLASSE = " Suppression de  parametre: Parametrage/ parametre  list classe action";
     public  static final String READ_CLASSE = "Consultation parametre:Parametrage/ parametre  list classe action";
+    public  static final String ADD_BUDGET = "Ajouter budget Financement:Financement/ Budget  list Budget";
+    public  static final String UPDATE_BUDGET = "Modifier budget Financement:Financement/ Budget  list Budget";
 
     // fournisseur
     public static final String CREATE_FOURNISSEUR = " Ajout de parametre: Parametrage/ parametre  nouvelle  classe";

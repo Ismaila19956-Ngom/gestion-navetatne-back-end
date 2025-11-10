@@ -614,7 +614,7 @@ public class CongeExportServiceImpl {
         font.setBold(false);
         style.setFont(font);
         // BLEU CLAIR pour Emploi dans l'établissement
-        style.setFillForegroundColor(IndexedColors.LIGHT_BLUE.getIndex());
+        style.setFillForegroundColor(IndexedColors.LIGHT_CORNFLOWER_BLUE.getIndex());
         style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         style.setVerticalAlignment(VerticalAlignment.CENTER);
         style.setAlignment(HorizontalAlignment.LEFT);
@@ -625,7 +625,7 @@ public class CongeExportServiceImpl {
     private CellStyle createDateEntreeStyle(Workbook wb) {
         CellStyle style = wb.createCellStyle();
         // BLEU CLAIR pour Date d'entrée
-        style.setFillForegroundColor(IndexedColors.LIGHT_BLUE.getIndex());
+        style.setFillForegroundColor(IndexedColors.LIGHT_CORNFLOWER_BLUE.getIndex());
         style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         style.setDataFormat(wb.createDataFormat().getFormat("dd/mm/yyyy"));
         style.setVerticalAlignment(VerticalAlignment.CENTER);
@@ -679,7 +679,7 @@ public class CongeExportServiceImpl {
         style.setWrapText(true);
         style.setVerticalAlignment(VerticalAlignment.TOP);
         // GRIS pour période des congés
-        style.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+        style.setFillForegroundColor(IndexedColors.LIGHT_GREEN.getIndex());
         style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         applyBorders(style);
         return style;
@@ -702,7 +702,7 @@ public class CongeExportServiceImpl {
     private CellStyle createYellowHighlightStyle(Workbook wb) {
         CellStyle style = wb.createCellStyle();
         // JAUNE pour les absences AUTRES
-        style.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
+        style.setFillForegroundColor(IndexedColors.GREEN.getIndex());
         style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         style.setAlignment(HorizontalAlignment.CENTER);
         style.setVerticalAlignment(VerticalAlignment.CENTER);

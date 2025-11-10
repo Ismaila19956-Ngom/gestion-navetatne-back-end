@@ -22,6 +22,7 @@ import java.time.LocalDate;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RealisationDTO implements Serializable {
     private static final long serialVersionUID = -5387827484974552092L;
+    private FournisseurDTO fournisseur;
 
     @Schema(description = "L'id technique, généré au moment de persister l'objet", accessMode = Schema.AccessMode.READ_ONLY)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
@@ -42,7 +43,7 @@ public class RealisationDTO implements Serializable {
 
     @JournalAttribute
     @NotNull
-    private String fournisseur;
+    private Long fournisseurId;
 
     @JournalAttribute
     private String numeroBon;

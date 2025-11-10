@@ -1,13 +1,15 @@
 package com.webgram.dgpsn.repositories;
 
+import com.webgram.dgpsn.entities.CongeEntity;
+import com.webgram.dgpsn.entities.enums.TypeConge;
+import com.webgram.dgpsn.models.responses.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import com.webgram.dgpsn.entities.CongeEntity;
-import com.webgram.dgpsn.entities.enums.TypeConge;
+
 import java.util.Date;
 import java.util.List;
 
@@ -29,7 +31,7 @@ public interface CongeRepository extends JpaRepository<CongeEntity, Long>, Query
     boolean existsByNumeroDecisionAndIdNot(String numeroDecision, Long id);
 
 
-    ///Trouve tous les congés d'un agent
+    /// Trouve tous les congés d'un agent
     @Query("SELECT c FROM CongeEntity c WHERE c.agent.id = :agentId ORDER BY c.dateDebut DESC")
     List<CongeEntity> findByAgentId(@Param("agentId") Long agentId);
 
@@ -41,7 +43,7 @@ public interface CongeRepository extends JpaRepository<CongeEntity, Long>, Query
                                                 @Param("typeConge") TypeConge typeConge);
 
 
-     // Trouve tous les congés entre deux dates
+    // Trouve tous les congés entre deux dates
     @Query("SELECT c FROM CongeEntity c " +
             "WHERE c.dateDepart >= :dateDebut AND c.dateReprise <= :dateFin " +
             "ORDER BY c.dateDepart ASC")
@@ -88,6 +90,49 @@ public interface CongeRepository extends JpaRepository<CongeEntity, Long>, Query
             "GROUP BY c.typeConge")
     List<Object[]> findStatistiquesGlobales();
 
+    // 1. Résumé
+    @Query("SELECT new com.webgram.dgpsn.models.responses.CongeDashboardSummaryDTO(" +
+            "COUNT(c), " +
+            "SUM(CASE WHEN c.statutType = 'ACCEPTER' THEN 1 ELSE 0 END), " +
+            "SUM(CASE WHEN c.statutType = 'TRAITEMENT_ENCOUR' THEN 1 ELSE 0 END), " +
+            "SUM(CASE WHEN c.statutType = 'REFUSER' THEN 1 ELSE 0 END)) " +
+            "FROM CongeEntity c")
+    CongeDashboardSummaryDTO getDashboardSummary();
+
+    // 2. Répartition par type congé
+    @Query("SELECT new com.webgram.dgpsn.models.responses.TypeCongeCountDTO(c.typeConge, COUNT(c)) " +
+            "FROM CongeEntity c GROUP BY c.typeConge")
+    List<TypeCongeCountDTO> countByTypeConge();
+
+    // 3. Répartition par statut
+    @Query("SELECT new com.webgram.dgpsn.models.responses.StatutCountDTO(c.statutType, COUNT(c)) " +
+            "FROM CongeEntity c GROUP BY c.statutType")
+    List<StatutCountDTO> countByStatut();
+
+
+    // 6. Top 5 agents
+    @Query("""
+            SELECT new com.webgram.dgpsn.models.responses.TopAgentDTO(
+                CONCAT(LEFT(a.prenom, 1), '. ', a.nom),
+                COUNT(c))
+            FROM CongeEntity c
+            JOIN c.agent a
+            GROUP BY a.id, a.prenom, a.nom
+            ORDER BY COUNT(c) DESC
+            """)
+    List<TopAgentDTO> findTop5Agents();
+
+    // 7. Taux d'approbation par type
+    @Query("""
+            SELECT c.typeConge,
+                   CASE 
+                     WHEN COUNT(c) = 0 THEN 0.0 
+                     ELSE 100.0 * SUM(CASE WHEN c.statutType = 'ACCEPTER' THEN 1 ELSE 0 END) / COUNT(c)
+                   END
+            FROM CongeEntity c
+            GROUP BY c.typeConge
+            """)
+    List<Object[]> approvalRateByType();
 }
 
 

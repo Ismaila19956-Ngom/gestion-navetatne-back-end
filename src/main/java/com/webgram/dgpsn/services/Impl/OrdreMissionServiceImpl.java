@@ -1,6 +1,7 @@
 package com.webgram.dgpsn.services.Impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.webgram.dgpsn.entities.enums.ResponsableMission;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
@@ -32,6 +33,7 @@ import java.io.IOException;
 import java.security.InvalidParameterException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -62,7 +64,7 @@ public class OrdreMissionServiceImpl implements OrdreMissionService {
 
     @Override
     public OrdreMissionDTO create(OrdreMissionDTO ordreMissionDTO) throws IOException {
-
+        validateMissionDurationIfDGPSN(ordreMissionDTO);
        var savedOrdreMission=ordreMissionRepository.save(ordreMissionMapper.asEntity(ordreMissionDTO));
 //       alerteService.newOrdreMission(savedOrdreMission);
         return ordreMissionMapper.asDto(savedOrdreMission);
@@ -83,6 +85,7 @@ public class OrdreMissionServiceImpl implements OrdreMissionService {
             throw new ResourceNotFoundException("not_found");
         }
         ordreMissionDTO.setId(ordreMissionDTO.getId());
+        validateMissionDurationIfDGPSN(ordreMissionDTO);
         var updatedFamily= ordreMissionRepository.save(ordreMissionMapper.asEntity(ordreMissionDTO));
         return ordreMissionMapper.asDto(updatedFamily);
     }
@@ -242,6 +245,23 @@ public OrdreMissionDTO updateStatusOrdreMission(Long ordreMissionId, String stat
 
         } else {
             throw new InvalidParameterException(MessageFormat.format(INVALID_EXTENSION_MESSAGE, file.getOriginalFilename(), documentProperties.getAcceptFileExtensions()));
+        }
+    }
+
+    private void validateMissionDurationIfDGPSN(OrdreMissionDTO dto) {
+        if (dto.getStructure() == ResponsableMission.DGPSN) {
+            Date debut = dto.getDateDepartOrdre();
+            Date fin = dto.getDateRetourOrdre();
+            if (debut == null || fin == null) {
+                throw new IllegalArgumentException("Les dates de départ et de retour de mission sont obligatoires pour le DGPSN.");
+            }
+            long diffInMillies = Math.abs(fin.getTime() - debut.getTime());
+            long diffInDays = diffInMillies / (1000 * 60 * 60 * 24);
+            if (diffInDays > 10) {
+                throw new IllegalArgumentException(
+                        String.format("La durée de la mission pour le DGPSN ne peut pas dépasser 10 jours. Durée actuelle : %d jour(s).", diffInDays)
+                );
+            }
         }
     }
 }

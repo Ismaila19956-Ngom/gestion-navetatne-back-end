@@ -516,4 +516,88 @@ public ResponseEntity<List<StatisticalBudgetActivityDTO>> getActivitiesAndBudget
     public List<Map<String, Object>> getMonthlyBudgetConsumption() {
         return dashboardService.getMonthlyBudgetConsumption();
     }
+
+
+    @Operation(summary = "summary of conge", description = "resumer  du conge.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success"),
+            @ApiResponse(responseCode = "500", description = "Internal server error during request processing")})
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/dashboard-conge")
+    public ResponseEntity<CongeDashboardDTO> getDashboard() {
+        return ResponseEntity.ok(dashboardService.getFullDashboard());
+
+    }
+    // ================= SERVICE EXTERIEUR DASHBOARD ENDPOINTS =================
+
+    @Operation(summary = "Read Service Exterieur KPIs", description = "Récupère les indicateurs globaux des services extérieurs")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success"),
+            @ApiResponse(responseCode = "500", description = "Internal server error during request processing")})
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/service-exterieur/kpis")
+    public ServiceExterieurKpiResponse getServiceExterieurKpis() {
+        return dashboardService.getServiceExterieurKpis();
+    }
+
+    @Operation(summary = "Read activities by type", description = "Répartition des activités par type (Formations, Missions, Ateliers)")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success"),
+            @ApiResponse(responseCode = "500", description = "Internal server error during request processing")})
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/service-exterieur/activities-by-type")
+    public List<StatisticalDTO> getActivitiesByType() {
+        return dashboardService.getActivitiesByType();
+    }
+
+    @Operation(summary = "Read budget by activity type", description = "Budget par type d'activité")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success"),
+            @ApiResponse(responseCode = "500", description = "Internal server error during request processing")})
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/service-exterieur/budget-by-type")
+    public List<StatisticalFundingDTO> getBudgetByActivityType() {
+        return dashboardService.getBudgetByActivityType();
+    }
+
+    @Operation(summary = "Read monthly activities evolution", description = "Évolution mensuelle des activités sur 12 mois")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success"),
+            @ApiResponse(responseCode = "500", description = "Internal server error during request processing")})
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/service-exterieur/monthly-evolution")
+    public List<Map<String, Object>> getMonthlyActivitiesEvolution() {
+        return dashboardService.getMonthlyActivitiesEvolution();
+    }
+
+    @Operation(summary = "Read activities by status", description = "Répartition des activités par statut")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success"),
+            @ApiResponse(responseCode = "500", description = "Internal server error during request processing")})
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/service-exterieur/activities-by-status")
+    public List<StatisticalDTO> getActivitiesByStatus() {
+        return dashboardService.getActivitiesByStatus();
+    }
+
+    @Operation(summary = "Read top 5 activities by budget", description = "Top 5 des activités par budget")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success"),
+            @ApiResponse(responseCode = "500", description = "Internal server error during request processing")})
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/service-exterieur/top5-by-budget")
+    public List<StatisticalFundingDTO> getTop5ActivitiesByBudget() {
+        return dashboardService.getTop5ActivitiesByBudget();
+    }
+
+    @Operation(summary = "Read participants by activity type", description = "Nombre de participants par type d'activité")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success"),
+            @ApiResponse(responseCode = "500", description = "Internal server error during request processing")})
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/service-exterieur/participants-by-type")
+    public List<StatisticalDTO> getParticipantsByActivityType() {
+        return dashboardService.getParticipantsByActivityType();
+
+    }
 }

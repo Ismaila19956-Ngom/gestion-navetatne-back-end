@@ -26,7 +26,7 @@ public class BudgetDgpsnDTO implements Serializable {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @JournalAttribute
     private Long id;
-
+    private Double montantEngage;
     @JournalAttribute
     @NotNull
     private String code;
@@ -39,4 +39,6 @@ public class BudgetDgpsnDTO implements Serializable {
 
     @JournalAttribute
     private Integer annee;
+
+
 }

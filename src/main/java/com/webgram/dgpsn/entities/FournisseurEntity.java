@@ -50,8 +50,11 @@
         @Column(name = "frn_rib", length = 50)
         private String rib; // Facultatif
 
-        @Column(name = "frn_categorie", length = 50)
-        private String categorieFournisseur;
+//        @Column(name = "frn_categorie", length = 50)
+//        private String categorieFournisseur;
+        @ManyToOne
+        @JoinColumn(name = "frn_categorie")
+        private LabelEntity categorieFournisseur;
 
         @Column(name = "frn_delai_paiement")
         private Integer delaiPaiement;

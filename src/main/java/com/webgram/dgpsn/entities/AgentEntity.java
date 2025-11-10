@@ -1,11 +1,13 @@
 package com.webgram.dgpsn.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.webgram.dgpsn.entities.enums.Sexe;
 import lombok.*;
 import com.webgram.dgpsn.entities.audits.Auditable;
 
 import jakarta.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Table(name = "agent")
@@ -35,6 +37,10 @@ public class AgentEntity extends Auditable<Long> implements Serializable {
     @Column(name = "agt_date_de_naissance")
     @Temporal(TemporalType.DATE)
     private Date dateNaissance;
+
+    @Column(name = "agt_date_creation")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private Date dateCreation;
 
     @Enumerated (EnumType.STRING)
     @Column(name = "agt_sexe")

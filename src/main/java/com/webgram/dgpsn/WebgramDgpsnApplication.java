@@ -74,7 +74,7 @@ public class WebgramDgpsnApplication {
         if (directionDG.isEmpty()) {
             var dgpsn = DirectionEntity.builder()
                     .code("DGPSN")
-                    .libelle("Direction General ")
+                    .libelle("CONSEIL D'ORIENTATION")
                     .parent(null)
                     .build();
 

@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -104,6 +105,7 @@ public class AgentController {
             @Parameter(name = "adresse", description = "value of adresse used to filter list agent") @RequestParam(value = "adresse", required = false) String adresse,
             @Parameter(name = "email", description = "value of email used to filter list agent") @RequestParam(value = "email", required = false) String email,
             @Parameter(name = "telephone", description = "value of telephone used to filter list agent") @RequestParam(value = "telephone", required = false) String telephone,
+            @Parameter(name = "dateCreation", description = "value of dateCreation used to filter list agent") @RequestParam(value = "dateCreation", required = false) Date dateCreation,
             @Parameter(name = "structureId", description = "value of structureId used to filter list agent") @RequestParam(value = "structureId", required = false) Long structureId,
             @Parameter(name = "fonctionId", description = "value of fonctionId used to filter list agent") @RequestParam(value = "fonctionId", required = false) Long fonctionId,
             @Parameter(name = "directionId", description = "value of directionId used to filter list agent") @RequestParam(value = "directionId", required = false) Long directionId,
@@ -111,7 +113,7 @@ public class AgentController {
             @Parameter(name = "ascending", description = "list of ascending used to filter list agent") @RequestParam(value = "ascending", required = false) Boolean ascending
 
     ) {
-        return agentService.readAll(pageable, idsToIgnore, typeStructure, nom, prenom, adresse, email, telephone, structureId, fonctionId, directionId, sortBy, ascending);
+        return agentService.readAll(pageable, idsToIgnore, typeStructure, nom, prenom, adresse, email, telephone, dateCreation, structureId , fonctionId, directionId, sortBy, ascending);
     }
 
     @Operation(

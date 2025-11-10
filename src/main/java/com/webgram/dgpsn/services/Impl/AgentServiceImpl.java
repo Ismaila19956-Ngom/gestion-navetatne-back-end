@@ -16,13 +16,17 @@ import com.webgram.dgpsn.entities.AgentEntity;
 import com.webgram.dgpsn.entities.enums.TypeStructure;
 import com.webgram.dgpsn.exceptions.ResourceNotFoundException;
 import com.webgram.dgpsn.mappers.AgentMapper;
+import com.webgram.dgpsn.models.AgentCountByDirectionDTO;
 import com.webgram.dgpsn.models.AgentDTO;
+import com.webgram.dgpsn.models.AgentDashboardDTO;
 import com.webgram.dgpsn.models.DownloadFile;
 import com.webgram.dgpsn.properties.DocumentProperties;
 import com.webgram.dgpsn.repositories.AgentRepository;
 import com.webgram.dgpsn.repositories.UserRepository;
 import com.webgram.dgpsn.services.AgentService;
+import com.webgram.dgpsn.services.CongeService;
 import com.webgram.dgpsn.services.DataStorageService;
+import com.webgram.dgpsn.services.DirectionService;
 import com.webgram.dgpsn.services.modelExcel.AgentExcelDTO;
 import com.webgram.dgpsn.services.utils.DownloadFileUtils;
 import lombok.RequiredArgsConstructor;
@@ -40,10 +44,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.security.InvalidParameterException;
 import java.text.MessageFormat;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -70,6 +71,8 @@ public class AgentServiceImpl implements AgentService {
     private String AGENT_IDENTIFIER_NOT_FOUND_MESSAGE = "Invalide id agent: {}";
 
     private final UserRepository userRepository;
+    private final CongeService congeService;
+    private final DirectionService directionService;
 
     @Override
 
@@ -129,6 +132,7 @@ public class AgentServiceImpl implements AgentService {
             String adresse,
             String email,
             String telephone,
+            Date dateCreation,
             Long structureId,
             Long fonctionId,
             Long directionId,
@@ -136,7 +140,7 @@ public class AgentServiceImpl implements AgentService {
             Boolean ascending
     ) {
         return agentRepository
-                .readAllByFiltering(pageable, idsToIgnore, typeStructure, nom, prenom, adresse, email, telephone, structureId, fonctionId, directionId, sortBy, ascending)
+                .readAllByFiltering(pageable, idsToIgnore, typeStructure, nom, prenom, adresse, email, telephone, dateCreation, structureId, fonctionId, directionId, sortBy, ascending)
                 .map(agentMapper::asDto);
     }
 
@@ -244,4 +248,7 @@ public class AgentServiceImpl implements AgentService {
                 .collect(Collectors.toList());
         return agents;
     }
+
+
+
 }

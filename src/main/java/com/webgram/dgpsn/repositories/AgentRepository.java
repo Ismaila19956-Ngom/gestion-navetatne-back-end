@@ -1,18 +1,21 @@
 package com.webgram.dgpsn.repositories;
 
 import com.querydsl.core.BooleanBuilder;
+import com.webgram.dgpsn.models.AgentCountByDirectionDTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.stereotype.Repository;
 import com.webgram.dgpsn.entities.enums.TypeStructure;
 import com.webgram.dgpsn.entities.AgentEntity;
 import com.webgram.dgpsn.entities.QAgentEntity;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -31,6 +34,7 @@ public interface AgentRepository extends JpaRepository<AgentEntity, Long>, Query
             String adresse,
             String email,
             String telephone,
+            Date dateCreation,
             Long structureId,
             Long fonctionId,
             Long directionId,
@@ -61,6 +65,9 @@ public interface AgentRepository extends JpaRepository<AgentEntity, Long>, Query
         if(StringUtils.isNotEmpty(telephone)) {
             booleanBuider.and(QAgentEntity.agentEntity.telephone.containsIgnoreCase(telephone));
         }
+        if(Objects.nonNull(dateCreation)) {
+            booleanBuider.and(QAgentEntity.agentEntity.dateCreation.eq(dateCreation));
+        }
         if(Objects.nonNull(structureId)) {
             booleanBuider.and(QAgentEntity.agentEntity.structure.id.eq(structureId));
         }
@@ -82,4 +89,10 @@ public interface AgentRepository extends JpaRepository<AgentEntity, Long>, Query
 
         return findAll(booleanBuider, pageRequest);
     }
+
+    @Query("SELECT new com.webgram.dgpsn.models.AgentCountByDirectionDTO(d.libelle, COUNT(a)) " +
+            "FROM AgentEntity a " +
+            "JOIN a.direction d " +
+            "GROUP BY d.libelle")
+    List<AgentCountByDirectionDTO> countAgentsByDirection();
 }
