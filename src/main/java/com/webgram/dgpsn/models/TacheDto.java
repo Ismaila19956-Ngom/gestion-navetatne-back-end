@@ -53,7 +53,7 @@ public class TacheDto implements Serializable {
 
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private ValueIndicatorDTO indicator;
+    private ManagementUnitDTO indicator;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @NotNull

@@ -92,7 +92,7 @@ List<StatisticalFundingDTO> avgAgeProjectByPartner();
     /**
      * Trouve toutes les sources de financement d'un budget
      */
-    @Query("SELECT f FROM FundingSourceEntity f WHERE f.budget.id = :budgetId")
+    @Query("SELECT f FROM FundingSourceEntity f WHERE f.id = :budgetId")
     List<FundingSourceEntity> findByBudgetId(@Param("budgetId") Long budgetId);
 
     /**
@@ -112,4 +112,31 @@ List<StatisticalFundingDTO> avgAgeProjectByPartner();
      */
     @Query("SELECT f FROM FundingSourceEntity f WHERE f.valueIndicator.id IN :valueIndicatorIds")
     List<FundingSourceEntity> findByValueIndicatorIdIn(@Param("valueIndicatorIds") List<Long> valueIndicatorIds);
+
+    /**
+     * Trouve les sources de financement par ManagementUnit (ACTIVITY) et Budget
+     */
+    @Query("SELECT f FROM FundingSourceEntity f WHERE f.managementUnit.id = :managementUnitId AND f.budget.id = :budgetId")
+    List<FundingSourceEntity> findByManagementUnitIdAndBudgetId(
+            @Param("managementUnitId") Long managementUnitId,
+            @Param("budgetId") Long budgetId
+    );
+
+    /**
+     * Trouve les sources de financement par ValueIndicator et Budget
+     */
+    @Query("SELECT f FROM FundingSourceEntity f WHERE f.valueIndicator.id = :valueIndicatorId AND f.budget.id = :budgetId")
+    List<FundingSourceEntity> findByValueIndicatorIdAndBudgetId(
+            @Param("valueIndicatorId") Long valueIndicatorId,
+            @Param("budgetId") Long budgetId
+    );
+
+    /**
+     * Trouve les sources de financement par Tache et Budget
+     */
+    @Query("SELECT f FROM FundingSourceEntity f WHERE f.tache.id = :tacheId AND f.budget.id = :budgetId")
+    List<FundingSourceEntity> findByTacheIdAndBudgetId(
+            @Param("tacheId") Long tacheId,
+            @Param("budgetId") Long budgetId
+    );
 }

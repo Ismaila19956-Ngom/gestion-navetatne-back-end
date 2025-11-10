@@ -37,9 +37,9 @@ public abstract class TacheMapper implements EntityMapper<TacheDto, TacheEntity>
     }
 
     @Named("getIndicator")
-    public ValueIndicatorEntity getIndicator(Long indicatorId) {
+    public ManagementUnitEntity getIndicator(Long indicatorId) {
         if (Objects.nonNull(indicatorId)) {
-            return ValueIndicatorEntity.builder().id(indicatorId).build();
+            return ManagementUnitEntity.builder().id(indicatorId).build();
         }
         return null;
     }
