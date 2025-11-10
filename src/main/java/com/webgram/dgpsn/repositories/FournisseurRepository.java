@@ -11,7 +11,7 @@
     import org.springframework.data.jpa.repository.JpaRepository;
     import org.springframework.data.querydsl.QuerydslPredicateExecutor;
     import org.springframework.stereotype.Repository;
-    import com.webgram.dgpsn.entities.QFournisseurEntity;
+   // import com.webgram.dgpsn.entities.QFournisseurEntity;
 
     import java.util.Objects;
 
@@ -30,25 +30,26 @@
         ) {
             var booleanBuider = new BooleanBuilder();
             Sort sort = Sort.unsorted();
-
-            if (StringUtils.isNotEmpty(raisonSociale)) {
-                booleanBuider.and(QFournisseurEntity.fournisseurEntity.raisonSociale.containsIgnoreCase(raisonSociale));
-            }
-            if (StringUtils.isNotEmpty(codeFournisseur)) {
-                booleanBuider.and(QFournisseurEntity.fournisseurEntity.codeFournisseur.containsIgnoreCase(codeFournisseur));
-            }
-            if (StringUtils.isNotEmpty(ninea)) {
-                booleanBuider.and(QFournisseurEntity.fournisseurEntity.ninea.containsIgnoreCase(ninea));
-            }
-
-            if (StringUtils.isNotEmpty(categorieFournisseur)) {
-                 booleanBuider.and(QFournisseurEntity.fournisseurEntity.categorieFournisseur.eq(categorieFournisseur));
-            }
-
-            if (StringUtils.isNotEmpty(statut)) {
-                StatutFournisseur statutEnum = StatutFournisseur.valueOf(statut.toUpperCase());
-            }
-
+//
+//            if (StringUtils.isNotEmpty(raisonSociale)) {
+//                booleanBuider.and(QFournisseurEntity.fournisseurEntity.raisonSociale.containsIgnoreCase(raisonSociale));
+//            }
+//            if (StringUtils.isNotEmpty(codeFournisseur)) {
+//                booleanBuider.and(QFournisseurEntity.fournisseurEntity.codeFournisseur.containsIgnoreCase(codeFournisseur));
+//            }
+//            if (StringUtils.isNotEmpty(ninea)) {
+//                booleanBuider.and(QFournisseurEntity.fournisseurEntity.ninea.containsIgnoreCase(ninea));
+//            }
+//
+////            if (StringUtils.isNotEmpty(categorieFournisseur)) {
+////                 booleanBuider.and(QFournisseurEntity.fournisseurEntity.categorieFournisseur.eq(categorieFournisseur));
+////            }
+//
+//
+//            if (StringUtils.isNotEmpty(statut)) {
+//                StatutFournisseur statutEnum = StatutFournisseur.valueOf(statut.toUpperCase());
+//            }
+//
 
             if (StringUtils.isNotEmpty(sortBy)) {
                 sort = Sort.by(sortBy);
