@@ -30,6 +30,16 @@ public class LigneBudgetaireEntity extends Auditable<Long> implements Serializab
 
     @Column(name = "ligne_budgetaire_montant")
     private Double montant;
+
+    @Column(name = "ligne_budgetaire_primitif")
+    private Double primitif;
+
+    @Column(name = "ligne_budgetaire_modification")
+    private Double modification;
+
+    @Column(name = "ligne_budgetaire_budget_modifie")
+    private Double budgetModifie;
+
     @Column(name = "ligne_budgetaire_type")
     @Enumerated(EnumType.STRING)
     private TypeLigneBugetaire typeLigneBugetaire;

@@ -6,6 +6,8 @@ import com.webgram.dgpsn.entities.audits.Auditable;
 
 import jakarta.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Table(name = "BudgetDgpsn")
 @Entity
@@ -34,5 +36,9 @@ public class BudgetDgpsnEntity extends Auditable<Long> implements Serializable {
 
     @Column(name = "budget_dgpsn_annee")
     private Integer annee;
+    @Column(name = "budget_dgpsn_montant_engage", nullable = false)
+    private Double montantEngage = 0.0;
+    @OneToMany(mappedBy = "budget", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<LigneBudgetaireEntity> lignesBudgetaires = new ArrayList<>();
 
 }

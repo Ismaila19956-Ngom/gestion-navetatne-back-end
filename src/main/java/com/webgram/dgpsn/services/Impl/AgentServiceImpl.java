@@ -249,20 +249,6 @@ public class AgentServiceImpl implements AgentService {
         return agents;
     }
 
-    @Override
-    public AgentDashboardDTO getAgentDashboard() {
-        Long totalAgents = agentRepository.count();
-        Long totalAgentsEnConges = (long) congeService.readAll().size();
-        Long totalAgentsParDirection = agentRepository.countAgentsByDirection()
-                .stream()
-                .mapToLong(AgentCountByDirectionDTO::getTotalAgents)
-                .sum();
-        return new AgentDashboardDTO(totalAgents, totalAgentsEnConges, totalAgentsParDirection);
-    }
 
-    @Override
-    public List<AgentCountByDirectionDTO> AgentCountByDirection() {
-        return agentRepository.countAgentsByDirection();
-    }
 
 }

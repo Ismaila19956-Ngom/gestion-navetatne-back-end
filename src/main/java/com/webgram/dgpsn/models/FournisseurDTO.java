@@ -1,6 +1,7 @@
 package com.webgram.dgpsn.models;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -29,7 +30,10 @@ public class FournisseurDTO implements Serializable {
     private String registreCommerce; // Champ facultatif
     private String banque; // Champ facultatif
     private String rib; // Champ facultatif
-    private String categorieFournisseur;
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private LabelDTO categorieFournisseur;
+    private Long categorieFournisseurId;
     private Integer delaiPaiement;
     private String nomContact;
     private String fonctionContact;

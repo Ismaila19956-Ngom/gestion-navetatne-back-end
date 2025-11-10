@@ -1,6 +1,7 @@
 package com.webgram.dgpsn.entities;
 
 import com.webgram.dgpsn.entities.audits.Auditable;
+import com.webgram.dgpsn.entities.enums.ResponsableMission;
 import com.webgram.dgpsn.entities.enums.StatutType;
 import com.webgram.dgpsn.entities.enums.TypeGroupe;
 import com.webgram.dgpsn.entities.enums.TypeOrdreMission;
@@ -30,6 +31,9 @@ public class OrdreMissionEntity extends Auditable<Long> implements Serializable 
 
     @Enumerated(EnumType.STRING)
     private TypeOrdreMission ordreMission;
+
+    @Enumerated(EnumType.STRING)
+    private ResponsableMission structure;
 
     @Enumerated(EnumType.STRING)
     private TypeGroupe groupe;
@@ -76,6 +80,11 @@ public class OrdreMissionEntity extends Auditable<Long> implements Serializable 
     @ManyToOne
     @JoinColumn(name = "frais")
     private LabelEntity frais;
+
+    @ManyToOne
+    @JoinColumn(name = "moyenTranport")
+    private LabelEntity moyenTranport;
+
 
 
     @ManyToMany
