@@ -108,6 +108,9 @@ public class ManagementUnitEntity extends Auditable<Long> implements Serializabl
     @ManyToOne(fetch = FetchType.LAZY)
     private ManagementUnitEntity parent;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    private BudgetDgpsnEntity budgetDgpsn;
+
 
     @ManyToMany
     @JoinTable(name = "management_unit_subsector",

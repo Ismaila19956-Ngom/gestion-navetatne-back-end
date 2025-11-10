@@ -33,8 +33,12 @@ public class RealisationEntity extends Auditable<Long> implements Serializable {
     @Column(name = "realisation_date")
     private LocalDate date;
 
-    @Column(name = "realisation_fournisseur")
-    private String fournisseur;
+//    @Column(name = "realisation_fournisseur")
+//    private String fournisseur;
+    @ManyToOne
+    @JoinColumn(name = "fournisseur_id")
+    private FournisseurEntity fournisseur;
+
 
     @Column(name = "realisation_numero_bon")
     private String numeroBon;

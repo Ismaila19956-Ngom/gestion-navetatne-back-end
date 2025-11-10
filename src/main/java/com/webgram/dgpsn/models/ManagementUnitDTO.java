@@ -88,6 +88,9 @@ public class ManagementUnitDTO {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private List<StructureProjectDTO> ministerTutelles;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private BudgetDgpsnDTO budgetDgpsn;
+
     private Long axeId;
     private Long typeContratId;
     private Long responsibleId;
@@ -98,6 +101,7 @@ public class ManagementUnitDTO {
     private List<Long> verificationSourceIds;
     private List<Long> actorInvolvedIds;
     private Long structureId;
+    private Long budgetDgpsnId;
 
 
 }

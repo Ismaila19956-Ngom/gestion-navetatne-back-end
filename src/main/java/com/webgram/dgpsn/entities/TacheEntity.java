@@ -52,7 +52,7 @@ public class TacheEntity extends Auditable<Long> implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "indicator_id")
-    private ValueIndicatorEntity indicator;
+    private ManagementUnitEntity indicator;
 
     public enum StatutTache {
         PLANIFIE,
