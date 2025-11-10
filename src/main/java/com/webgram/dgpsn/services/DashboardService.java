@@ -5,6 +5,7 @@ import com.webgram.dgpsn.entities.IssueLogEntity;
 import com.webgram.dgpsn.entities.enums.TypeProjet;
 import com.webgram.dgpsn.models.AgentCountByDirectionDTO;
 import com.webgram.dgpsn.models.AgentDashboardDTO;
+import com.webgram.dgpsn.models.AgentGroupingDTO;
 import com.webgram.dgpsn.models.responses.*;
 
 import java.util.List;
@@ -15,12 +16,12 @@ import java.util.Date;
 public interface DashboardService {
 
 //    AGENT DASHBOARD
-     AgentDashboardDTO getAgentDashboard();
     AgentDashboardDTO getAgentsDashboard();
      List<AgentCountByDirectionDTO> AgentCountByDirection();
 //    AgentDashboardDTO getAgentsDashboard();
     List<AgentCountByDirectionDTO> AgentCountByDirections();
 
+    AgentGroupingDTO getAgentGrouping();
     List<StatisticalDTO> readStatProjectByStatus();
 
     List<StatisticalDTO> readStatProjectByFlag();
@@ -38,8 +39,8 @@ public interface DashboardService {
     List<StatisticalFundingDTO> readTotalFundingtByPartner();
 
     List<StatisticalDTO> readStatNumberProjectByStructure();
-    AgentDashboardDTO readAllAgents();
-    List<AgentCountByDirectionDTO> readAgentCountByDirection();
+//    AgentDashboardDTO readAllAgents();
+//    List<AgentCountByDirectionDTO> readAgentCountByDirection();
     List<StatisticalDTO> readStatIssueLogByStatus();
     List<Map<String, Object>> readStatIssueLogByYear(Integer year);
 
