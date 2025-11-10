@@ -25,6 +25,18 @@ public class ManagementUnitRule {
     static final String PARENT_ID = "/{parentId}";
     static final String ALL = "/all";
     static final String PTBA = "/{managementUnitId}/ptba";
+    static final String BUDGET_TREE = "/tree/budget/{budgetId}";
+
+    @Bean
+    public SecurityRule readTreeManagementUnitByBudgetId() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(PROJECT_API_PREFIX + BUDGET_TREE)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
 
     @Bean
     public SecurityRule generatePtba() {

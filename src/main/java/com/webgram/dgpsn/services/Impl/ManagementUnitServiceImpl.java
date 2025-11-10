@@ -42,6 +42,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -63,6 +64,7 @@ import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -81,6 +83,8 @@ public class ManagementUnitServiceImpl implements ManagementUnitService {
     private final ExpenseActivityRepository expenseActivityRepository;
     private final ValueIndicatorRepository valueIndicatorRepository;
     private final TacheRepository tacheRepository;
+    private final FundingSourceRepository fundingSourceRepository;
+    private final BudgetDgpsnRepository budgetDgpsnRepository;
 
     final WorkbookService workbookService;
 
@@ -183,7 +187,7 @@ public class ManagementUnitServiceImpl implements ManagementUnitService {
         var pageManagementUnit = managementUnitRepository
                 .readAllByFiltering(
                         pageable, code, name, type, dateDebut, dateFin,
-                        budget, poids, responsibleId, tag, parentId, axePSEId,publish, projectIds)
+                        budget, poids, responsibleId, tag, parentId, axePSEId, publish, projectIds)
                 .map(managementUnitMapper::asDto);
         pageManagementUnit.getContent().forEach(management -> {
             var ministeres = structureProjectRepository.findByProjetIdAndStructureProjectType(management.getId(), StructureProjectType.GUARDIANSHIP);
@@ -243,6 +247,7 @@ public class ManagementUnitServiceImpl implements ManagementUnitService {
         }
 
     }
+
     @Override
     @Journal(actionType = ActionType.EXPORT_PROJECT_TO_EXCEL)
     public void exportProjets(PrintWriter writer) {
@@ -449,19 +454,31 @@ public class ManagementUnitServiceImpl implements ManagementUnitService {
 //    }
 
     @Override
+    @CacheEvict(value = "managementUnitTree", allEntries = true) // INVALIDE TOUT LE CACHE
     public TreeNodeDTO addNodeToTreeManagmentUnit(Long parentId, TreeNodeDTO nodeDTO) {
         var parent = managementUnitRepository.findById(parentId)
-                .orElseThrow(() -> new ResourceNotFoundException("Projet non trouvé"));
+                .orElseThrow(() -> new ResourceNotFoundException("Parent non trouvé"));
+
         var managementUnit = ManagementUnitEntity.builder()
-                .nomenclature(nodeDTO.getCode())
+                .code(nodeDTO.getCode())
+                .nomenclature(nodeDTO.getNomenclature())
                 .name(nodeDTO.getName())
                 .type(nodeDTO.getType())
                 .actif(true)
                 .parent(parent)
+                .budgetDgpsn(parent.getBudgetDgpsn())
                 .build();
-        managementUnitRepository.save(managementUnit);
 
-        return nodeDTO;
+        var saved = managementUnitRepository.save(managementUnit);
+
+        // Retourne le nœud avec l'ID généré
+        return new TreeNodeDTO(
+                saved.getId(),
+                saved.getCode(),
+                saved.getNomenclature(),
+                saved.getName(),
+                saved.getType()
+        );
     }
 
     @Override
@@ -668,10 +685,6 @@ public class ManagementUnitServiceImpl implements ManagementUnitService {
                 indicator.getIndicatorProjet().getIndicator().getLibelle() : "Indicateur");
         node.setNomenclature(node.getCode());
         node.setType(TypeProjet.INDICATOR);
-        node.setTargetValue(indicator.getTargetValue());
-        node.setValueReched(indicator.getValueReched());
-        node.setStartDate(indicator.getStartDate());
-        node.setEndDate(indicator.getEndDate());
         node.setChildren(new ArrayList<>());
 
         return node;
@@ -687,27 +700,6 @@ public class ManagementUnitServiceImpl implements ManagementUnitService {
                 });
     }
 
-    private TreeNodeDTO createTacheNode(TacheEntity tache) {
-        TreeNodeDTO node = new TreeNodeDTO();
-        node.setId(tache.getId());
-        node.setCode("TACHE-" + tache.getId());
-        node.setName("Tâche - " + (tache.getCommentaire() != null ?
-                tache.getCommentaire().substring(0, Math.min(50, tache.getCommentaire().length())) :
-                "Sans description"));
-        node.setNomenclature(node.getCode());
-        node.setType(TypeProjet.TACHE);
-        node.setTrimestre(tache.getTrimestre());
-        node.setMois(tache.getMois());
-        node.setSemaines(tache.getSemaines());
-        node.setCommentaire(tache.getCommentaire());
-        node.setStatut(tache.getStatut() != null ? tache.getStatut().name() : null);
-        node.setStartDate(tache.getDateDebut());
-        node.setEndDate(tache.getDateFin());
-        node.setChildren(new ArrayList<>());
-
-        return node;
-    }
-
     private void sortRecursively(TreeNodeDTO node) {
         if (node.getChildren() == null || node.getChildren().isEmpty()) {
             return;
@@ -718,4 +710,436 @@ public class ManagementUnitServiceImpl implements ManagementUnitService {
         node.getChildren().forEach(this::sortRecursively);
     }
 
+    ///////////////////////NEW VESION TREE RECUP BY BUDGET
+    @Override
+    public TreeNodeDTO readTreeManagementUnitByBudgetId(Long budgetId) {
+        if (budgetId == null) {
+            throw new IllegalArgumentException("budgetId cannot be null");
+        }
+
+        // 1. Récupérer tous les ManagementUnit liés à ce budget
+        List<ManagementUnitEntity> units = managementUnitRepository.findByBudgetDgpsnId(budgetId);
+
+        if (units.isEmpty()) {
+            return TreeNodeDTO.builder()
+                    .id(0L)
+                    .name("Aucun élément financé par ce budget")
+                    .type(TypeProjet.PROGRAMME)
+                    .children(new ArrayList<>())
+                    .build();
+        }
+
+        // 2. Map id → entity pour accès rapide
+        Map<Long, ManagementUnitEntity> unitMap = units.stream()
+                .collect(Collectors.toMap(ManagementUnitEntity::getId, Function.identity()));
+
+        // 3. Map id → TreeNodeDTO
+        Map<Long, TreeNodeDTO> nodeMap = new HashMap<>();
+
+        // 4. Créer les nœuds (OBJECTIF, ACTION, ACTIVITY, INDICATOR)
+        for (ManagementUnitEntity entity : units) {
+            TypeProjet type = entity.getType();
+            if (!List.of(TypeProjet.OBJECTIF, TypeProjet.ACTION, TypeProjet.ACTIVITY, TypeProjet.INDICATOR).contains(type)) {
+                continue;
+            }
+
+            TreeNodeDTO node = managementUnitMapper.asTreeDto(entity);
+            node.setChildren(new ArrayList<>());
+            nodeMap.put(entity.getId(), node);
+        }
+
+        // 5. Ajouter les TÂCHES comme enfants des INDICATEURS
+        for (ManagementUnitEntity indicatorUnit : units) {
+            if (indicatorUnit.getType() != TypeProjet.INDICATOR) continue;
+
+            Long indicatorId = indicatorUnit.getId();
+            List<TacheEntity> taches = tacheRepository.findByIndicatorId(indicatorId);
+
+            TreeNodeDTO indicatorNode = nodeMap.get(indicatorId);
+            if (indicatorNode == null) continue;
+
+            List<TreeNodeDTO> tacheNodes = taches.stream()
+                    .map(tache -> TreeNodeDTO.builder()
+                            .id(tache.getId())
+                            .code("T" + tache.getTrimestre() + (tache.getMois() != null ? "-" + tache.getMois() : ""))
+                            .nomenclature("Tâche")
+                            .name(tache.getCommentaire() != null && !tache.getCommentaire().isBlank()
+                                    ? tache.getCommentaire()
+                                    : "Tâche sans libellé")
+                            .type(TypeProjet.TACHE)
+                            .trimestre(tache.getTrimestre())
+                            .mois(tache.getMois())
+                            .semaines(tache.getSemaines() != null ? String.join(",", tache.getSemaines()) : null)
+                            .commentaire(tache.getCommentaire())
+                            .statut(tache.getStatut() != null ? tache.getStatut().name() : "PLANIFIE")
+                            .startDate(tache.getDateDebut())
+                            .endDate(tache.getDateFin())
+                            .children(new ArrayList<>())
+                            .build())
+                    .toList();
+
+            indicatorNode.getChildren().addAll(tacheNodes);
+        }
+
+        // 6. Construire l’arborescence
+        TreeNodeDTO root = TreeNodeDTO.builder()
+                .id(-1L)
+                .name("Budget PTBA")
+                .type(TypeProjet.PROGRAMME)
+                .children(new ArrayList<>())
+                .build();
+
+        for (ManagementUnitEntity entity : units) {
+            TreeNodeDTO node = nodeMap.get(entity.getId());
+            if (node == null) continue;
+
+            ManagementUnitEntity parent = entity.getParent();
+
+            if (parent == null || !unitMap.containsKey(parent.getId())) {
+                // Pas de parent ou parent hors budget → accrocher au root
+                root.getChildren().add(node);
+            } else {
+                // Parent dans le même budget → lien normal
+                TreeNodeDTO parentNode = nodeMap.get(parent.getId());
+                if (parentNode != null) {
+                    parentNode.getChildren().add(node);
+                }
+            }
+        }
+
+        // 7. Trier récursivement par code
+        sortTreeByCode(root);
+
+        return root;
+    }
+
+    // Méthode utilitaire pour trier les enfants
+    private void sortTreeByCode(TreeNodeDTO node) {
+        if (node.getChildren() != null && !node.getChildren().isEmpty()) {
+            node.getChildren().sort(Comparator.comparing(
+                    n -> n.getCode() != null ? n.getCode() : n.getName(),
+                    String.CASE_INSENSITIVE_ORDER
+            ));
+            node.getChildren().forEach(this::sortTreeByCode);
+        }
+    }
+
+    // Méthode utilitaire pour trier récursivement
+    private void sortChildren(TreeNodeDTO node) {
+        if (node.getChildren() != null) {
+            node.getChildren().sort(Comparator.comparing(n ->
+                    n.getCode() != null ? n.getCode() : n.getName(), String.CASE_INSENSITIVE_ORDER));
+            node.getChildren().forEach(this::sortChildren);
+        }
+    }
+
+
+    /**
+     * Ajoute récursivement tous les parents d'une unité de gestion jusqu'au projet racine
+     */
+    private void addParentHierarchy(Long managementUnitId, Set<Long> allIds) {
+        ManagementUnitEntity unit = managementUnitRepository.findById(managementUnitId).orElse(null);
+        if (unit != null && unit.getParent() != null) {
+            Long parentId = unit.getParent().getId();
+            if (!allIds.contains(parentId)) {
+                allIds.add(parentId);
+                addParentHierarchy(parentId, allIds);
+            }
+        }
+    }
+
+    /**
+     * Trouve le projet racine (PROGRAMME ou PROJECT sans parent)
+     */
+    private ManagementUnitEntity findRootProject(List<ManagementUnitEntity> units) {
+        // Chercher d'abord un PROGRAMME ou PROJECT sans parent
+        for (ManagementUnitEntity unit : units) {
+            if ((unit.getType() == TypeProjet.PROGRAMME || unit.getType() == TypeProjet.PROJECT)
+                    && unit.getParent() == null) {
+                return unit;
+            }
+        }
+
+        // Si pas trouvé, chercher n'importe quel élément sans parent
+        for (ManagementUnitEntity unit : units) {
+            if (unit.getParent() == null) {
+                return unit;
+            }
+        }
+
+        // En dernier recours, prendre le premier
+        return units.isEmpty() ? null : units.get(0);
+    }
+
+    /**
+     * Construit l'arbre en filtrant uniquement les éléments financés ou leurs parents
+     */
+    private TreeNodeDTO buildFilteredTree(
+            ManagementUnitEntity root,
+            Set<Long> includedManagementUnitIds,
+            Set<Long> financedActivityIds,
+            Set<Long> financedTacheIds,
+            Set<Long> financedIndicatorIds,
+            Long budgetId) {
+
+        TreeNodeDTO rootNode = new TreeNodeDTO(
+                root.getId(),
+                root.getCode(),
+                root.getNomenclature(),
+                root.getName(),
+                root.getType()
+        );
+
+        // Calculer le budget agrégé pour ce nœud
+        calculateAggregatedBudget(rootNode, root.getId(), financedActivityIds, financedTacheIds, financedIndicatorIds, budgetId);
+
+        // Construire récursivement les enfants ManagementUnit
+        List<ManagementUnitEntity> children = managementUnitRepository.findByParentId(root.getId());
+
+        for (ManagementUnitEntity child : children) {
+            // Inclure si l'enfant est requis dans la hiérarchie
+            if (includedManagementUnitIds.contains(child.getId())) {
+                TreeNodeDTO childNode = buildFilteredTree(
+                        child,
+                        includedManagementUnitIds,
+                        financedActivityIds,
+                        financedTacheIds,
+                        financedIndicatorIds,
+                        budgetId
+                );
+                rootNode.addChild(childNode);
+            }
+        }
+
+        // Si c'est une ACTIVITY, ajouter ses tâches financées directement
+        if (root.getType() == TypeProjet.ACTIVITY && financedActivityIds.contains(root.getId())) {
+            addFinancedTachesForActivity(rootNode, root.getId(), financedTacheIds);
+        }
+
+        // Si c'est un INDICATOR (ManagementUnit), ajouter ses tâches financées
+        if (root.getType() == TypeProjet.INDICATOR && financedIndicatorIds.contains(root.getId())) {
+            addFinancedTachesForIndicator(rootNode, root.getId(), financedTacheIds);
+        }
+
+        return rootNode;
+    }
+
+    /**
+     * Ajoute les tâches financées d'une activité
+     */
+    private void addFinancedTachesForActivity(
+            TreeNodeDTO activityNode,
+            Long activityId,
+            Set<Long> financedTacheIds) {
+
+        List<TacheEntity> allTaches = tacheRepository.findByActiviteId(activityId);
+
+        for (TacheEntity tache : allTaches) {
+            if (financedTacheIds.contains(tache.getId())) {
+                TreeNodeDTO tacheNode = createTacheNode(tache);
+                activityNode.addChild(tacheNode);
+            }
+        }
+    }
+
+    /**
+     * Ajoute les tâches financées d'un indicateur (ManagementUnit type=INDICATOR)
+     */
+    private void addFinancedTachesForIndicator(
+            TreeNodeDTO indicatorNode,
+            Long indicatorId,
+            Set<Long> financedTacheIds) {
+
+        List<TacheEntity> allTaches = tacheRepository.findByIndicatorId(indicatorId);
+
+        for (TacheEntity tache : allTaches) {
+            if (financedTacheIds.contains(tache.getId())) {
+                TreeNodeDTO tacheNode = createTacheNode(tache);
+                indicatorNode.addChild(tacheNode);
+            }
+        }
+    }
+
+    /**
+     * Crée un nœud pour une tâche
+     */
+    private TreeNodeDTO createTacheNode(TacheEntity tache) {
+        TreeNodeDTO node = new TreeNodeDTO();
+        node.setId(tache.getId());
+        node.setCode("TACHE-" + tache.getId());
+        node.setNomenclature("TACHE-" + tache.getId());
+        node.setName("Tâche T" + tache.getTrimestre() + "-M" + tache.getMois());
+        node.setType(TypeProjet.TACHE);
+        node.setTrimestre(tache.getTrimestre());
+        node.setMois(tache.getMois());
+        node.setSemaines(tache.getSemaines());
+        node.setCommentaire(tache.getCommentaire());
+        node.setStatut(tache.getStatut() != null ? tache.getStatut().name() : null);
+        node.setStartDate(tache.getDateDebut());
+        node.setEndDate(tache.getDateFin());
+
+        // Calculer budget pour cette tâche
+        List<FundingSourceEntity> sources = fundingSourceRepository.findByTacheId(tache.getId());
+        double totalBudget = sources.stream()
+                .mapToDouble(s -> s.getMontant() != null ? s.getMontant() : 0.0)
+                .sum();
+
+        node.setBudget(totalBudget);
+        node.setDepense(0.0);
+        node.setTauxExecution(0.0);
+
+        return node;
+    }
+
+    /**
+     * Calcule le budget agrégé pour un nœud (somme des budgets de tous ses descendants financés)
+     */
+    private void calculateAggregatedBudget(
+            TreeNodeDTO node,
+            Long managementUnitId,
+            Set<Long> financedActivityIds,
+            Set<Long> financedTacheIds,
+            Set<Long> financedIndicatorIds,
+            Long budgetId) {
+
+        double totalBudget = 0.0;
+
+        ManagementUnitEntity unit = managementUnitRepository.findById(managementUnitId).orElse(null);
+        if (unit == null) {
+            node.setBudget(0.0);
+            node.setDepense(0.0);
+            node.setTauxExecution(0.0);
+            return;
+        }
+
+        // Si c'est une activité financée, récupérer les sources de financement
+        if (unit.getType() == TypeProjet.ACTIVITY && financedActivityIds.contains(managementUnitId)) {
+            List<FundingSourceEntity> activitySources = fundingSourceRepository
+                    .findByManagementUnitIdPerso(managementUnitId);
+            totalBudget += activitySources.stream()
+                    .mapToDouble(s -> s.getMontant() != null ? s.getMontant() : 0.0)
+                    .sum();
+
+            // Ajouter les budgets des tâches de cette activité
+            List<TacheEntity> taches = tacheRepository.findByActiviteId(managementUnitId);
+            for (TacheEntity tache : taches) {
+                if (financedTacheIds.contains(tache.getId())) {
+                    List<FundingSourceEntity> tacheSources = fundingSourceRepository.findByTacheId(tache.getId());
+                    totalBudget += tacheSources.stream()
+                            .mapToDouble(s -> s.getMontant() != null ? s.getMontant() : 0.0)
+                            .sum();
+                }
+            }
+        }
+
+        // Si c'est un indicateur financé (ManagementUnit type=INDICATOR)
+        if (unit.getType() == TypeProjet.INDICATOR && financedIndicatorIds.contains(managementUnitId)) {
+            List<FundingSourceEntity> indicatorSources = fundingSourceRepository
+                    .findByManagementUnitIdPerso(managementUnitId);
+            totalBudget += indicatorSources.stream()
+                    .mapToDouble(s -> s.getMontant() != null ? s.getMontant() : 0.0)
+                    .sum();
+
+            // Ajouter les budgets des tâches de cet indicateur
+            List<TacheEntity> taches = tacheRepository.findByIndicatorId(managementUnitId);
+            for (TacheEntity tache : taches) {
+                if (financedTacheIds.contains(tache.getId())) {
+                    List<FundingSourceEntity> tacheSources = fundingSourceRepository.findByTacheId(tache.getId());
+                    totalBudget += tacheSources.stream()
+                            .mapToDouble(s -> s.getMontant() != null ? s.getMontant() : 0.0)
+                            .sum();
+                }
+            }
+        }
+
+        // Pour les niveaux supérieurs (ACTION, OBJECTIF, PROJECT), agréger les budgets des enfants
+        if (unit.getType() != TypeProjet.ACTIVITY && unit.getType() != TypeProjet.INDICATOR) {
+            List<ManagementUnitEntity> children = managementUnitRepository.findByParentId(managementUnitId);
+            for (ManagementUnitEntity child : children) {
+                totalBudget += calculateDescendantsBudget(
+                        child.getId(),
+                        financedActivityIds,
+                        financedTacheIds,
+                        financedIndicatorIds,
+                        budgetId
+                );
+            }
+        }
+
+        node.setBudget(totalBudget);
+        node.setDepense(0.0); // À implémenter selon votre logique métier
+        node.setTauxExecution(totalBudget > 0 ? (node.getDepense() / totalBudget) * 100 : 0.0);
+    }
+
+    /**
+     * Calcule récursivement le budget total des descendants
+     */
+    private double calculateDescendantsBudget(
+            Long managementUnitId,
+            Set<Long> financedActivityIds,
+            Set<Long> financedTacheIds,
+            Set<Long> financedIndicatorIds,
+            Long budgetId) {
+
+        double total = 0.0;
+
+        ManagementUnitEntity unit = managementUnitRepository.findById(managementUnitId).orElse(null);
+        if (unit == null) {
+            return 0.0;
+        }
+
+        // Si c'est une activité financée
+        if (unit.getType() == TypeProjet.ACTIVITY && financedActivityIds.contains(managementUnitId)) {
+            List<FundingSourceEntity> activitySources = fundingSourceRepository
+                    .findByManagementUnitIdPerso(managementUnitId);
+            total += activitySources.stream()
+                    .mapToDouble(s -> s.getMontant() != null ? s.getMontant() : 0.0)
+                    .sum();
+
+            // Tâches de cette activité
+            List<TacheEntity> taches = tacheRepository.findByActiviteId(managementUnitId);
+            for (TacheEntity tache : taches) {
+                if (financedTacheIds.contains(tache.getId())) {
+                    List<FundingSourceEntity> tacheSources = fundingSourceRepository.findByTacheId(tache.getId());
+                    total += tacheSources.stream()
+                            .mapToDouble(s -> s.getMontant() != null ? s.getMontant() : 0.0)
+                            .sum();
+                }
+            }
+        }
+
+        // Si c'est un indicateur financé
+        if (unit.getType() == TypeProjet.INDICATOR && financedIndicatorIds.contains(managementUnitId)) {
+            List<FundingSourceEntity> indicatorSources = fundingSourceRepository
+                    .findByManagementUnitIdPerso(managementUnitId);
+            total += indicatorSources.stream()
+                    .mapToDouble(s -> s.getMontant() != null ? s.getMontant() : 0.0)
+                    .sum();
+
+            // Tâches de cet indicateur
+            List<TacheEntity> taches = tacheRepository.findByIndicatorId(managementUnitId);
+            for (TacheEntity tache : taches) {
+                if (financedTacheIds.contains(tache.getId())) {
+                    List<FundingSourceEntity> tacheSources = fundingSourceRepository.findByTacheId(tache.getId());
+                    total += tacheSources.stream()
+                            .mapToDouble(s -> s.getMontant() != null ? s.getMontant() : 0.0)
+                            .sum();
+                }
+            }
+        }
+
+        // Parcourir récursivement les enfants
+        List<ManagementUnitEntity> children = managementUnitRepository.findByParentId(managementUnitId);
+        for (ManagementUnitEntity child : children) {
+            total += calculateDescendantsBudget(
+                    child.getId(),
+                    financedActivityIds,
+                    financedTacheIds,
+                    financedIndicatorIds,
+                    budgetId
+            );
+        }
+
+        return total;
+    }
 }
