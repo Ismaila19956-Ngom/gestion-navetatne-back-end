@@ -33,7 +33,6 @@ public class DashboardServiceImpl implements DashboardService {
 
     private final StructureProjectRepository structureProjectRepository;
     private final StatusRepository statusRepository;
-    //    private final FlagRepository flagRepository;
     private final FundingRepository fundingRepository;
 
     private final FundingConfigRepository fundingConfigRepository;
