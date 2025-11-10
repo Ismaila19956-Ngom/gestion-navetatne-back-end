@@ -44,9 +44,9 @@ public interface RealisationRepository extends JpaRepository<RealisationEntity, 
         if (Objects.nonNull(date)) {
             booleanBuilder.and(QRealisationEntity.realisationEntity.date.eq(date));
         }
-        if (Objects.nonNull(fournisseur)) {
-            booleanBuilder.and(QRealisationEntity.realisationEntity.fournisseur.equalsIgnoreCase(fournisseur));
-        }
+//        if (Objects.nonNull(fournisseur)) {
+//            booleanBuilder.and(QRealisationEntity.realisationEntity.fournisseur.equalsIgnoreCase(fournisseur));
+//        }
         if (Objects.nonNull(numeroBon)) {
             booleanBuilder.and(QRealisationEntity.realisationEntity.numeroBon.equalsIgnoreCase(numeroBon));
         }
