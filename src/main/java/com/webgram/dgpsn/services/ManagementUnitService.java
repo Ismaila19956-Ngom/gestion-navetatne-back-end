@@ -46,5 +46,7 @@ public interface ManagementUnitService {
     TreeNodeDTO readTreeManagmentUnit(Long projectId);
     TreeNodeDTO addNodeToTreeManagmentUnit(Long parentId, TreeNodeDTO nodeDTO);
     List<TreeNodeDTO> readAllProjectsWithTree();
+
+    TreeNodeDTO readTreeManagementUnitByBudgetId(Long budgetId);
 }
 

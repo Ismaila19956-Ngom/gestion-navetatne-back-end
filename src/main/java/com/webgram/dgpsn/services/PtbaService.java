@@ -130,7 +130,7 @@ public class PtbaService {
         PtbaActivityDTO dto = PtbaActivityDTO.builder()
                 .id(activite.getId())
                 .objectif(objectif.getName())
-                .objectifCode(objectif.getCode())
+                .objectifCode(objectif.getNomenclature())
                 .action(action.getName())
                 .actionCode(action.getCode())
                 .activite(activite.getName())
