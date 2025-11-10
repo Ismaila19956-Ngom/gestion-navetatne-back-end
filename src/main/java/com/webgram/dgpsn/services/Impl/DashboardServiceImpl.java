@@ -337,24 +337,21 @@ public class DashboardServiceImpl implements DashboardService {
         );
     }
 
-    private  final  AgentRepository agentRepository;
 
 
+//    /**
+//     * Read all agents for card
+//     * @return
+//     */
+//    @Override
+//    public AgentDashboardDTO readAllAgents() {
+//        return agentService.getAgentDashboard();
+//    }
 
-
-    /**
-     * Read all agents for card
-     * @return
-     */
-    @Override
-    public AgentDashboardDTO readAllAgents() {
-        return agentService.getAgentDashboard();
-    }
-
-    @Override
-    public List<AgentCountByDirectionDTO> readAgentCountByDirection() {
-        return agentService.AgentCountByDirection();
-    }
+//    @Override
+//    public List<AgentCountByDirectionDTO> readAgentCountByDirection() {
+//        return agentService.AgentCountByDirection();
+//    }
 
     @Override
     public AgentGroupingDTO getAgentGrouping() {
@@ -1219,7 +1216,7 @@ public class DashboardServiceImpl implements DashboardService {
     }
 
     @Override
-    public AgentDashboardDTO getAgentDashboard() {
+    public AgentDashboardDTO getAgentsDashboard() {
         Long totalAgents = agentRepository.count();
         Long totalAgentsEnConges = (long) congeService.readAll().size();
         Long totalAgentsParDirection = agentRepository.countAgentsByDirection()
@@ -1235,25 +1232,6 @@ public class DashboardServiceImpl implements DashboardService {
     }
     /* Icpe Dashboard END*/
 
-    @Override
-    public AgentDashboardDTO readAllAgents() {
-        return null;
-    }
-    @Override
-    public List<AgentCountByDirectionDTO> readAgentCountByDirection() {
-        return List.of();
-    }
-
-    @Override
-    public AgentDashboardDTO getAgentsDashboard() {
-        Long totalAgents = agentRepository.count();
-        Long totalAgentsEnConges = (long) congeService.readAll().size();
-        Long totalAgentsParDirection = agentRepository.countAgentsByDirection()
-                .stream()
-                .mapToLong(AgentCountByDirectionDTO::getTotalAgents)
-                .sum();
-        return new AgentDashboardDTO(totalAgents, totalAgentsEnConges, totalAgentsParDirection);
-    }
 
     @Override
     public List<AgentCountByDirectionDTO> AgentCountByDirections() {

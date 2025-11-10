@@ -16,7 +16,6 @@ import java.util.Date;
 public interface DashboardService {
 
 //    AGENT DASHBOARD
-     AgentDashboardDTO getAgentDashboard();
     AgentDashboardDTO getAgentsDashboard();
      List<AgentCountByDirectionDTO> AgentCountByDirection();
 //    AgentDashboardDTO getAgentsDashboard();
@@ -40,8 +39,8 @@ public interface DashboardService {
     List<StatisticalFundingDTO> readTotalFundingtByPartner();
 
     List<StatisticalDTO> readStatNumberProjectByStructure();
-    AgentDashboardDTO readAllAgents();
-    List<AgentCountByDirectionDTO> readAgentCountByDirection();
+//    AgentDashboardDTO readAllAgents();
+//    List<AgentCountByDirectionDTO> readAgentCountByDirection();
     List<StatisticalDTO> readStatIssueLogByStatus();
     List<Map<String, Object>> readStatIssueLogByYear(Integer year);
 

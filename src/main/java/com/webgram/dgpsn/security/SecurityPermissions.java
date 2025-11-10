@@ -21,6 +21,9 @@ public enum SecurityPermissions {
     READ_TDB_RESUME("Consulter tableau de bord - Rapport", Feature.DASHBOARD),
     READ_TDB_SERVICE("Consulter tableau de bord - Service Exterieur", Feature.DASHBOARD),
     READ_TDB_CONGE("Consulter tableau de bord - Congés", Feature.DASHBOARD),
+    AGENT_GROUPING("",Feature.DASHBOARD),
+    AGENT_STAT_CARD("", Feature.DASHBOARD),
+    AGENTS_FOR_DIRECTIONS("", Feature.DASHBOARD),
 
     /* début fonctionnalités sur la sécurité */
     ADD_PROFILE("Ajouter profil", Feature.PROFILE),
@@ -454,41 +457,6 @@ public enum SecurityPermissions {
     ADD_DOCUMENT_TYPE("Ajouter document type", Feature.DOCUMENT_TYPE),
     EDIT_DOCUMENT_TYPE("Modifier document type", Feature.DOCUMENT_TYPE),
     DELETE_DOCUMENT_TYPE("Supprimer document type", Feature.DOCUMENT_TYPE),
-
-    READ_CRITICITY("Consulter criticite", Feature.CRITICITY),
-    ADD_CRITICITY("Ajouter criticite", Feature.CRITICITY),
-    EDIT_CRITICITY("Modifier criticite", Feature.CRITICITY),
-    DELETE_CRITICITY("Supprimer criticite", Feature.CRITICITY),
-
-
-    /* début fonctionnalités sur le Dashboard */
-
-    READ_TDB_PROJETS("Consulter tableau de bord des projets", Feature.TDB_PROJETS),
-    READ_TDB_FINANCMENTS("Consulter tableau de bord des financements", Feature.TDB_Financements),
-    READ_TDB_PROBLEMES("Consulter tableau de bord des problèmes", Feature.TDB_PROBLEMES),
-    READ_TDB_ENTREPRISE("Consulter tableau de bord des entreprises", Feature.TDB_Enttrepsie),
-    READ_TDB_QUALITE_AIR("Consulter tableau de bord des qualité de l'air", Feature.TDB_QUALITE_AIR),
-    READ_TDB_EVALUATION("Consulter tableau de bord de l'évaluation environnementale", Feature.TDB_EVALUATION),
-    READ_TDB_POLLUTION("Consulter tableau de bord de la pollution", Feature.TDB_POLLUTION),
-    READ_TDB_ICPE("Consulter tableau de bord ICPE", Feature.TDB_ICPE),
-    AGENT_STAT_CARD("", Feature.AGENT_READ_STAT_CARD),
-    AGENTS_FOR_DIRECTIONS("", Feature.AGENTS_FOR_DIRECTIONS),
-    AGENT_GROUPING("", Feature.AGENT_GROUPING),
-    /* fin fonctionnalités sur le Dashboard */
-
-
-
-    /* fin fonctionnalités sur le référentiel */
-
-    ADD_CASH("Ajouter monnaie", Feature.CASH),
-    EDIT_CASH("Modifier monnaie", Feature.CASH),
-    DELETE_CASH("Supprimer monnaie", Feature.CASH),
-    READ_CASH("Consulter monnaie", Feature.CASH),
-
-    ADD_ECHANGE("Ajouter taux echange", Feature.ECHANGE),
-    EDIT_ECHANGE("Modifier taux echange", Feature.ECHANGE),
-    DELETE_ECHANGE("Supprimer taux echange", Feature.ECHANGE),
-    READ_ECHANGE("Consulter taux echange", Feature.ECHANGE),
 
 
     ALL_ACCESS("Toutes les permissions", Feature.ALL_ACCESS),

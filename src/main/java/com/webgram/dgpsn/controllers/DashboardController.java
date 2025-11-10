@@ -447,8 +447,8 @@ public ResponseEntity<List<StatisticalBudgetActivityDTO>> getActivitiesAndBudget
             @ApiResponse(responseCode = "500", description = "Internal server error during request processing")})
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/agent/card")
-    public ResponseEntity<?> getAgentStats() {
-        return ResponseEntity.ok(dashboardService.readAllAgents());
+    public ResponseEntity<AgentDashboardDTO> getAgentStats() {
+        return ResponseEntity.ok(dashboardService.getAgentsDashboard());
     }
 
     @Operation(summary = "Get agent statistics des qui sont dans les directions", description = "Returns statistics card for agents")
@@ -458,7 +458,7 @@ public ResponseEntity<List<StatisticalBudgetActivityDTO>> getActivitiesAndBudget
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/direction/agents")
     public ResponseEntity<List<AgentCountByDirectionDTO>> AgentCountByDirection() {
-        return ResponseEntity.ok(dashboardService.readAgentCountByDirection());
+        return ResponseEntity.ok(dashboardService.AgentCountByDirection());
     }
 
     /* Icpe Dashboard START*/

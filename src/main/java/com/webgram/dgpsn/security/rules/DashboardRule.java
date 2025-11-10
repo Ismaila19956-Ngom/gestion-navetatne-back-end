@@ -71,6 +71,30 @@ public class DashboardRule {
     static final String SERVICE_EXTERIEUR_PARTICIPANTS_BY_TYPE = "/service-exterieur/participants-by-type";
 
 
+
+    @Bean
+    public SecurityRule getAgentStats() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(DASHBOARD_API_PREFIX + AGENT_STAT_CARD)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.AGENT_STAT_CARD)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+    @Bean
+    public SecurityRule AgentCountByDirection() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(DASHBOARD_API_PREFIX + AGENTS_FOR_DIRECTIONS)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.AGENTS_FOR_DIRECTIONS)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+
     @Bean
     public SecurityRule getGroupingAgent() {
         return SecurityRule.builder()
@@ -82,7 +106,6 @@ public class DashboardRule {
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
-
 
     @Bean
     public SecurityRule getServiceExterieurKpis() {

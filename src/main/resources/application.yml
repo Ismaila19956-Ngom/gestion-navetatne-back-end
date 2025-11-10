@@ -11,10 +11,10 @@ spring:
   profiles:
     active: default
   datasource:
-    name: ${DB_NAME:dgpsn_db}
+    name: ${DB_NAME:dgpsn-db}
     host: ${DB_HOST:127.0.0.1}
-    username: ${DB_USERNAME:postgres}
-    password: ${DB_PASSWORD:passer}
+    username: ${DB_USERNAME:admin}
+    password: ${DB_PASSWORD:secret123}
 
     url: jdbc:postgresql://${spring.datasource.host}:5432/${spring.datasource.name}?autoReconnect=true&useSSL=false&createDatabaseIfNotExist=true
   servlet:
