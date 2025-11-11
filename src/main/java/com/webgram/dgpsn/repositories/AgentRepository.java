@@ -2,6 +2,7 @@ package com.webgram.dgpsn.repositories;
 
 import com.querydsl.core.BooleanBuilder;
 import com.webgram.dgpsn.models.AgentCountByDirectionDTO;
+import com.webgram.dgpsn.models.RetraiteProjectionDTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -10,6 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import com.webgram.dgpsn.entities.enums.TypeStructure;
 import com.webgram.dgpsn.entities.AgentEntity;
@@ -95,4 +97,19 @@ public interface AgentRepository extends JpaRepository<AgentEntity, Long>, Query
             "JOIN a.direction d " +
             "GROUP BY d.libelle")
     List<AgentCountByDirectionDTO> countAgentsByDirection();
+
+    @Query("""
+                    SELECT new com.webgram.dgpsn.models.RetraiteProjectionDTO(
+                        YEAR(a.dateNaissance) + 60,
+                        d.libelle,
+                        COUNT(a)
+                    )
+                    FROM AgentEntity a
+                    JOIN a.direction d
+                    WHERE :annee IS NULL OR (YEAR(a.dateNaissance) + 60) = :annee
+                    GROUP BY YEAR(a.dateNaissance) + 60, d.libelle
+                    ORDER BY YEAR(a.dateNaissance) + 60 ASC
+            """)
+    List<RetraiteProjectionDTO> countFutureRetraitesByDirection(@Param("annee") Integer annee);
+
 }
