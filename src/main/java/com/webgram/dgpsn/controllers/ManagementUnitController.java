@@ -262,24 +262,26 @@ public class ManagementUnitController {
 
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success"),
-            @ApiResponse(responseCode = "404", description = "Projet non trouvé"),
-            @ApiResponse(responseCode = "500", description = "Internal server error during request processing")})
-    @GetMapping("/budgets-dgpsn/{budgetId}/ptba")
-    @Operation(summary = "Générer PTBA DGPSN", description = "PTBA basé sur le plan comptable et les lignes budgétaires")
-    public PtbaResponseDTO generatePtba(
-            @PathVariable Long budgetId,
+            @ApiResponse(responseCode = "400", description = "Paramètres invalides (budgetId et annee sont tous les deux absents)"),
+            @ApiResponse(responseCode = "404", description = "Budget ou données non trouvés"),
+            @ApiResponse(responseCode = "500", description = "Erreur interne du serveur")})
+    @GetMapping("/ptba")
+    @Operation(
+            summary = "Générer le PTBA (Plan de Travail et Budget Annuel)",
+            description = "Génère le PTBA soit pour un budget spécifique (si 'budgetId' est fourni), soit en version consolidée pour une année entière (si 'annee' est fournie). 'budgetId' est prioritaire."
+    )
+    public PtbaResponseDTO generatePtbaFlexible(
+            @Parameter(description = "ID du budget pour lequel générer le PTBA. Prioritaire sur l'année.")
+            @RequestParam(required = false) Long budgetId,
+            @Parameter(description = "Année pour laquelle générer un PTBA consolidé (utilisé uniquement si 'budgetId' n'est pas fourni).")
             @RequestParam(required = false) Integer annee) {
-        return ptbaService.generatePtbaByBudgetId(budgetId, annee);
+
+        if (budgetId == null && annee == null) {
+            throw new IllegalArgumentException("Vous devez fournir soit un 'budgetId', soit une 'annee'.");
+        }
+
+        return ptbaService.generatePtbaFlexible(budgetId, annee);
     }
-//    @GetMapping("/{managementUnitId}/ptba")
-//    @ResponseStatus(HttpStatus.OK)
-//    public PtbaResponseDTO generatePtba(
-//            @Parameter(name = "managementUnitId", description = "L'ID du projet/programme")
-//            @PathVariable Long managementUnitId,
-//            @Parameter(name = "annee", description = "L'année pour le PTBA (optionnel, utilise anneeDebut par défaut)")
-//            @RequestParam(value = "annee", required = false) Integer annee) {
-//        return ptbaService.generatePtba(managementUnitId, annee);
-//    }
 
     @Operation(summary = "Read management unit tree by budget", description = "It returns a tree management unit filtered by budget id")
     @ApiResponses(value = {

@@ -11,30 +11,25 @@ public interface FinancementReportService {
     /**
      * Génère le rapport financier complet
      */
-    FinancialReportDTO generateFinancialReport(Integer annee, String periodType, Long budgetId);
-    
+    FinancialReportDTO generateFinancialReport(Integer annee, String periodType);
+
     /**
-     * Génère les recettes de fonctionnement (Classe 7)
+     *  Génère les recettes de fonctionnement (Classe 7)
      */
-    List<BudgetReportRowDTO> generateRecettesFonctionnement(Long budgetId, Integer annee, String periodType);
-    
+
+    List<BudgetReportRowDTO> generateRecettesFonctionnement(List<Long> budgetIds, Integer annee, String periodType);
+
     /**
-     * Génère les dépenses de fonctionnement (Classe 6)
+     *  Génère les dépenses de fonctionnement (Classe 6)
      */
-    List<BudgetReportRowDTO> generateDepensesFonctionnement(Long budgetId, Integer annee, String periodType);
-    
-    /**
-     * Génère les dépenses d'investissement (Classe 2)
-     */
-    List<BudgetReportRowDTO> generateInvestissements(Long budgetId, Integer annee, String periodType);
-    
-    /**
-     * Génère le récapitulatif des investissements
-     */
-    List<BudgetReportRowDTO> generateRecapitulatifInvestissement(Long budgetId, Integer annee);
-    
-    /**
-     * Récupère les engagements pour une année donnée
-     */
-    List<EngagementDTO> getEngagements(Long budgetId, Integer annee);
+    List<BudgetReportRowDTO> generateDepensesFonctionnement(List<Long> budgetIds, Integer annee, String periodType);
+
+
+    List<BudgetReportRowDTO> generateInvestissements(List<Long> budgetIds, Integer annee, String periodType);
+
+    List<BudgetReportRowDTO> generateRecapitulatifInvestissement(List<Long> budgetIds, Integer annee);
+
+    List<EngagementDTO> getEngagements(List<Long> budgetIds, Integer annee);
+
+
 }
