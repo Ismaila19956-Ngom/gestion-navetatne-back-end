@@ -26,8 +26,8 @@ public class TreeNodeDTO implements Serializable {
     private TypeProjet type;
 
     // Champs supplémentaires pour les indicateurs
-    private Double targetValue;
-    private Double valueReched;
+//    private Double targetValue;
+//    private Double valueReched;
     private Date startDate;
     private Date endDate;
 

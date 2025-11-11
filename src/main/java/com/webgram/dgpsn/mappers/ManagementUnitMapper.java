@@ -1,5 +1,6 @@
 package com.webgram.dgpsn.mappers;
 
+import com.webgram.dgpsn.models.TreeNodeDTO;
 import org.apache.commons.lang3.StringUtils;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -67,7 +68,16 @@ public abstract class ManagementUnitMapper implements EntityMapper<ManagementUni
     @Mapping(target = "verificationSources", source = "verificationSourceIds", qualifiedByName = "mapVerificationSource")
     @Mapping(target = "actorsInvolved", source = "actorInvolvedIds", qualifiedByName = "mapActorInvolved")
     @Mapping(target = "structure", source = "structureId", qualifiedByName = "getStructure")
+    @Mapping(target = "budgetDgpsn", source = "budgetDgpsnId", qualifiedByName = "getBudgetDgpsn")
     public abstract ManagementUnitEntity asEntity(ManagementUnitDTO dto);
+
+    @Named("getBudgetDgpsn")
+    public BudgetDgpsnEntity getBudgetDgpsn(Long budgetDgpsnId) {
+        if (Objects.nonNull(budgetDgpsnId)) {
+            return BudgetDgpsnEntity.builder().id(budgetDgpsnId).build();
+        }
+        return null;
+    }
 
 //    @Mapping(target = "minister", source = "codeMinister", qualifiedByName = "getStructureByCode")
 //    @Mapping(target = "status", source = "codeStatus", qualifiedByName = "getStatusByCode")
@@ -377,6 +387,6 @@ public abstract class ManagementUnitMapper implements EntityMapper<ManagementUni
     }
 
     @Mapping(target = "children", ignore = true)
-    public  abstract ManagementUnitTreeDTO asTreeDto(ManagementUnitEntity entity);
+    public abstract TreeNodeDTO asTreeDto(ManagementUnitEntity entity);
 
 }

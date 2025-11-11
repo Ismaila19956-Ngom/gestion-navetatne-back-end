@@ -1,5 +1,8 @@
 package com.webgram.dgpsn.controllers;
 
+import com.webgram.dgpsn.models.AgentCountByDirectionDTO;
+import com.webgram.dgpsn.models.AgentDashboardDTO;
+import com.webgram.dgpsn.models.AgentGroupingDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -438,6 +441,26 @@ public ResponseEntity<List<StatisticalBudgetActivityDTO>> getActivitiesAndBudget
         return dashboardService.getTendancePollutionEau();
     }
 
+    @Operation(summary = "Get agent statistics card", description = "Returns statistics card for agents")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success"),
+            @ApiResponse(responseCode = "500", description = "Internal server error during request processing")})
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/agent/card")
+    public ResponseEntity<AgentDashboardDTO> getAgentStats() {
+        return ResponseEntity.ok(dashboardService.getAgentsDashboard());
+    }
+
+    @Operation(summary = "Get agent statistics des qui sont dans les directions", description = "Returns statistics card for agents")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success"),
+            @ApiResponse(responseCode = "500", description = "Internal server error during request processing")})
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/direction/agents")
+    public ResponseEntity<List<AgentCountByDirectionDTO>> AgentCountByDirection() {
+        return ResponseEntity.ok(dashboardService.AgentCountByDirection());
+    }
+
     /* Icpe Dashboard START*/
     @GetMapping("/icpe/kpis")
     @ResponseStatus(HttpStatus.OK)
@@ -599,5 +622,15 @@ public ResponseEntity<List<StatisticalBudgetActivityDTO>> getActivitiesAndBudget
     public List<StatisticalDTO> getParticipantsByActivityType() {
         return dashboardService.getParticipantsByActivityType();
 
+    }
+
+    @Operation(summary = "Get Grouping Agent Sexe / lenght", description = "")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success"),
+            @ApiResponse(responseCode = "500", description = "Internal server error during request processing")})
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/agent/groups")
+    public ResponseEntity<AgentGroupingDTO> getGroupingAgent() {
+        return ResponseEntity.ok(dashboardService.getAgentGrouping());
     }
 }
