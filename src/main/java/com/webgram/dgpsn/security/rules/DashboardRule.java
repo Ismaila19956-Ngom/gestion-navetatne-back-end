@@ -69,8 +69,20 @@ public class DashboardRule {
     static final String MONTHLY_SERVICE_EXTERIEUR_ACTIVITIES_BY_STATUS = "/service-exterieur/activities-by-status";
     static final String SERVICE_EXTERIEUR_TOP_5_BY_BUDGET = "/service-exterieur/top5-by-budget";
     static final String SERVICE_EXTERIEUR_PARTICIPANTS_BY_TYPE = "/service-exterieur/participants-by-type";
+    static final String RETRAITE_PROJECTIONS = "/retraites-projections";
 
 
+    @Bean
+    public SecurityRule getRetraiteProjections() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(DASHBOARD_API_PREFIX + RETRAITE_PROJECTIONS)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.RETRAITE_PROJECTIONS)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
 
     @Bean
     public SecurityRule getAgentStats() {

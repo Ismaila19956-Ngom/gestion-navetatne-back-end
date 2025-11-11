@@ -24,6 +24,7 @@ public enum SecurityPermissions {
     AGENT_GROUPING("",Feature.DASHBOARD),
     AGENT_STAT_CARD("", Feature.DASHBOARD),
     AGENTS_FOR_DIRECTIONS("", Feature.DASHBOARD),
+    RETRAITE_PROJECTIONS("", Feature.DASHBOARD),
 
     /* début fonctionnalités sur la sécurité */
     ADD_PROFILE("Ajouter profil", Feature.PROFILE),
