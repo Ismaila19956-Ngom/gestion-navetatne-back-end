@@ -1,6 +1,7 @@
 package com.webgram.dgpsn.services;
 
 import com.webgram.dgpsn.entities.*;
+import com.webgram.dgpsn.entities.enums.TypeLigneBugetaire;
 import com.webgram.dgpsn.entities.enums.TypeProjet;
 import com.webgram.dgpsn.models.responses.ptba.PtbaActivityDTO;
 import com.webgram.dgpsn.models.responses.ptba.PtbaFundingSourcesDTO;
@@ -26,6 +27,7 @@ public class PtbaService {
     private final TacheRepository tacheRepository;
     private final FundingSourceRepository fundingSourceRepository;
     private final ValueIndicatorRepository valueIndicatorRepository;
+    private final BudgetDgpsnRepository budgetDgpsnRepository;
 
     /**
      * Génère le PTBA complet pour un projet donné de manière optimisée.
@@ -130,7 +132,7 @@ public class PtbaService {
         PtbaActivityDTO dto = PtbaActivityDTO.builder()
                 .id(activite.getId())
                 .objectif(objectif.getName())
-                .objectifCode(objectif.getCode())
+                .objectifCode(objectif.getNomenclature())
                 .action(action.getName())
                 .actionCode(action.getCode())
                 .activite(activite.getName())
@@ -252,40 +254,40 @@ public class PtbaService {
     /**
      * Calcule tous les totaux
      */
-    private void calculateTotals(PtbaResponseDTO response) {
-        Map<String, Double> totauxObjectif = new HashMap<>();
-        Map<String, Double> totauxAction = new HashMap<>();
-        Map<String, Double> totauxSourcesGlobal = new HashMap<>();
-        double totalGeneral = 0.0;
-
-        for (PtbaActivityDTO activity : response.getActivities()) {
-            // Total par objectif
-            String objectifKey = activity.getObjectif();
-            totauxObjectif.put(objectifKey,
-                    totauxObjectif.getOrDefault(objectifKey, 0.0) + activity.getCoutCFA());
-
-            // Total par action
-            String actionKey = activity.getObjectif() + " > " + activity.getAction();
-            totauxAction.put(actionKey,
-                    totauxAction.getOrDefault(actionKey, 0.0) + activity.getCoutCFA());
-
-            // Total général
-            totalGeneral += activity.getCoutCFA();
-
-            // Totaux des sources de financement
-            if (activity.getSourcesFinancement() != null && activity.getSourcesFinancement().getSources() != null) {
-                activity.getSourcesFinancement().getSources().forEach((bailleur, montant) -> {
-                    totauxSourcesGlobal.put(bailleur,
-                            totauxSourcesGlobal.getOrDefault(bailleur, 0.0) + montant);
-                });
-            }
-        }
-
-        response.setTotauxParObjectif(totauxObjectif);
-        response.setTotauxParAction(totauxAction);
-        response.setTotalGeneral(totalGeneral);
-        response.setTotauxSourcesFinancement(totauxSourcesGlobal);
-    }
+//    private void calculateTotals(PtbaResponseDTO response) {
+//        Map<String, Double> totauxObjectif = new HashMap<>();
+//        Map<String, Double> totauxAction = new HashMap<>();
+//        Map<String, Double> totauxSourcesGlobal = new HashMap<>();
+//        double totalGeneral = 0.0;
+//
+//        for (PtbaActivityDTO activity : response.getActivities()) {
+//            // Total par objectif
+//            String objectifKey = activity.getObjectif();
+//            totauxObjectif.put(objectifKey,
+//                    totauxObjectif.getOrDefault(objectifKey, 0.0) + activity.getCoutCFA());
+//
+//            // Total par action
+//            String actionKey = activity.getObjectif() + " > " + activity.getAction();
+//            totauxAction.put(actionKey,
+//                    totauxAction.getOrDefault(actionKey, 0.0) + activity.getCoutCFA());
+//
+//            // Total général
+//            totalGeneral += activity.getCoutCFA();
+//
+//            // Totaux des sources de financement
+//            if (activity.getSourcesFinancement() != null && activity.getSourcesFinancement().getSources() != null) {
+//                activity.getSourcesFinancement().getSources().forEach((bailleur, montant) -> {
+//                    totauxSourcesGlobal.put(bailleur,
+//                            totauxSourcesGlobal.getOrDefault(bailleur, 0.0) + montant);
+//                });
+//            }
+//        }
+//
+//        response.setTotauxParObjectif(totauxObjectif);
+//        response.setTotauxParAction(totauxAction);
+//        response.setTotalGeneral(totalGeneral);
+//        response.setTotauxSourcesFinancement(totauxSourcesGlobal);
+//    }
 
 
     // --- MÉTHODES UTILITAIRES ---
@@ -329,5 +331,155 @@ public class PtbaService {
             response.setResponsable(projet.getResponsible().getPrenom() + " " + projet.getResponsible().getNom());
         }
         return response;
+    }
+
+    ////////////////////////////////////
+    public PtbaResponseDTO generatePtbaByBudgetId(Long budgetId, Integer annee) {
+        log.info("Génération PTBA DGPSN pour Budget ID: {}", budgetId);
+
+        BudgetDgpsnEntity budget = budgetDgpsnRepository.findById(budgetId)
+                .orElseThrow(() -> new RuntimeException("Budget DGPSN non trouvé : " + budgetId));
+
+        if (budget.getLignesBudgetaires() == null || budget.getLignesBudgetaires().isEmpty()) {
+            return buildEmptyResponse(budget);
+        }
+
+        List<PtbaActivityDTO> lignesDto = new ArrayList<>();
+        Set<String> bailleurs = new HashSet<>();
+
+        for (LigneBudgetaireEntity ligne : budget.getLignesBudgetaires()) {
+            if (ligne.getRubrique() == null) continue;
+
+            PlanComptableElementEntity rubrique = ligne.getRubrique();
+
+            PtbaActivityDTO dto = PtbaActivityDTO.builder()
+                    .id(ligne.getId())
+                    .objectif(rubrique.getLibelle())
+                    .objectifCode(rubrique.getCode())
+                    .action(getTypeLabel(ligne.getTypeLigneBugetaire()))
+                    .actionCode(ligne.getTypeLigneBugetaire().name())
+                    .activite("-")
+                    .activiteCode("-")
+                    .indicateurs("-")
+                    .taches(extractCommentaire(ligne.getCommentaire()))
+                    .coutCFA(ligne.getBudgetModifie() != null ? ligne.getBudgetModifie() :
+                            ligne.getPrimitif() != null ? ligne.getPrimitif() : ligne.getMontant())
+                    .build();
+
+            // Sources de financement (dans commentaire ou futur champ)
+            PtbaFundingSourcesDTO sources = extractSourcesFromCommentaire(ligne.getCommentaire());
+            sources.getBailleurNames().forEach(bailleurs::add);
+            dto.setSourcesFinancement(sources);
+
+            // Planification (si dans commentaire : "T1", "Trimestre 2", etc.)
+            extractTrimestreFromCommentaire(ligne.getCommentaire(), dto);
+
+            lignesDto.add(dto);
+        }
+
+        PtbaResponseDTO response = PtbaResponseDTO.builder()
+                .projetId(budget.getId())
+                .projetCode(budget.getCode())
+                .projetName(budget.getLibelle())
+                .annee(annee != null ? annee : budget.getAnnee())
+                .activities(lignesDto)
+                .bailleurs(bailleurs)
+                .build();
+
+        calculateTotals(response);
+        return response;
+    }
+
+    private String getTypeLabel(TypeLigneBugetaire type) {
+        return type == TypeLigneBugetaire.CLASSE_7 ? "RECETTE" :
+                type == TypeLigneBugetaire.CLASSE_6 ? "DÉPENSE" : "AUTRE";
+    }
+
+    private String extractCommentaire(String commentaire) {
+        return commentaire != null && !commentaire.trim().isEmpty() ? commentaire : "-";
+    }
+
+    private PtbaFundingSourcesDTO extractSourcesFromCommentaire(String commentaire) {
+        PtbaFundingSourcesDTO dto = new PtbaFundingSourcesDTO();
+        if (commentaire == null || commentaire.isBlank()) return dto;
+
+        // Format attendu : "BAILLEUR:500000; AUTRE:200000"
+        String[] parts = commentaire.split(";");
+        for (String part : parts) {
+            if (!part.contains(":")) continue;
+            String[] kv = part.split(":", 2);
+            if (kv.length != 2) continue;
+            try {
+                String bailleur = kv[0].trim();
+                Double montant = Double.parseDouble(kv[1].trim().replaceAll("[^0-9.]", ""));
+                if (montant > 0) dto.addSource(bailleur, montant);
+            } catch (Exception e) {
+                log.debug("Source non parsable: {}", part);
+            }
+        }
+        return dto;
+    }
+
+    private void extractTrimestreFromCommentaire(String commentaire, PtbaActivityDTO dto) {
+        if (commentaire == null) return;
+
+        String lower = commentaire.toLowerCase();
+        if (lower.contains("t1") || lower.contains("trimestre 1")) markTrimestre(dto, 1);
+        if (lower.contains("t2") || lower.contains("trimestre 2")) markTrimestre(dto, 2);
+        if (lower.contains("t3") || lower.contains("trimestre 3")) markTrimestre(dto, 3);
+        if (lower.contains("t4") || lower.contains("trimestre 4")) markTrimestre(dto, 4);
+    }
+
+    private void markTrimestre(PtbaActivityDTO dto, int trimestre) {
+        PtbaTrimesterDTO t = switch (trimestre) {
+            case 1 -> dto.getTrimestre1();
+            case 2 -> dto.getTrimestre2();
+            case 3 -> dto.getTrimestre3();
+            case 4 -> dto.getTrimestre4();
+            default -> null;
+        };
+        if (t != null) {
+            t.setJanvier(true); t.setFevrier(true); t.setMars(true);
+            if (trimestre == 2) { t.setAvril(true); t.setMai(true); t.setJuin(true); }
+            if (trimestre == 3) { t.setJuillet(true); t.setAout(true); t.setSeptembre(true); }
+            if (trimestre == 4) { t.setOctobre(true); t.setNovembre(true); t.setDecembre(true); }
+        }
+    }
+
+    private void calculateTotals(PtbaResponseDTO response) {
+        Map<String, Double> totauxRubrique = new HashMap<>();
+        Map<String, Double> totauxType = new HashMap<>();
+        Map<String, Double> totauxSources = new HashMap<>();
+        double total = 0.0;
+
+        for (PtbaActivityDTO a : response.getActivities()) {
+            String rubrique = a.getObjectif();
+            totauxRubrique.put(rubrique, totauxRubrique.getOrDefault(rubrique, 0.0) + a.getCoutCFA());
+
+            String type = a.getAction(); // RECETTE ou DÉPENSE
+            totauxType.put(type, totauxType.getOrDefault(type, 0.0) + a.getCoutCFA());
+
+            total += a.getCoutCFA();
+
+            a.getSourcesFinancement().getSources().forEach((b, m) ->
+                    totauxSources.put(b, totauxSources.getOrDefault(b, 0.0) + m));
+        }
+
+        response.setTotauxParObjectif(totauxRubrique);
+        response.setTotauxParAction(totauxType);
+        response.setTotalGeneral(total);
+        response.setTotauxSourcesFinancement(totauxSources);
+    }
+
+    private PtbaResponseDTO buildEmptyResponse(BudgetDgpsnEntity budget) {
+        return PtbaResponseDTO.builder()
+                .projetId(budget.getId())
+                .projetCode(budget.getCode())
+                .projetName(budget.getLibelle())
+                .annee(budget.getAnnee())
+                .activities(Collections.emptyList())
+                .bailleurs(Collections.emptySet())
+                .totalGeneral(0.0)
+                .build();
     }
 }

@@ -21,6 +21,10 @@ public enum SecurityPermissions {
     READ_TDB_RESUME("Consulter tableau de bord - Rapport", Feature.DASHBOARD),
     READ_TDB_SERVICE("Consulter tableau de bord - Service Exterieur", Feature.DASHBOARD),
     READ_TDB_CONGE("Consulter tableau de bord - Congés", Feature.DASHBOARD),
+    AGENT_GROUPING("",Feature.DASHBOARD),
+    AGENT_STAT_CARD("", Feature.DASHBOARD),
+    AGENTS_FOR_DIRECTIONS("", Feature.DASHBOARD),
+    RETRAITE_PROJECTIONS("", Feature.DASHBOARD),
 
     /* début fonctionnalités sur la sécurité */
     ADD_PROFILE("Ajouter profil", Feature.PROFILE),

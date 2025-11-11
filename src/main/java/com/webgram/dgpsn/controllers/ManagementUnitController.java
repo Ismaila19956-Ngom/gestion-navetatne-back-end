@@ -1,6 +1,10 @@
 package com.webgram.dgpsn.controllers;
 
+import com.webgram.dgpsn.entities.BudgetDgpsnEntity;
+import com.webgram.dgpsn.entities.ManagementUnitEntity;
+import com.webgram.dgpsn.exceptions.ResourceNotFoundException;
 import com.webgram.dgpsn.models.responses.ptba.PtbaResponseDTO;
+import com.webgram.dgpsn.repositories.ManagementUnitRepository;
 import com.webgram.dgpsn.services.PtbaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -37,6 +41,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ManagementUnitController {
     private final ManagementUnitService managementUnitService;
+    private final ManagementUnitRepository managementUnitRepository;
     private final PtbaService ptbaService;
 
     private static final String HEADER_PREFIX = "attachment; filename=\"";
@@ -224,8 +229,25 @@ public class ManagementUnitController {
     @PostMapping("/tree/add/{parentId}")
     @ResponseStatus(HttpStatus.CREATED)
     public TreeNodeDTO addNodeToTreeManagmentUnit(
-            @PathVariable Long parentId, TreeNodeDTO nodeDTO) {
-        return managementUnitService.addNodeToTreeManagmentUnit(parentId, nodeDTO);
+            @PathVariable Long parentId,
+            @RequestBody TreeNodeDTO nodeDTO) {
+
+        // 1. Créer le nœud
+        managementUnitService.addNodeToTreeManagmentUnit(parentId, nodeDTO);
+
+        // 2. RÉCUPÉRER LE BUDGET ID DU PARENT
+        ManagementUnitEntity parent = managementUnitRepository.findById(parentId)
+                .orElseThrow(() -> new ResourceNotFoundException("Parent non trouvé"));
+
+        BudgetDgpsnEntity budget = parent.getBudgetDgpsn();
+        if (budget == null) {
+            throw new IllegalStateException("Le parent n'est pas lié à un budget");
+        }
+
+        Long budgetId = budget.getId();
+
+        // 3. RETOURNER L'ARBRE COMPLET MIS À JOUR
+        return managementUnitService.readTreeManagementUnitByBudgetId(budgetId);
     }
 
     @Operation(summary = "Read all management unit tree", description = "It return a tree management unit")
@@ -238,20 +260,37 @@ public class ManagementUnitController {
         return managementUnitService.readAllProjectsWithTree();
     }
 
-    @Operation(
-            summary = "Generate PTBA",
-            description = "Génère le Plan de Travail et Budget Annuel (PTBA) pour un projet donné")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success"),
             @ApiResponse(responseCode = "404", description = "Projet non trouvé"),
             @ApiResponse(responseCode = "500", description = "Internal server error during request processing")})
-    @GetMapping("/{managementUnitId}/ptba")
-    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/budgets-dgpsn/{budgetId}/ptba")
+    @Operation(summary = "Générer PTBA DGPSN", description = "PTBA basé sur le plan comptable et les lignes budgétaires")
     public PtbaResponseDTO generatePtba(
-            @Parameter(name = "managementUnitId", description = "L'ID du projet/programme")
-            @PathVariable Long managementUnitId,
-            @Parameter(name = "annee", description = "L'année pour le PTBA (optionnel, utilise anneeDebut par défaut)")
-            @RequestParam(value = "annee", required = false) Integer annee) {
-        return ptbaService.generatePtba(managementUnitId, annee);
+            @PathVariable Long budgetId,
+            @RequestParam(required = false) Integer annee) {
+        return ptbaService.generatePtbaByBudgetId(budgetId, annee);
+    }
+//    @GetMapping("/{managementUnitId}/ptba")
+//    @ResponseStatus(HttpStatus.OK)
+//    public PtbaResponseDTO generatePtba(
+//            @Parameter(name = "managementUnitId", description = "L'ID du projet/programme")
+//            @PathVariable Long managementUnitId,
+//            @Parameter(name = "annee", description = "L'année pour le PTBA (optionnel, utilise anneeDebut par défaut)")
+//            @RequestParam(value = "annee", required = false) Integer annee) {
+//        return ptbaService.generatePtba(managementUnitId, annee);
+//    }
+
+    @Operation(summary = "Read management unit tree by budget", description = "It returns a tree management unit filtered by budget id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success"),
+            @ApiResponse(responseCode = "404", description = "Budget not found"),
+            @ApiResponse(responseCode = "500", description = "Internal server error during request processing")})
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/tree/budget/{budgetId}")
+    public TreeNodeDTO readTreeManagementUnitByBudgetId(
+            @Parameter(name = "budgetId", description = "The budget id to filter the tree")
+            @PathVariable Long budgetId) {
+        return managementUnitService.readTreeManagementUnitByBudgetId(budgetId);
     }
 }

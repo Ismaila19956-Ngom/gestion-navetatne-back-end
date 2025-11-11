@@ -1,5 +1,6 @@
 package com.webgram.dgpsn.services.Impl;
 
+import com.webgram.dgpsn.entities.PlanComptableElementEntity;
 import com.webgram.dgpsn.entities.RealisationEntity;
 import com.webgram.dgpsn.entities.enums.TypeLigneBugetaire;
 import com.webgram.dgpsn.entities.enums.TypePlanComptable;
@@ -122,10 +123,18 @@ public class FinancementReportServiceImpl implements FinancementReportService {
         String compte = "";
         String servicesDGPSN = "";
 
-        // Récupérer le compte depuis la relation "realisations" (PlanComptableElement)
-        if (entity.getRealisations() != null) {
-            compte = entity.getRealisations().getCode();
+        PlanComptableElementEntity element = entity.getRealisations();
+        PlanComptableElementEntity compteElement = null;
+
+        while (element != null) {
+            if (element.getType() == TypePlanComptable.COMPTE) {
+                compteElement = element;
+                break;
+            }
+            element = element.getParent();
         }
+
+        compte = (compteElement != null) ? compteElement.getCode() : null;
 
         // Récupérer le service depuis la ligne budgétaire si nécessaire
         if (entity.getLigneBudgetaire() != null && entity.getLigneBudgetaire().getBudget() != null) {
