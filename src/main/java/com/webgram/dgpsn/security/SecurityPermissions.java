@@ -24,6 +24,7 @@ public enum SecurityPermissions {
     AGENT_GROUPING("",Feature.DASHBOARD),
     AGENT_STAT_CARD("", Feature.DASHBOARD),
     AGENTS_FOR_DIRECTIONS("", Feature.DASHBOARD),
+    RETRAITE_PROJECTIONS("", Feature.DASHBOARD),
 
     /* début fonctionnalités sur la sécurité */
     ADD_PROFILE("Ajouter profil", Feature.PROFILE),
@@ -149,6 +150,11 @@ public enum SecurityPermissions {
     ADD_CANDIDAT("Ajouter candidat", Feature.CANDIDAT),
     EDIT_CANDIDAT("Modifier candidat", Feature.CANDIDAT),
     DELETE_CANDIDAT("Supprimer candidat", Feature.CANDIDAT),
+
+    READ_CARACTERISTIQUE_RECRUTEMENT("Consulter candidat", Feature.CARACTERISTIQUE_RECRUTEMENT),
+    ADD_CARACTERISTIQUE_RECRUTEMENT("Ajouter candidat", Feature.CARACTERISTIQUE_RECRUTEMENT),
+    EDIT_CARACTERISTIQUE_RECRUTEMENT("Modifier candidat", Feature.CARACTERISTIQUE_RECRUTEMENT),
+    DELETE_CARACTERISTIQUE_RECRUTEMENT("Supprimer candidat", Feature.CARACTERISTIQUE_RECRUTEMENT),
 
 
     READ_MILESTONE("Consulter dates importantes", Feature.MILESTONE),

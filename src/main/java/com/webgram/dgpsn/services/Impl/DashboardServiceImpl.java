@@ -6,12 +6,12 @@ import com.webgram.dgpsn.mappers.ManagementUnitMapper;
 import com.webgram.dgpsn.models.AgentCountByDirectionDTO;
 import com.webgram.dgpsn.models.AgentDashboardDTO;
 import com.webgram.dgpsn.models.AgentGroupingDTO;
+import com.webgram.dgpsn.models.RetraiteProjectionDTO;
 import com.webgram.dgpsn.models.responses.*;
 import com.webgram.dgpsn.repositories.*;
 import com.webgram.dgpsn.services.AgentService;
 import com.webgram.dgpsn.services.CongeService;
 import com.webgram.dgpsn.services.DashboardService;
-import com.webgram.dgpsn.services.DirectionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -337,21 +337,6 @@ public class DashboardServiceImpl implements DashboardService {
         );
     }
 
-
-
-//    /**
-//     * Read all agents for card
-//     * @return
-//     */
-//    @Override
-//    public AgentDashboardDTO readAllAgents() {
-//        return agentService.getAgentDashboard();
-//    }
-
-//    @Override
-//    public List<AgentCountByDirectionDTO> readAgentCountByDirection() {
-//        return agentService.AgentCountByDirection();
-//    }
 
     @Override
     public AgentGroupingDTO getAgentGrouping() {
@@ -1224,6 +1209,11 @@ public class DashboardServiceImpl implements DashboardService {
                 .mapToLong(AgentCountByDirectionDTO::getTotalAgents)
                 .sum();
         return new AgentDashboardDTO(totalAgents, totalAgentsEnConges, totalAgentsParDirection);
+    }
+
+    @Override
+    public List<RetraiteProjectionDTO> getRetraiteProjections(Integer annee) {
+        return agentRepository.countFutureRetraitesByDirection(annee);
     }
 
     @Override

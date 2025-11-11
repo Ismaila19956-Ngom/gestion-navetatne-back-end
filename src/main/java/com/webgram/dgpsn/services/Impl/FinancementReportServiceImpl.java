@@ -1,5 +1,6 @@
 package com.webgram.dgpsn.services.Impl;
 
+import com.webgram.dgpsn.entities.BudgetDgpsnEntity;
 import com.webgram.dgpsn.entities.PlanComptableElementEntity;
 import com.webgram.dgpsn.entities.RealisationEntity;
 import com.webgram.dgpsn.entities.enums.TypeLigneBugetaire;
@@ -35,47 +36,48 @@ public class FinancementReportServiceImpl implements FinancementReportService {
     private final RealisationRepository realisationRepository;
 
     @Override
-    public FinancialReportDTO generateFinancialReport(Integer annee, String periodType, Long budgetId) {
-        log.info("Génération du rapport financier - année: {}, période: {}, budgetId: {}", annee, periodType, budgetId);
+    public FinancialReportDTO generateFinancialReport(Integer annee, String periodType) {
+        log.info("Génération du rapport financier - année: {}, période: {}", annee, periodType);
 
-        if (!budgetDgpsnRepository.existsById(budgetId)) {
-            throw new ResourceNotFoundException("BudgetDgpsn", budgetId);
+        // MODIFIÉ: Récupérer tous les budgets pour l'année donnée
+        List<BudgetDgpsnEntity> budgets = budgetDgpsnRepository.findByAnnee(annee);
+        if (budgets.isEmpty()) {
+            throw new ResourceNotFoundException("Aucun budget trouvé pour l'année ", annee);
         }
+
+        List<Long> budgetIds = budgets.stream().map(BudgetDgpsnEntity::getId).collect(Collectors.toList());
 
         return FinancialReportDTO.builder()
                 .annee(annee)
                 .periodType(periodType)
-                .recettesFonctionnement(generateRecettesFonctionnement(budgetId, annee, periodType))
-                .depensesFonctionnement(generateDepensesFonctionnement(budgetId, annee, periodType))
-                .investissements(generateInvestissements(budgetId, annee, periodType))
-                .recapInvestissement(generateRecapitulatifInvestissement(budgetId, annee))
-                .engagements(getEngagements(budgetId, annee))
+                .recettesFonctionnement(generateRecettesFonctionnement(budgetIds, annee, periodType))
+                .depensesFonctionnement(generateDepensesFonctionnement(budgetIds, annee, periodType))
+                .investissements(generateInvestissements(budgetIds, annee, periodType))
+                .recapInvestissement(generateRecapitulatifInvestissement(budgetIds, annee))
+                .engagements(getEngagements(budgetIds, annee))
                 .build();
     }
 
-    @Override
-    public List<BudgetReportRowDTO> generateRecettesFonctionnement(Long budgetId, Integer annee, String periodType) {
-        log.info("Génération des recettes de fonctionnement - budgetId: {}, année: {}", budgetId, annee);
-        return generateReportForClasse(budgetId, "7", TypeLigneBugetaire.CLASSE_7, annee, periodType);
+    public List<BudgetReportRowDTO> generateRecettesFonctionnement(List<Long> budgetIds, Integer annee, String periodType) {
+        log.info("Génération des recettes de fonctionnement - budgetIds: {}, année: {}", budgetIds, annee);
+        return generateReportForClasse(budgetIds, "7", TypeLigneBugetaire.CLASSE_7, annee, periodType);
+    }
+
+    public List<BudgetReportRowDTO> generateDepensesFonctionnement(List<Long> budgetIds, Integer annee, String periodType) {
+        log.info("Génération des dépenses de fonctionnement - budgetIds: {}, année: {}", budgetIds, annee);
+        return generateReportForClasse(budgetIds, "6", TypeLigneBugetaire.CLASSE_6, annee, periodType);
+    }
+
+    public List<BudgetReportRowDTO> generateInvestissements(List<Long> budgetIds, Integer annee, String periodType) {
+        log.info("Génération des investissements - budgetIds: {}, année: {}", budgetIds, annee);
+        return generateReportForClasse(budgetIds, "2", TypeLigneBugetaire.CLASSE_2, annee, periodType);
     }
 
     @Override
-    public List<BudgetReportRowDTO> generateDepensesFonctionnement(Long budgetId, Integer annee, String periodType) {
-        log.info("Génération des dépenses de fonctionnement - budgetId: {}, année: {}", budgetId, annee);
-        return generateReportForClasse(budgetId, "6", TypeLigneBugetaire.CLASSE_6, annee, periodType);
-    }
+    public List<BudgetReportRowDTO> generateRecapitulatifInvestissement(List<Long> budgetIds, Integer annee) {
+        log.info("Génération du récapitulatif investissement - budgetIds: {}, année: {}", budgetIds, annee);
 
-    @Override
-    public List<BudgetReportRowDTO> generateInvestissements(Long budgetId, Integer annee, String periodType) {
-        log.info("Génération des investissements - budgetId: {}, année: {}", budgetId, annee);
-        return generateReportForClasse(budgetId, "2", TypeLigneBugetaire.CLASSE_2, annee, periodType);
-    }
-
-    @Override
-    public List<BudgetReportRowDTO> generateRecapitulatifInvestissement(Long budgetId, Integer annee) {
-        log.info("Génération du récapitulatif investissement - budgetId: {}, année: {}", budgetId, annee);
-
-        List<BudgetReportRowDTO> rows = generateReportForClasse(budgetId, "2", TypeLigneBugetaire.CLASSE_2, annee, "trimestriel");
+        List<BudgetReportRowDTO> rows = generateReportForClasse(budgetIds, "2", TypeLigneBugetaire.CLASSE_2, annee, "trimestriel");
 
         for (BudgetReportRowDTO row : rows) {
             if (row.getRealisationsPeriodiques() != null) {
@@ -90,14 +92,14 @@ public class FinancementReportServiceImpl implements FinancementReportService {
     }
 
     @Override
-    public List<EngagementDTO> getEngagements(Long budgetId, Integer annee) {
-        log.info("Récupération des engagements (réalisations) - budgetId: {}, année: {}", budgetId, annee);
+    public List<EngagementDTO> getEngagements(List<Long> budgetIds, Integer annee) {
+        log.info("Récupération des engagements (réalisations) - budgetIds: {}, année: {}", budgetIds, annee);
 
         LocalDate startDate = LocalDate.of(annee, 1, 1);
         LocalDate endDate = LocalDate.of(annee, 12, 31);
 
-        // Récupérer toutes les lignes budgétaires du budget
-        List<Long> ligneBudgetaireIds = ligneBudgetaireRepository.findByBudgetId(budgetId)
+        // MODIFIÉ: Récupérer toutes les lignes budgétaires des budgets concernés
+        List<Long> ligneBudgetaireIds = ligneBudgetaireRepository.findByBudgetIdIn(budgetIds)
                 .stream()
                 .map(ligne -> ligne.getId())
                 .toList();
@@ -106,12 +108,13 @@ public class FinancementReportServiceImpl implements FinancementReportService {
             return new ArrayList<>();
         }
 
-        // Récupérer toutes les réalisations pour ces lignes
+        // Le reste de la méthode est inchangé
         return realisationRepository.findByLigneBudgetaireIdIn(ligneBudgetaireIds)
                 .stream()
                 .filter(r -> r.getDate() != null &&
                         !r.getDate().isBefore(startDate) &&
                         !r.getDate().isAfter(endDate))
+                .sorted(Comparator.comparing(RealisationEntity::getDate))
                 .map(this::mapRealisationToEngagementDTO)
                 .toList();
     }
@@ -124,10 +127,17 @@ public class FinancementReportServiceImpl implements FinancementReportService {
         String servicesDGPSN = "";
 
         PlanComptableElementEntity element = entity.getRealisations();
-        while (element != null && element.getParent() != null) {
+        PlanComptableElementEntity compteElement = null;
+
+        while (element != null) {
+            if (element.getType() == TypePlanComptable.RUBRIQUE) {
+                compteElement = element;
+                break;
+            }
             element = element.getParent();
         }
-        compte = (element != null) ? element.getCode() : null;
+
+        compte = (compteElement != null) ? compteElement.getCode() : null;
 
         // Récupérer le service depuis la ligne budgétaire si nécessaire
         if (entity.getLigneBudgetaire() != null && entity.getLigneBudgetaire().getBudget() != null) {
@@ -141,7 +151,7 @@ public class FinancementReportServiceImpl implements FinancementReportService {
                 .numMandat(entity.getNumeroMandat())
                 .factureEtat(entity.getFacture() != null ? entity.getFacture() : entity.getDescription())
                 .montants(entity.getMontant())
-                .fournisseurBeneficiaire(String.valueOf(entity.getFournisseur()))
+                .fournisseurBeneficiaire(entity.getFournisseur().getRaisonSociale() != null ? entity.getFournisseur().getRaisonSociale() : "")
                 .servicesDGPSN(servicesDGPSN)
                 .compte(compte)
                 .date(entity.getDate())
@@ -152,23 +162,19 @@ public class FinancementReportServiceImpl implements FinancementReportService {
      * Méthode générique pour générer un rapport pour une classe donnée
      */
     private List<BudgetReportRowDTO> generateReportForClasse(
-            Long budgetId,
+            List<Long> budgetIds,
             String classeCode,
             TypeLigneBugetaire typeLigne,
             Integer annee,
             String periodType) {
 
         List<BudgetReportRowDTO> result = new ArrayList<>();
-
         List<PlanComptableElementDTO> rubriques = getRubriquesByClasse(classeCode);
-
         if (rubriques.isEmpty()) {
             log.warn("Aucune rubrique trouvée pour la classe {}", classeCode);
             return result;
         }
-
         Map<String, List<PlanComptableElementDTO>> rubriquesByCompte = groupRubriquesByCompte(rubriques);
-
         double totalBudget2025 = 0.0;
         double totalRealisationsCumulees = 0.0;
         double totalResteARealiser = 0.0;
@@ -188,7 +194,7 @@ public class FinancementReportServiceImpl implements FinancementReportService {
             List<BudgetReportRowDTO> lignesRubriques = new ArrayList<>();
 
             for (PlanComptableElementDTO rubrique : rubriquesDuCompte) {
-                List<LigneBudgetaireDTO> lignes = getLignesBudgetaires(budgetId, rubrique.getId(), typeLigne);
+                List<LigneBudgetaireDTO> lignes = getLignesBudgetaires(budgetIds, rubrique.getId(), typeLigne);
 
                 if (!lignes.isEmpty()) {
                     double budgetRubrique = lignes.stream()
@@ -318,8 +324,8 @@ public class FinancementReportServiceImpl implements FinancementReportService {
     /**
      * Récupère les lignes budgétaires pour une rubrique
      */
-    private List<LigneBudgetaireDTO> getLignesBudgetaires(Long budgetId, Long rubriqueId, TypeLigneBugetaire typeLigne) {
-        return ligneBudgetaireRepository.findByBudgetIdAndRubriqueIdAndType(budgetId, rubriqueId, typeLigne)
+    private List<LigneBudgetaireDTO> getLignesBudgetaires(List<Long> budgetIds, Long rubriqueId, TypeLigneBugetaire typeLigne) {
+        return ligneBudgetaireRepository.findByBudgetIdsAndRubriqueIdAndType(budgetIds, rubriqueId, typeLigne)
                 .stream()
                 .map(this::mapLigneToDTO)
                 .collect(Collectors.toList());
