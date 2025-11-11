@@ -27,6 +27,18 @@ public class ManagementUnitRule {
     static final String PTBA = "/{managementUnitId}/ptba";
     static final String BUDGET_TREE = "/tree/budget/{budgetId}";
     static final String PTBA_BUDGET = "/budgets-dgpsn/{budgetId}/ptba";
+    static final String PTBA_ANNEE_BUDGET = "/ptba";
+
+    @Bean
+    public SecurityRule readPtbaAnneeBudget() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(PROJECT_API_PREFIX + PTBA_ANNEE_BUDGET)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
 
     @Bean
     public SecurityRule readPtbaBudget() {
