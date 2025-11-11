@@ -124,10 +124,17 @@ public class FinancementReportServiceImpl implements FinancementReportService {
         String servicesDGPSN = "";
 
         PlanComptableElementEntity element = entity.getRealisations();
-        while (element != null && element.getParent() != null) {
+        PlanComptableElementEntity compteElement = null;
+
+        while (element != null) {
+            if (element.getType() == TypePlanComptable.COMPTE) {
+                compteElement = element;
+                break;
+            }
             element = element.getParent();
         }
-        compte = (element != null) ? element.getCode() : null;
+
+        compte = (compteElement != null) ? compteElement.getCode() : null;
 
         // Récupérer le service depuis la ligne budgétaire si nécessaire
         if (entity.getLigneBudgetaire() != null && entity.getLigneBudgetaire().getBudget() != null) {
