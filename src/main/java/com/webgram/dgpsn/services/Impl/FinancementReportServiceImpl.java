@@ -127,7 +127,7 @@ public class FinancementReportServiceImpl implements FinancementReportService {
         PlanComptableElementEntity compteElement = null;
 
         while (element != null) {
-            if (element.getType() == TypePlanComptable.COMPTE) {
+            if (element.getType() == TypePlanComptable.RUBRIQUE) {
                 compteElement = element;
                 break;
             }
@@ -148,7 +148,7 @@ public class FinancementReportServiceImpl implements FinancementReportService {
                 .numMandat(entity.getNumeroMandat())
                 .factureEtat(entity.getFacture() != null ? entity.getFacture() : entity.getDescription())
                 .montants(entity.getMontant())
-                .fournisseurBeneficiaire(String.valueOf(entity.getFournisseur()))
+                .fournisseurBeneficiaire(String.valueOf(entity.getFournisseur().getRaisonSociale()))
                 .servicesDGPSN(servicesDGPSN)
                 .compte(compte)
                 .date(entity.getDate())
