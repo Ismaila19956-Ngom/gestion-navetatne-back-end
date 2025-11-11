@@ -151,6 +151,11 @@ public enum SecurityPermissions {
     EDIT_CANDIDAT("Modifier candidat", Feature.CANDIDAT),
     DELETE_CANDIDAT("Supprimer candidat", Feature.CANDIDAT),
 
+    READ_CARACTERISTIQUE_RECRUTEMENT("Consulter candidat", Feature.CARACTERISTIQUE_RECRUTEMENT),
+    ADD_CARACTERISTIQUE_RECRUTEMENT("Ajouter candidat", Feature.CARACTERISTIQUE_RECRUTEMENT),
+    EDIT_CARACTERISTIQUE_RECRUTEMENT("Modifier candidat", Feature.CARACTERISTIQUE_RECRUTEMENT),
+    DELETE_CARACTERISTIQUE_RECRUTEMENT("Supprimer candidat", Feature.CARACTERISTIQUE_RECRUTEMENT),
+
 
     READ_MILESTONE("Consulter dates importantes", Feature.MILESTONE),
     ADD_MILESTONE("Ajouter dates importantes", Feature.MILESTONE),
