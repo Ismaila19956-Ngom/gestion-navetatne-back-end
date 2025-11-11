@@ -3,6 +3,7 @@ package com.webgram.dgpsn.controllers;
 import com.webgram.dgpsn.models.AgentCountByDirectionDTO;
 import com.webgram.dgpsn.models.AgentDashboardDTO;
 import com.webgram.dgpsn.models.AgentGroupingDTO;
+import com.webgram.dgpsn.models.RetraiteProjectionDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -632,5 +633,17 @@ public ResponseEntity<List<StatisticalBudgetActivityDTO>> getActivitiesAndBudget
     @GetMapping("/agent/groups")
     public ResponseEntity<AgentGroupingDTO> getGroupingAgent() {
         return ResponseEntity.ok(dashboardService.getAgentGrouping());
+    }
+
+    @Operation(summary = "Prevision des agent retraites", description = "")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success"),
+            @ApiResponse(responseCode = "500", description = "Internal server error during request processing")})
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/retraites-projections")
+    public ResponseEntity<List<RetraiteProjectionDTO>> getRetraiteProjections(
+            @RequestParam(value = "annee", required = false) Integer annee
+    ) {
+        return ResponseEntity.ok(dashboardService.getRetraiteProjections(annee));
     }
 }
