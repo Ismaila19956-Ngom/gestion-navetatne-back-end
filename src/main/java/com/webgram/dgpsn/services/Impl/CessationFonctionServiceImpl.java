@@ -57,7 +57,7 @@ public class CessationFonctionServiceImpl implements CessationFonctionService {
 //            throw new IllegalArgumentException("La date de cessation doit être comprise entre la date de début de l'autorisation et la date de fin de la demande d'autorisation");
 //        }
         var savedConge = cessationFonctionRepository.save(cessationFonctionMapper.asEntity(cessationDTO));
-//        alerteService.generateAlertCreateCessationService(cessationDTO);
+        alerteService.generateAlertCreateCessationService(cessationDTO);
         return cessationFonctionMapper.asDto(savedConge);
     }
 

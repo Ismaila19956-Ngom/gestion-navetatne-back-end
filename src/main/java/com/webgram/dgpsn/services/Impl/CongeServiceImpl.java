@@ -185,7 +185,7 @@ public void validConge(Long congeId, StatutType statut) {
     var updateStatutConge = congeRepository.save(conge);
     log.info("Updated conge statut: {}", updateStatutConge.getStatutType());
     if (updateStatutConge.getStatutType() == StatutType.ACCEPTER) {
-//        alerteService.generateAlerteForCongeAccepte(updateStatutConge);
+       alerteService.generateAlerteForCongeAccepte(updateStatutConge);
     }
 }
 
@@ -326,7 +326,7 @@ public void validConge(Long congeId, StatutType statut) {
         agentDTO.setNom(agent.getNom());
         agentDTO.setMatricule(agent.getMatricule());
         congeDTO.setAgent(agentDTO);
-//        alerteService.generateAlertCreateConge(congeDTO);
+       alerteService.generateAlertCreateConge(congeDTO);
 
     }
 

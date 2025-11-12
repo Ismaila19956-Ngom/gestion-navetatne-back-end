@@ -13,6 +13,7 @@ import com.webgram.dgpsn.mappers.RecrutementMapper;
 import com.webgram.dgpsn.models.CandidatDTO;
 import com.webgram.dgpsn.models.RecrutementDTO;
 import com.webgram.dgpsn.repositories.RecrutementRepository;
+import com.webgram.dgpsn.services.AlerteService;
 import com.webgram.dgpsn.services.CandidatService;
 import com.webgram.dgpsn.services.RecrutementService;
 import lombok.AccessLevel;
@@ -43,6 +44,7 @@ public class RecrutementServiceImpl implements RecrutementService {
     private final RecrutementRepository recrutementRepository;
     private final RecrutementMapper recrutementMapper;
     final CandidatService candidatService;
+    final AlerteServiceImpl alerteService;
     private static final String RECRUTEMENT_NOT_FOUND_MESSAGE = "Recrutement non trouvé avec l'ID {0}";
 
 
@@ -105,7 +107,7 @@ public class RecrutementServiceImpl implements RecrutementService {
 
         RecrutementEntity savedEntity = recrutementRepository.save(entity);
         log.info("Recrutement créé avec succès, ID : {}", savedEntity.getId());
-
+        alerteService.generateAlertNouveauRecrutement(recrutementMapper.asDto(savedEntity));
         return recrutementMapper.asDto(savedEntity);
     }
 

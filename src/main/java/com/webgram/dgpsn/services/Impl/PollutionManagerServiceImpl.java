@@ -37,7 +37,7 @@ public class PollutionManagerServiceImpl implements PollutionManagerService {
     public PollutionManagerDTO create(PollutionManagerDTO pollutionManagerDTO) {
         pollutionManagerDTO.setTypeStatut(StatutType.EN_COURS);
         // Appeler la méthode de génération d'alerte avec le DTO
-        alerteService.generateAlertForPollution(pollutionManagerDTO);
+//        alerteService.generateAlertForPollution(pollutionManagerDTO);
         var saved = pollutionManagerRepository
                 .save(pollutionManagerMapper.asEntity(pollutionManagerDTO));
         log.info("actManager successfully added {}", saved);
