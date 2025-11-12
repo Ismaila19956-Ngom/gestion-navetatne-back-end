@@ -1,5 +1,6 @@
 package com.webgram.dgpsn.services.Impl;
 
+import com.webgram.dgpsn.entities.BudgetDgpsnEntity;
 import com.webgram.dgpsn.entities.PlanComptableElementEntity;
 import com.webgram.dgpsn.entities.RealisationEntity;
 import com.webgram.dgpsn.entities.enums.TypeLigneBugetaire;
@@ -35,49 +36,70 @@ public class FinancementReportServiceImpl implements FinancementReportService {
     private final RealisationRepository realisationRepository;
 
     @Override
-    public FinancialReportDTO generateFinancialReport(Integer annee, String periodType, Long budgetId) {
-        log.info("Génération du rapport financier - année: {}, période: {}, budgetId: {}", annee, periodType, budgetId);
+    public FinancialReportDTO generateFinancialReport(Integer annee, String periodType) {
+        log.info("Génération du rapport financier - année: {}, période: {}", annee, periodType);
 
-        if (!budgetDgpsnRepository.existsById(budgetId)) {
-            throw new ResourceNotFoundException("BudgetDgpsn", budgetId);
+        // MODIFIÉ: Récupérer tous les budgets pour l'année donnée
+        List<BudgetDgpsnEntity> budgets = budgetDgpsnRepository.findByAnnee(annee);
+        if (budgets.isEmpty()) {
+            throw new ResourceNotFoundException("Aucun budget trouvé pour l'année ", annee);
         }
+
+        List<Long> budgetIds = budgets.stream().map(BudgetDgpsnEntity::getId).collect(Collectors.toList());
 
         return FinancialReportDTO.builder()
                 .annee(annee)
                 .periodType(periodType)
-                .recettesFonctionnement(generateRecettesFonctionnement(budgetId, annee, periodType))
-                .depensesFonctionnement(generateDepensesFonctionnement(budgetId, annee, periodType))
-                .investissements(generateInvestissements(budgetId, annee, periodType))
-                .recapInvestissement(generateRecapitulatifInvestissement(budgetId, annee))
-                .engagements(getEngagements(budgetId, annee))
+                .recettesFonctionnement(generateRecettesFonctionnement(budgetIds, annee, periodType))
+                .depensesFonctionnement(generateDepensesFonctionnement(budgetIds, annee, periodType))
+                .investissements(generateInvestissements(budgetIds, annee, periodType))
+                .recapInvestissement(generateRecapitulatifInvestissement(budgetIds, annee))
+                .engagements(getEngagements(budgetIds, annee))
                 .build();
     }
 
-    @Override
-    public List<BudgetReportRowDTO> generateRecettesFonctionnement(Long budgetId, Integer annee, String periodType) {
-        log.info("Génération des recettes de fonctionnement - budgetId: {}, année: {}", budgetId, annee);
-        return generateReportForClasse(budgetId, "7", TypeLigneBugetaire.CLASSE_7, annee, periodType);
+    public List<BudgetReportRowDTO> generateRecettesFonctionnement(List<Long> budgetIds, Integer annee, String periodType) {
+        log.info("Génération des recettes de fonctionnement - budgetIds: {}, année: {}", budgetIds, annee);
+        return generateReportForClasse(budgetIds, "7", TypeLigneBugetaire.CLASSE_7, annee, periodType);
+    }
+
+    public List<BudgetReportRowDTO> generateDepensesFonctionnement(List<Long> budgetIds, Integer annee, String periodType) {
+        log.info("Génération des dépenses de fonctionnement - budgetIds: {}, année: {}", budgetIds, annee);
+        return generateReportForClasse(budgetIds, "6", TypeLigneBugetaire.CLASSE_6, annee, periodType);
+    }
+
+    public List<BudgetReportRowDTO> generateInvestissements(List<Long> budgetIds, Integer annee, String periodType) {
+        log.info("Génération des investissements - budgetIds: {}, année: {}", budgetIds, annee);
+        return generateReportForClasse(budgetIds, "2", TypeLigneBugetaire.CLASSE_2, annee, periodType);
     }
 
     @Override
-    public List<BudgetReportRowDTO> generateDepensesFonctionnement(Long budgetId, Integer annee, String periodType) {
-        log.info("Génération des dépenses de fonctionnement - budgetId: {}, année: {}", budgetId, annee);
-        return generateReportForClasse(budgetId, "6", TypeLigneBugetaire.CLASSE_6, annee, periodType);
-    }
+    public List<BudgetReportRowDTO> generateRecapitulatifInvestissement(List<Long> budgetIds, Integer annee) {
+        log.info("Génération du récapitulatif investissement complet (Classes 1 & 2) - budgetIds: {}, année: {}", budgetIds, annee);
 
-    @Override
-    public List<BudgetReportRowDTO> generateInvestissements(Long budgetId, Integer annee, String periodType) {
-        log.info("Génération des investissements - budgetId: {}, année: {}", budgetId, annee);
-        return generateReportForClasse(budgetId, "2", TypeLigneBugetaire.CLASSE_2, annee, periodType);
-    }
+        List<BudgetReportRowDTO> finalRecap = new ArrayList<>();
 
-    @Override
-    public List<BudgetReportRowDTO> generateRecapitulatifInvestissement(Long budgetId, Integer annee) {
-        log.info("Génération du récapitulatif investissement - budgetId: {}, année: {}", budgetId, annee);
+        // --- 1. Générer les Recettes d'Investissement (Classe 1) ---
+        List<BudgetReportRowDTO> recettesInvestissement = generateReportForClasse(budgetIds, "1", TypeLigneBugetaire.CLASSE_1, annee, "trimestriel");
+        finalRecap.addAll(recettesInvestissement);
 
-        List<BudgetReportRowDTO> rows = generateReportForClasse(budgetId, "2", TypeLigneBugetaire.CLASSE_2, annee, "trimestriel");
+        // --- 2. Ajouter une ligne de titre pour séparer les sections ---
+        // (S'il y a des recettes et des dépenses à afficher)
+        if (!recettesInvestissement.isEmpty()) {
+            BudgetReportRowDTO depensesTitleRow = BudgetReportRowDTO.builder()
+                    .rubrique("2 DEPENSES D'INVESTISSEMENT")
+                    .isTitle(true)
+                    .build();
+            finalRecap.add(depensesTitleRow);
+        }
 
-        for (BudgetReportRowDTO row : rows) {
+        // --- 3. Générer les Dépenses d'Investissement (Classe 2) ---
+        List<BudgetReportRowDTO> depensesInvestissement = generateReportForClasse(budgetIds, "2", TypeLigneBugetaire.CLASSE_2, annee, "trimestriel");
+        finalRecap.addAll(depensesInvestissement);
+
+
+        // --- 4. Aplatir les réalisations trimestrielles pour le frontend ---
+        for (BudgetReportRowDTO row : finalRecap) {
             if (row.getRealisationsPeriodiques() != null) {
                 row.setT1(row.getRealisationsPeriodiques().getOrDefault("t1", 0.0));
                 row.setT2(row.getRealisationsPeriodiques().getOrDefault("t2", 0.0));
@@ -86,18 +108,18 @@ public class FinancementReportServiceImpl implements FinancementReportService {
             }
         }
 
-        return rows;
+        return finalRecap;
     }
 
     @Override
-    public List<EngagementDTO> getEngagements(Long budgetId, Integer annee) {
-        log.info("Récupération des engagements (réalisations) - budgetId: {}, année: {}", budgetId, annee);
+    public List<EngagementDTO> getEngagements(List<Long> budgetIds, Integer annee) {
+        log.info("Récupération des engagements (réalisations) - budgetIds: {}, année: {}", budgetIds, annee);
 
         LocalDate startDate = LocalDate.of(annee, 1, 1);
         LocalDate endDate = LocalDate.of(annee, 12, 31);
 
-        // Récupérer toutes les lignes budgétaires du budget
-        List<Long> ligneBudgetaireIds = ligneBudgetaireRepository.findByBudgetId(budgetId)
+        // Récupérer toutes les lignes budgétaires des budgets concernés
+        List<Long> ligneBudgetaireIds = ligneBudgetaireRepository.findByBudgetIdIn(budgetIds)
                 .stream()
                 .map(ligne -> ligne.getId())
                 .toList();
@@ -106,12 +128,15 @@ public class FinancementReportServiceImpl implements FinancementReportService {
             return new ArrayList<>();
         }
 
-        // Récupérer toutes les réalisations pour ces lignes
         return realisationRepository.findByLigneBudgetaireIdIn(ligneBudgetaireIds)
                 .stream()
                 .filter(r -> r.getDate() != null &&
                         !r.getDate().isBefore(startDate) &&
                         !r.getDate().isAfter(endDate))
+                .sorted(Comparator
+                        .comparing(RealisationEntity::getDate)
+                        .thenComparing(RealisationEntity::getNumeroMandat, Comparator.nullsLast(String::compareTo))
+                )
                 .map(this::mapRealisationToEngagementDTO)
                 .toList();
     }
@@ -127,7 +152,7 @@ public class FinancementReportServiceImpl implements FinancementReportService {
         PlanComptableElementEntity compteElement = null;
 
         while (element != null) {
-            if (element.getType() == TypePlanComptable.COMPTE) {
+            if (element.getType() == TypePlanComptable.RUBRIQUE) {
                 compteElement = element;
                 break;
             }
@@ -148,7 +173,7 @@ public class FinancementReportServiceImpl implements FinancementReportService {
                 .numMandat(entity.getNumeroMandat())
                 .factureEtat(entity.getFacture() != null ? entity.getFacture() : entity.getDescription())
                 .montants(entity.getMontant())
-                .fournisseurBeneficiaire(String.valueOf(entity.getFournisseur()))
+                .fournisseurBeneficiaire(entity.getFournisseur() != null && entity.getFournisseur().getRaisonSociale() != null ? entity.getFournisseur().getRaisonSociale() : "")
                 .servicesDGPSN(servicesDGPSN)
                 .compte(compte)
                 .date(entity.getDate())
@@ -159,132 +184,135 @@ public class FinancementReportServiceImpl implements FinancementReportService {
      * Méthode générique pour générer un rapport pour une classe donnée
      */
     private List<BudgetReportRowDTO> generateReportForClasse(
-            Long budgetId,
+            List<Long> budgetIds,
             String classeCode,
             TypeLigneBugetaire typeLigne,
             Integer annee,
             String periodType) {
 
         List<BudgetReportRowDTO> result = new ArrayList<>();
-
         List<PlanComptableElementDTO> rubriques = getRubriquesByClasse(classeCode);
-
         if (rubriques.isEmpty()) {
             log.warn("Aucune rubrique trouvée pour la classe {}", classeCode);
             return result;
         }
-
         Map<String, List<PlanComptableElementDTO>> rubriquesByCompte = groupRubriquesByCompte(rubriques);
 
-        double totalBudget2025 = 0.0;
+        // Totaux pour l'ensemble de la classe
+        double totalBudgetInitial = 0.0; // NOUVEAU : Total pour le budget initial
+        double totalPrimitif = 0.0;
+        double totalModification = 0.0;
+        double totalBudgetModifie = 0.0;
         double totalRealisationsCumulees = 0.0;
-        double totalResteARealiser = 0.0;
         Map<String, Double> totalRealisationsPeriodiques = initializePeriodMap(periodType);
 
         for (Map.Entry<String, List<PlanComptableElementDTO>> entry : rubriquesByCompte.entrySet()) {
             List<PlanComptableElementDTO> rubriquesDuCompte = entry.getValue();
-
             PlanComptableElementDTO premiereRubrique = rubriquesDuCompte.get(0);
             String compteCode = getCompteCode(premiereRubrique);
             String compteLibelle = getCompteLibelle(premiereRubrique);
 
-            double budgetCompte = 0.0;
+            // Totaux pour le compte courant
+            double budgetInitialCompte = 0.0; // NOUVEAU : Total du compte pour le budget initial
+            double primitifCompte = 0.0;
+            double modificationCompte = 0.0;
+            double budgetModifieCompte = 0.0;
             double realisationsCompte = 0.0;
             Map<String, Double> realisationsPeriodiqueCompte = initializePeriodMap(periodType);
-
             List<BudgetReportRowDTO> lignesRubriques = new ArrayList<>();
 
             for (PlanComptableElementDTO rubrique : rubriquesDuCompte) {
-                List<LigneBudgetaireDTO> lignes = getLignesBudgetaires(budgetId, rubrique.getId(), typeLigne);
+                List<LigneBudgetaireDTO> lignes = getLignesBudgetaires(budgetIds, rubrique.getId(), typeLigne);
 
                 if (!lignes.isEmpty()) {
-                    double budgetRubrique = lignes.stream()
-                            .mapToDouble(l -> l.getMontant() != null ? l.getMontant() : 0.0)
-                            .sum();
+                    double budgetInitialRubrique = lignes.stream().mapToDouble(l -> l.getMontant() != null ? l.getMontant() : 0.0).sum(); // NOUVEAU
+                    double primitifRubrique = lignes.stream().mapToDouble(l -> l.getPrimitif() != null ? l.getPrimitif() : 0.0).sum();
+                    double modificationRubrique = lignes.stream().mapToDouble(l -> l.getModification() != null ? l.getModification() : 0.0).sum();
+                    double budgetModifieRubrique = lignes.stream().mapToDouble(l -> l.getBudgetModifie() != null ? l.getBudgetModifie() : 0.0).sum();
 
-                    // Récupérer les IDs des lignes budgétaires pour cette rubrique
-                    List<Long> ligneIds = lignes.stream()
-                            .map(LigneBudgetaireDTO::getId)
-                            .collect(Collectors.toList());
-
+                    List<Long> ligneIds = lignes.stream().map(LigneBudgetaireDTO::getId).collect(Collectors.toList());
                     Map<String, Double> realisationsPeriodiques = getRealisationsPeriodiques(ligneIds, annee, periodType);
-                    double realisationsCumulees = realisationsPeriodiques.values().stream()
-                            .mapToDouble(Double::doubleValue)
-                            .sum();
+                    double realisationsCumulees = realisationsPeriodiques.values().stream().mapToDouble(Double::doubleValue).sum();
 
-                    double tauxExecution = budgetRubrique > 0 ? (realisationsCumulees / budgetRubrique * 100) : 0.0;
-                    double resteARealiser = budgetRubrique - realisationsCumulees;
+                    double budgetDeReference = budgetModifieRubrique > 0 ? budgetModifieRubrique : budgetInitialRubrique;
+                    double tauxExecution = budgetDeReference > 0 ? (realisationsCumulees / budgetDeReference * 100) : 0.0;
+                    double resteARealiser = budgetDeReference - realisationsCumulees;
 
                     BudgetReportRowDTO row = BudgetReportRowDTO.builder()
                             .classe(classeCode)
                             .compte(compteCode)
                             .sousCompte(getSousCompteCode(rubrique))
                             .rubrique(rubrique.getLibelle())
-                            .budget2024(budgetRubrique)
-                            .budget2025(budgetRubrique)
+                            .budgetInitial(budgetInitialRubrique) // NOUVEAU
+                            .primitif(primitifRubrique)
+                            .modification(modificationRubrique)
+                            .budgetModifie(budgetModifieRubrique)
                             .realisationsPeriodiques(realisationsPeriodiques)
                             .realisationsCumulees(realisationsCumulees)
                             .tauxExecution(Math.round(tauxExecution * 100.0) / 100.0)
-                            .niveauExecution(Math.round(tauxExecution * 100.0) / 100.0)
                             .resteARealiser(resteARealiser)
-                            .isCategory(false)
-                            .isSubCategory(false)
-                            .isTotal(false)
+                            .isCategory(false).isSubCategory(false).isTotal(false)
                             .build();
-
                     lignesRubriques.add(row);
 
-                    budgetCompte += budgetRubrique;
+                    // Accumuler tous les totaux pour le compte
+                    budgetInitialCompte += budgetInitialRubrique; // NOUVEAU
+                    primitifCompte += primitifRubrique;
+                    modificationCompte += modificationRubrique;
+                    budgetModifieCompte += budgetModifieRubrique;
                     realisationsCompte += realisationsCumulees;
                     sumPeriodMaps(realisationsPeriodiqueCompte, realisationsPeriodiques);
                 }
             }
 
-            if (budgetCompte > 0 || realisationsCompte > 0) {
-                double tauxExecutionCompte = budgetCompte > 0 ? (realisationsCompte / budgetCompte * 100) : 0.0;
+            if (budgetInitialCompte > 0 || budgetModifieCompte > 0 || realisationsCompte > 0) {
+                double budgetDeReferenceCompte = budgetModifieCompte > 0 ? budgetModifieCompte : budgetInitialCompte;
+                double tauxExecutionCompte = budgetDeReferenceCompte > 0 ? (realisationsCompte / budgetDeReferenceCompte * 100) : 0.0;
+
                 BudgetReportRowDTO compteRow = BudgetReportRowDTO.builder()
                         .classe(classeCode)
                         .compte(compteCode)
                         .rubrique(compteLibelle)
-                        .budget2024(budgetCompte)
-                        .budget2025(budgetCompte)
+                        .budgetInitial(budgetInitialCompte) // NOUVEAU
+                        .primitif(primitifCompte)
+                        .modification(modificationCompte)
+                        .budgetModifie(budgetModifieCompte)
                         .realisationsPeriodiques(realisationsPeriodiqueCompte)
                         .realisationsCumulees(realisationsCompte)
                         .tauxExecution(Math.round(tauxExecutionCompte * 100.0) / 100.0)
-                        .niveauExecution(Math.round(tauxExecutionCompte * 100.0) / 100.0)
-                        .resteARealiser(budgetCompte - realisationsCompte)
-                        .isCategory(true)
-                        .isSubCategory(false)
-                        .isTotal(false)
+                        .resteARealiser(budgetDeReferenceCompte - realisationsCompte)
+                        .isCategory(true).isSubCategory(false).isTotal(false)
                         .build();
-
                 result.add(compteRow);
                 result.addAll(lignesRubriques);
 
-                totalBudget2025 += budgetCompte;
+                // Accumuler les totaux pour la classe entière
+                totalBudgetInitial += budgetInitialCompte; // NOUVEAU
+                totalPrimitif += primitifCompte;
+                totalModification += modificationCompte;
+                totalBudgetModifie += budgetModifieCompte;
                 totalRealisationsCumulees += realisationsCompte;
-                totalResteARealiser += (budgetCompte - realisationsCompte);
                 sumPeriodMaps(totalRealisationsPeriodiques, realisationsPeriodiqueCompte);
             }
         }
 
-        if (totalBudget2025 > 0 || totalRealisationsCumulees > 0) {
-            double tauxExecutionTotal = totalBudget2025 > 0 ? (totalRealisationsCumulees / totalBudget2025 * 100) : 0.0;
+        if (totalBudgetInitial > 0 || totalBudgetModifie > 0 || totalRealisationsCumulees > 0) {
+            double budgetDeReferenceTotal = totalBudgetModifie > 0 ? totalBudgetModifie : totalBudgetInitial;
+            double tauxExecutionTotal = budgetDeReferenceTotal > 0 ? (totalRealisationsCumulees / budgetDeReferenceTotal * 100) : 0.0;
+
             BudgetReportRowDTO totalRow = BudgetReportRowDTO.builder()
                     .classe(classeCode)
                     .rubrique(getTotalLabel(classeCode))
-                    .budget2024(totalBudget2025)
-                    .budget2025(totalBudget2025)
+                    .budgetInitial(totalBudgetInitial) // NOUVEAU
+                    .primitif(totalPrimitif)
+                    .modification(totalModification)
+                    .budgetModifie(totalBudgetModifie)
                     .realisationsPeriodiques(totalRealisationsPeriodiques)
                     .realisationsCumulees(totalRealisationsCumulees)
                     .tauxExecution(Math.round(tauxExecutionTotal * 100.0) / 100.0)
-                    .niveauExecution(Math.round(tauxExecutionTotal * 100.0) / 100.0)
-                    .resteARealiser(totalResteARealiser)
-                    .isCategory(false)
-                    .isSubCategory(false)
-                    .isTotal(true)
+                    .resteARealiser(budgetDeReferenceTotal - totalRealisationsCumulees)
+                    .isCategory(false).isSubCategory(false).isTotal(true)
                     .build();
-
             result.add(totalRow);
         }
 
@@ -325,8 +353,8 @@ public class FinancementReportServiceImpl implements FinancementReportService {
     /**
      * Récupère les lignes budgétaires pour une rubrique
      */
-    private List<LigneBudgetaireDTO> getLignesBudgetaires(Long budgetId, Long rubriqueId, TypeLigneBugetaire typeLigne) {
-        return ligneBudgetaireRepository.findByBudgetIdAndRubriqueIdAndType(budgetId, rubriqueId, typeLigne)
+    private List<LigneBudgetaireDTO> getLignesBudgetaires(List<Long> budgetIds, Long rubriqueId, TypeLigneBugetaire typeLigne) {
+        return ligneBudgetaireRepository.findByBudgetIdsAndRubriqueIdAndType(budgetIds, rubriqueId, typeLigne)
                 .stream()
                 .map(this::mapLigneToDTO)
                 .collect(Collectors.toList());
@@ -441,16 +469,29 @@ public class FinancementReportServiceImpl implements FinancementReportService {
 
     private String getTotalLabel(String classeCode) {
         switch (classeCode) {
-            case "7":
-                return "TOTAL RECETTES DE FONCTIONNEMENT";
-            case "6":
-                return "TOTAL DEPENSES DE FONCTIONNEMENT";
+            case "1":
+                return "TOTAL RECETTES D'INVESTISSEMENT";   // Comptes de capitaux
             case "2":
-                return "TOTAL DEPENSES D'INVESTISSEMENT";
+                return "TOTAL DEPENSES D'INVESTISSEMENT";   // Immobilisations, charges à répartir
+            case "3":
+                return "TOTAL STOCKS ET ENCOURS";           // Comptes de stocks et en-cours
+            case "4":
+                return "TOTAL TIERS (DEBITEURS ET CREDITEURS)"; // Comptes de tiers
+            case "5":
+                return "TOTAL COMPTES FINANCIERS";          // Trésorerie, banques, caisses
+            case "6":
+                return "TOTAL DEPENSES DE FONCTIONNEMENT";  // Charges
+            case "7":
+                return "TOTAL RECETTES DE FONCTIONNEMENT";  // Produits
+            case "8":
+                return "TOTAL COMPTES SPÉCIAUX";            // Résultats, engagements hors bilan
+            case "9":
+                return "TOTAL COMPTES ANALYTIQUES / HORS BILAN"; // Optionnel, selon le plan
             default:
                 return "TOTAL";
         }
     }
+
 
     // Mappers
     private PlanComptableElementDTO mapPlanToDTO(com.webgram.dgpsn.entities.PlanComptableElementEntity entity) {
@@ -475,6 +516,9 @@ public class FinancementReportServiceImpl implements FinancementReportService {
         dto.setMontant(entity.getMontant());
         dto.setTypeLigneBugetaire(entity.getTypeLigneBugetaire());
         dto.setCommentaire(entity.getCommentaire());
+        dto.setPrimitif(entity.getPrimitif());
+        dto.setModification(entity.getModification());
+        dto.setBudgetModifie(entity.getBudgetModifie());
 
         if (entity.getBudget() != null) {
             dto.setBudgetId(entity.getBudget().getId());

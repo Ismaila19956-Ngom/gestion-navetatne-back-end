@@ -83,6 +83,9 @@ public class ManagementUnitDTO {
     private List<StructureDTO> actorsInvolved;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private List<StructureDTO> structuresResponsables;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private List<LabelDTO> executionZones;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
@@ -100,6 +103,7 @@ public class ManagementUnitDTO {
     private List<Long> executionZoneIds;
     private List<Long> verificationSourceIds;
     private List<Long> actorInvolvedIds;
+    private List<Long> structuresResponsablesIds;
     private Long structureId;
     private Long budgetDgpsnId;
 

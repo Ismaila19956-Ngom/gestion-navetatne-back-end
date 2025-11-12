@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.webgram.dgpsn.entities.BudgetDgpsnEntity;
 import com.webgram.dgpsn.entities.QBudgetDgpsnEntity;
 
+import java.util.List;
 import java.util.Objects;
 
 @Repository
@@ -39,4 +40,9 @@ public interface BudgetDgpsnRepository extends JpaRepository<BudgetDgpsnEntity, 
 
         return findAll(booleanBuilder, pageable);
     }
+
+    /**
+     * Récupère tous les budgets pour une année donnée
+     */
+    List<BudgetDgpsnEntity> findByAnnee(Integer annee);
 }

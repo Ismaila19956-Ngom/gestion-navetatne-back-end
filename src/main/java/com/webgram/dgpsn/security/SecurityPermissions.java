@@ -26,6 +26,13 @@ public enum SecurityPermissions {
     AGENTS_FOR_DIRECTIONS("", Feature.DASHBOARD),
     RETRAITE_PROJECTIONS("", Feature.DASHBOARD),
 
+//    -------------
+
+    READ_CONTRAT_AGENT("Consulter un contrat agent (RH)", Feature.AGENT),
+    ADD_CONTRAT_AGENT("Ajouter un contrat agent (RH)",Feature.AGENT),
+    DELETE_CONTRAT_AGENT("Supprimer un contrat agent (RH)",Feature.AGENT),
+    UPDATE_CONTRAT_AGENT("Modifier un contrat agent (RH)",Feature.AGENT),
+
     /* début fonctionnalités sur la sécurité */
     ADD_PROFILE("Ajouter profil", Feature.PROFILE),
     EDIT_PROFILE("Modifier profil", Feature.PROFILE),
@@ -47,6 +54,7 @@ public enum SecurityPermissions {
     ADD_ALERTE("Ajouter alerte", Feature.ALERTE),
     EDIT_ALERTE("Modifier alerte", Feature.ALERTE),
     DELETE_ALERTE("Supprimer alerte", Feature.ALERTE),
+    READ_NOTIFICATION("Consulter les notifications", Feature.ALERTE),
 
     ADD_PLAN_DE_PASSATION("ajouter plan passation", Feature.PLAN_DE_PASSATION),
     READ_PLAN_DE_PASSATION("consulter plan passation", Feature.PLAN_DE_PASSATION),
@@ -58,10 +66,6 @@ public enum SecurityPermissions {
     EDIT_DIRECTION("Modifier  direction", Feature.ORGANIGRAMME),
     DELETE_DIRECTION("Supprimer  direction", Feature.ORGANIGRAMME),
 
-    READ_TEMPLATE("Consulter liste alerte", Feature.TEMPLATE),
-    ADD_TEMPLATE("Ajouter alerte", Feature.TEMPLATE),
-    EDIT_TEMPLATE("Modifier alerte", Feature.TEMPLATE),
-    DELETE_TEMPLATE("Supprimer alerte", Feature.TEMPLATE),
 
     READ_PROJECT("Consulter liste projet", Feature.PROJECT_LIST),
     ADD_PROJECT("Ajouter projet", Feature.PROJECT_LIST),
@@ -79,6 +83,10 @@ public enum SecurityPermissions {
     READ_PROJECT_EENTREPRISE("Consulter entreprises", Feature.PROJECT_LIST),
     READ_SUMMARY_SHEET("Consulter fiche de synthèse", Feature.PROJECT_LIST),
     READ_DETAIL("Consulter détails", Feature.PROJECT_LIST),
+    ADD_PLAN_DE_PASSATION_MARKET("Ajouter plan de passation", Feature.PROJECT_LIST),
+    READ_PLAN_DE_PASSATION_MARKET("Consulter plan de passation", Feature.PROJECT_LIST),
+    DELETE_PLAN_DE_PASSATION_MARKET("Supprimer plan de passation", Feature.PROJECT_LIST),
+    EDIT_PLAN_DE_PASSATION_MARKET("Modifier plan de passation", Feature.PROJECT_LIST),
 
     /* fin fonctionnalités sur la liste des projets */
 
@@ -114,10 +122,10 @@ public enum SecurityPermissions {
     DELETE_CONGE("Supprimer congé", Feature.DEMANDE_CONGE),
     READ_CONGE("Consulter congé", Feature.DEMANDE_CONGE),
     VALIDATION_CONGE("Valider congé", Feature.DEMANDE_CONGE),
-    GENERATE_FICHE_CONGE("Générer fiche de renseignement  congé", Feature.DEMANDE_CONGE),
+    GENERATE_FICHE_CONGE("Générer l’attestation de reprise", Feature.DEMANDE_CONGE),
     GENERATE_DEMANDE_CONGE("Générer demande  congé", Feature.DEMANDE_CONGE),
     GENERATE_DECISION_CONGE("Générer décision  congé", Feature.DEMANDE_CONGE),
-    GENERATE_BE_CONGE("Générer BE congé", Feature.DEMANDE_CONGE),
+   // GENERATE_BE_CONGE("Générer BE congé", Feature.DEMANDE_CONGE),
     READ_DOCUMENT_CONGE("Consulter document congé", Feature.DEMANDE_CONGE),
 
     READ_CESSATION_CONGE("Consulter Cessation Service", Feature.DEMANDE_CONGE),
@@ -150,6 +158,11 @@ public enum SecurityPermissions {
     ADD_CANDIDAT("Ajouter candidat", Feature.CANDIDAT),
     EDIT_CANDIDAT("Modifier candidat", Feature.CANDIDAT),
     DELETE_CANDIDAT("Supprimer candidat", Feature.CANDIDAT),
+
+    READ_CARACTERISTIQUE_RECRUTEMENT("Consulter candidat", Feature.CARACTERISTIQUE_RECRUTEMENT),
+    ADD_CARACTERISTIQUE_RECRUTEMENT("Ajouter candidat", Feature.CARACTERISTIQUE_RECRUTEMENT),
+    EDIT_CARACTERISTIQUE_RECRUTEMENT("Modifier candidat", Feature.CARACTERISTIQUE_RECRUTEMENT),
+    DELETE_CARACTERISTIQUE_RECRUTEMENT("Supprimer candidat", Feature.CARACTERISTIQUE_RECRUTEMENT),
 
 
     READ_MILESTONE("Consulter dates importantes", Feature.MILESTONE),
@@ -256,16 +269,16 @@ public enum SecurityPermissions {
     DELETE_ETAPE_MISSION_ACTIVITY("Supprimer etape", Feature.ETAPE_MISSION_ACTIVITY),
     READ_ETAPE_MISSION_ACTIVITY("Lire etape", Feature.ETAPE_MISSION_ACTIVITY),
 
-    ADD_FORMATION_EXTERIEUR("Ajouter formation externe", Feature.FORMATION),
-    READ_FORMATION_EXTERIEUR("Consulter formation externe", Feature.FORMATION),
-    EDIT_FORMATION_EXTERIEUR("Modifier formation externe", Feature.FORMATION),
-    DELETE_FORMATION_EXTERIEUR("Supprimer formation externe", Feature.FORMATION),
+    ADD_FORMATION_EXTERIEUR("Ajouter formation externe", Feature.SERVICE_EXTERIEUR),
+    READ_FORMATION_EXTERIEUR("Consulter formation externe", Feature.SERVICE_EXTERIEUR),
+    EDIT_FORMATION_EXTERIEUR("Modifier formation externe", Feature.SERVICE_EXTERIEUR),
+    DELETE_FORMATION_EXTERIEUR("Supprimer formation externe", Feature.SERVICE_EXTERIEUR),
 
 
-    READ_ATELIER("lier atelier", Feature.ATELIER),
-    ADD_ATELIER("ajouter atelier ", Feature.ATELIER),
-    EDIT_ATELIER("modifier atelier ", Feature.ATELIER),
-    DELETE_ATELIER("supprimer atelier ", Feature.ATELIER),
+    READ_ATELIER("lier atelier", Feature.SERVICE_EXTERIEUR),
+    ADD_ATELIER("ajouter atelier ", Feature.SERVICE_EXTERIEUR),
+    EDIT_ATELIER("modifier atelier ", Feature.SERVICE_EXTERIEUR),
+    DELETE_ATELIER("supprimer atelier ", Feature.SERVICE_EXTERIEUR),
 
     READ_PARTICIPANT("lire participant ", Feature.PARTICIPANT),
     ADD_PARTICIPANT("ajouter participant ", Feature.PARTICIPANT),
@@ -301,13 +314,13 @@ public enum SecurityPermissions {
     READ_FILE_RECRUTEMENT("read file recrutement", Feature.RECRUTEMENT),
 
     /*parametrage plant comptable*/
-    READ_PLAN_COMPTABLE("Consulter parametrage plant comptable", Feature.PLAN_COMPTABLE),
-    ADD_PLAN_COMPTABLE("Ajouter parametrage plant comptable", Feature.PLAN_COMPTABLE),
-    EDIT_PLAN_COMPTABLE("Modifier parametrage plant comptable", Feature.PLAN_COMPTABLE),
-    DELETE_PLAN_COMPTABLE("Supprimer parametrage plant comptable", Feature.PLAN_COMPTABLE),
-    IMPORT_PLAN_COMPTABLE("Import parametrage plant comptable", Feature.PLAN_COMPTABLE),
-    EXPORT_PLAN_COMPTABLE("Export parametrage plant comptable", Feature.PLAN_COMPTABLE),
-    READ_FILE_PLAN_COMPTABLE("Read file parametrage plant comptable", Feature.PLAN_COMPTABLE),
+    READ_PLAN_COMPTABLE("Consulter classe comptable", Feature.PLAN_COMPTABLE),
+    ADD_PLAN_COMPTABLE("Ajouter classe comptable", Feature.PLAN_COMPTABLE),
+    EDIT_PLAN_COMPTABLE("Modifier classe comptable", Feature.PLAN_COMPTABLE),
+    DELETE_PLAN_COMPTABLE("Supprimer classe comptable", Feature.PLAN_COMPTABLE),
+    IMPORT_PLAN_COMPTABLE("Import classe comptable", Feature.PLAN_COMPTABLE),
+    EXPORT_PLAN_COMPTABLE("Export class comptable", Feature.PLAN_COMPTABLE),
+    READ_FILE_PLAN_COMPTABLE("Read file class comptable", Feature.PLAN_COMPTABLE),
 
     /*fournisseur */
     READ_FOURNISSEUR("Consulter fournisseur", Feature.FOURNISSEUR),
@@ -499,6 +512,7 @@ public enum SecurityPermissions {
     READ_STATISTIQUES("Consulter statistiques", Feature.COURRIER),
     IMPORT_COURRIER("Importer courrier", Feature.COURRIER),
     EXPORT_COURRIER("Exporter courrier", Feature.COURRIER),
+    DOCUMENT_COURIER("Consulter document courrier ", Feature.COURRIER),
     /* Fin security courriers */
 
     ADD_PROMOTEUR("Ajouter promoteur", Feature.PROMOTEUR),

@@ -66,6 +66,27 @@ public interface LigneBudgetaireRepository extends JpaRepository<LigneBudgetaire
         return findAll(booleanBuilder, pageable);
     }
 
+    List<LigneBudgetaireEntity> findByBudgetIdIn(List<Long> budgetIds);
 
     List<LigneBudgetaireEntity> findByBudgetId(Long budgetId);
+
+    default List<LigneBudgetaireEntity> findByBudgetIdsAndRubriqueIdAndType(
+            List<Long> budgetIds,
+            Long rubriqueId,
+            TypeLigneBugetaire type) {
+
+        var booleanBuilder = new BooleanBuilder();
+
+        if (Objects.nonNull(budgetIds) && !budgetIds.isEmpty()) {
+            booleanBuilder.and(QLigneBudgetaireEntity.ligneBudgetaireEntity.budget.id.in(budgetIds));
+        }
+        if (Objects.nonNull(rubriqueId)) {
+            booleanBuilder.and(QLigneBudgetaireEntity.ligneBudgetaireEntity.rubrique.id.eq(rubriqueId));
+        }
+        if (Objects.nonNull(type)) {
+            booleanBuilder.and(QLigneBudgetaireEntity.ligneBudgetaireEntity.typeLigneBugetaire.eq(type));
+        }
+
+        return (List<LigneBudgetaireEntity>) findAll(booleanBuilder);
+    }
 }

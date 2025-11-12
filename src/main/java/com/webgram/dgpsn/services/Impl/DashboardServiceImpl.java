@@ -490,14 +490,14 @@ public class DashboardServiceImpl implements DashboardService {
 
         // Groupement par Année et Mois
         Map<String, Double> monthlyConsumption = allRealisations.stream()
+                // FILTRE AJOUTÉ ICI pour ignorer les réalisations sans date
+                .filter(r -> r.getDate() != null)
                 .collect(Collectors.groupingBy(
                         r -> {
-                            // RealisationEntity contient un champ date de type LocalDate [2]
                             LocalDate date = r.getDate();
-                            // Format AAAA-MM
                             return date.getYear() + "-" + String.format("%02d", date.getMonthValue());
                         },
-                        Collectors.summingDouble(RealisationEntity::getMontant) // RealisationEntity::getMontant [2]
+                        Collectors.summingDouble(RealisationEntity::getMontant)
                 ));
 
         return monthlyConsumption.entrySet().stream()
