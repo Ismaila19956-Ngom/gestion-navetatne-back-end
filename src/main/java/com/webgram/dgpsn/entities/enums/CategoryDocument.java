@@ -16,6 +16,8 @@ public enum CategoryDocument {
     ADMINISTRATIF("Document Conge Annuel", "Paramétrage des types de documents pour les congés Annuel"),
     MATERNITE("Document Conge maternite", "Paramétrage des types de documents pour les congés de maternite"),
     MALADIE("Document Conge Absence", "Paramétrage des types de documents pour les congés Absence"),
+    COURRIER("Document Courrier", "Paramétrage des types de documents pour les courriers"),
+
     AUTRES("Document Absence", "Paramétrage des types de documents pour lesAbsence");
 
 
