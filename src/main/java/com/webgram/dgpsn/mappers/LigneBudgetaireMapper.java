@@ -1,5 +1,7 @@
 package com.webgram.dgpsn.mappers;
 
+import com.webgram.dgpsn.entities.RecrutementEntity;
+import com.webgram.dgpsn.models.RecrutementDTO;
 import com.webgram.dgpsn.repositories.BudgetDgpsnRepository;
 import com.webgram.dgpsn.repositories.PlanComptableElementRepository;
 import org.mapstruct.Mapper;
@@ -19,6 +21,9 @@ public abstract class LigneBudgetaireMapper implements EntityMapper<LigneBudgeta
     @Mapping(target = "budget", source = "budgetId", qualifiedByName = "getBudget")
     @Mapping(target = "rubrique", source = "rubriqueId", qualifiedByName = "getRubrique")
     public abstract LigneBudgetaireEntity asEntity(LigneBudgetaireDTO dto);
+
+    @Override
+    public abstract LigneBudgetaireDTO asDto(LigneBudgetaireEntity entity);
 
     @Named("getBudget")
     public BudgetDgpsnEntity getBudget(Long budgetId) {

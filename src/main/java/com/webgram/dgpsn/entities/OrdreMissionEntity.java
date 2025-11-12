@@ -5,10 +5,9 @@ import com.webgram.dgpsn.entities.enums.ResponsableMission;
 import com.webgram.dgpsn.entities.enums.StatutType;
 import com.webgram.dgpsn.entities.enums.TypeGroupe;
 import com.webgram.dgpsn.entities.enums.TypeOrdreMission;
+import jakarta.persistence.*;
 import lombok.*;
 
-
-import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -32,8 +31,13 @@ public class OrdreMissionEntity extends Auditable<Long> implements Serializable 
     @Enumerated(EnumType.STRING)
     private TypeOrdreMission ordreMission;
 
+    // CHANGEMENT : structure devient une liste
+    @ElementCollection
+    @CollectionTable(name = "ordre_mission_structures",
+            joinColumns = @JoinColumn(name = "ordre_mission_id"))
     @Enumerated(EnumType.STRING)
-    private ResponsableMission structure;
+    @Column(name = "structure")
+    private List<ResponsableMission> structures;
 
     @Enumerated(EnumType.STRING)
     private TypeGroupe groupe;
@@ -43,6 +47,9 @@ public class OrdreMissionEntity extends Auditable<Long> implements Serializable 
 
     @Column(name = "indice", length = 100)
     private String indice;
+
+    @Column(name = "responsableMission", length = 100)
+    private String responsableMission;
 
     @Column(name = "object_mission", columnDefinition = "TEXT")
     private String objectMission;
@@ -72,20 +79,19 @@ public class OrdreMissionEntity extends Auditable<Long> implements Serializable 
     @ManyToMany
     @JoinTable(name = "ordre_mission_linked_prise_en_charge",
             joinColumns = {@JoinColumn(name = "ordre_mission_id")},
-            inverseJoinColumns = {@JoinColumn(name = "priseEnChargeId")}
-    )
-       private List<LabelEntity> priseEnCharge;
+            inverseJoinColumns = {@JoinColumn(name = "priseEnChargeId")})
+    private List<LabelEntity> priseEnCharge;
 
-
-    @ManyToOne
-    @JoinColumn(name = "frais")
-    private LabelEntity frais;
+    // CHANGEMENT : frais devient une liste
+    @ManyToMany
+    @JoinTable(name = "ordre_mission_linked_frais",
+            joinColumns = {@JoinColumn(name = "ordre_mission_id")},
+            inverseJoinColumns = {@JoinColumn(name = "frais_id")})
+    private List<LabelEntity> frais;
 
     @ManyToOne
     @JoinColumn(name = "moyenTranport")
     private LabelEntity moyenTranport;
-
-
 
     @ManyToMany
     @JoinTable(name = "ordre_mission_linked_agent",
@@ -93,13 +99,11 @@ public class OrdreMissionEntity extends Auditable<Long> implements Serializable 
             inverseJoinColumns = {@JoinColumn(name = "agent_id")})
     private List<AgentEntity> agent;
 
-
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "ordre_mission_document",
             joinColumns = {@JoinColumn(name = "ordre_mission_id")},
             inverseJoinColumns = {@JoinColumn(name = "document_id")})
     private List<DocumentEntity> document;
-
-
-
 }
+
+
