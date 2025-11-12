@@ -48,6 +48,10 @@ public class DashboardRule {
     static final String ICPE_INSPECTIONS_MENSUELLES = "/icpe/inspections-mensuelles";
     static final String ICPE_REPARTITION_CATEGORIE = "/icpe/repartition-categories";
     static final String ICPE_REPARTITION_CONFORMITE = "/icpe/repartition-conformite";
+    // agents DGPSN
+    static final String AGENT_STAT_CARD = "/agent/card";
+    static final String AGENTS_FOR_DIRECTIONS = "/direction/agents";
+    static final String AGENT_GROUPING = "/agent/groups";
 
     //budget
     static final String BUDGET_KPIS = "/budget/kpis";
@@ -65,6 +69,55 @@ public class DashboardRule {
     static final String MONTHLY_SERVICE_EXTERIEUR_ACTIVITIES_BY_STATUS = "/service-exterieur/activities-by-status";
     static final String SERVICE_EXTERIEUR_TOP_5_BY_BUDGET = "/service-exterieur/top5-by-budget";
     static final String SERVICE_EXTERIEUR_PARTICIPANTS_BY_TYPE = "/service-exterieur/participants-by-type";
+    static final String RETRAITE_PROJECTIONS = "/retraites-projections";
+
+
+    @Bean
+    public SecurityRule getRetraiteProjections() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(DASHBOARD_API_PREFIX + RETRAITE_PROJECTIONS)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.RETRAITE_PROJECTIONS)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+
+    @Bean
+    public SecurityRule getAgentStats() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(DASHBOARD_API_PREFIX + AGENT_STAT_CARD)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.AGENT_STAT_CARD)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+    @Bean
+    public SecurityRule AgentCountByDirection() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(DASHBOARD_API_PREFIX + AGENTS_FOR_DIRECTIONS)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.AGENTS_FOR_DIRECTIONS)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
+
+    @Bean
+    public SecurityRule getGroupingAgent() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern(DASHBOARD_API_PREFIX + AGENT_GROUPING)
+                .build()
+                .condition()
+                .hasPermission(SecurityPermissions.AGENT_GROUPING)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .end();
+    }
 
     @Bean
     public SecurityRule getServiceExterieurKpis() {

@@ -29,6 +29,7 @@ public enum Feature {
     PARTICIPANT("participant", Module.ACTES_GESTION),
     AGENT("Agents", Module.ACTES_GESTION),
     RECRUTEMENT("Recrutement", Module.ACTES_GESTION),
+    CARACTERISTIQUE_RECRUTEMENT("Caracteristique recrutement", Module.ACTES_GESTION),
 
     COURRIER("Courrier", Module.GESTION_COURRIER),
 

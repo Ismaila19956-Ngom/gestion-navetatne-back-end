@@ -20,25 +20,23 @@ public class FinancementReportController {
 
     private final FinancementReportService financementReportService;
 
-    @Operation(summary = "Générer le rapport financier complet", 
-               description = "Génère un rapport financier complet incluant recettes, dépenses, investissements et engagements")
+    @Operation(summary = "Générer le rapport financier complet par année",
+            description = "Génère un rapport financier complet incluant recettes, dépenses, investissements et engagements pour tous les budgets d'une année donnée.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Rapport généré avec succès"),
-            @ApiResponse(responseCode = "404", description = "Budget non trouvé"),
+            @ApiResponse(responseCode = "404", description = "Aucun budget trouvé pour l'année spécifiée"), // MODIFIÉ
             @ApiResponse(responseCode = "500", description = "Erreur serveur")
     })
     @GetMapping
     public ResponseEntity<FinancialReportDTO> getFinancialReport(
             @Parameter(description = "Année du rapport", example = "2025")
             @RequestParam Integer annee,
-            
+
             @Parameter(description = "Type de période: mensuel, trimestriel, annuel", example = "annuel")
-            @RequestParam(defaultValue = "annuel") String periodType,
-            
-            @Parameter(description = "ID du budget")
-            @RequestParam Long budgetId) {
-        
-        FinancialReportDTO report = financementReportService.generateFinancialReport(annee, periodType, budgetId);
+            @RequestParam(defaultValue = "annuel") String periodType) { // MODIFIÉ: budgetId supprimé
+
+        // MODIFIÉ: Appel de service sans budgetId
+        FinancialReportDTO report = financementReportService.generateFinancialReport(annee, periodType);
         return new ResponseEntity<>(report, HttpStatus.OK);
     }
 }

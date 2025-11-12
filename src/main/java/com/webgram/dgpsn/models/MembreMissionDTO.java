@@ -27,5 +27,7 @@ public class MembreMissionDTO implements Serializable {
     private String nom;
     private String structure;
     private String telephone;
+    //private String telephone;
+
 
 }

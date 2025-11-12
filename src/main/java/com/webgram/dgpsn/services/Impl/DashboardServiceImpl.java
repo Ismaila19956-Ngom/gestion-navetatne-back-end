@@ -5,12 +5,13 @@ import com.webgram.dgpsn.entities.enums.*;
 import com.webgram.dgpsn.mappers.ManagementUnitMapper;
 import com.webgram.dgpsn.models.AgentCountByDirectionDTO;
 import com.webgram.dgpsn.models.AgentDashboardDTO;
+import com.webgram.dgpsn.models.AgentGroupingDTO;
+import com.webgram.dgpsn.models.RetraiteProjectionDTO;
 import com.webgram.dgpsn.models.responses.*;
 import com.webgram.dgpsn.repositories.*;
 import com.webgram.dgpsn.services.AgentService;
 import com.webgram.dgpsn.services.CongeService;
 import com.webgram.dgpsn.services.DashboardService;
-import com.webgram.dgpsn.services.DirectionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,9 +19,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.Calendar;
 
 @Service
 @Transactional
@@ -32,7 +35,6 @@ public class DashboardServiceImpl implements DashboardService {
 
     private final StructureProjectRepository structureProjectRepository;
     private final StatusRepository statusRepository;
-    //    private final FlagRepository flagRepository;
     private final FundingRepository fundingRepository;
 
     private final FundingConfigRepository fundingConfigRepository;
@@ -172,14 +174,18 @@ public class DashboardServiceImpl implements DashboardService {
             }
         });
 
-        // Compter les missions par mois
+        // Compter les missions par mois - CORRECTION POUR java.sql.Date
         ordreMissionRepository.findAll().forEach(mission -> {
             if (mission.getDateDepartOrdre() != null) {
-                LocalDate date = mission.getDateDepartOrdre().toInstant()
-                        .atZone(java.time.ZoneId.systemDefault()).toLocalDate();
-                if (date.isAfter(now.minusMonths(12))) {
-                    String monthKey = date.getYear() + "-" + String.format("%02d", date.getMonthValue());
-                    missionsByMonth.merge(monthKey, 1L, Long::sum);
+                try {
+                    LocalDate date = convertDateToLocalDate(mission.getDateDepartOrdre());
+                    if (date != null && date.isAfter(now.minusMonths(12))) {
+                        String monthKey = date.getYear() + "-" + String.format("%02d", date.getMonthValue());
+                        missionsByMonth.merge(monthKey, 1L, Long::sum);
+                    }
+                } catch (Exception e) {
+                    log.warn("Impossible de convertir la date pour la mission ID {}: {}",
+                            mission.getId(), e.getMessage());
                 }
             }
         });
@@ -211,6 +217,43 @@ public class DashboardServiceImpl implements DashboardService {
         return result;
     }
 
+    /**
+     * Méthode utilitaire pour convertir java.util.Date ou java.sql.Date en LocalDate
+     * Cette méthode gère les deux types de dates utilisés dans l'application
+     *
+     * @param date la date à convertir (peut être java.util.Date ou java.sql.Date)
+     * @return LocalDate ou null si la conversion échoue
+     */
+    private LocalDate convertDateToLocalDate(Date date) {
+        if (date == null) {
+            return null;
+        }
+
+        try {
+            // Si c'est java.sql.Date, utiliser toLocalDate() directement
+            if (date instanceof java.sql.Date) {
+                return ((java.sql.Date) date).toLocalDate();
+            }
+
+            // Pour java.util.Date, utiliser toInstant()
+            return date.toInstant()
+                    .atZone(java.time.ZoneId.systemDefault())
+                    .toLocalDate();
+        } catch (UnsupportedOperationException e) {
+            // Fallback pour les cas edge
+            log.warn("Conversion via toInstant() non supportée, utilisation de Calendar");
+            java.util.Calendar cal = java.util.Calendar.getInstance();
+            cal.setTime(date);
+            return LocalDate.of(
+                    cal.get(java.util.Calendar.YEAR),
+                    cal.get(java.util.Calendar.MONTH) + 1,
+                    cal.get(java.util.Calendar.DAY_OF_MONTH)
+            );
+        } catch (Exception e) {
+            log.error("Erreur lors de la conversion de la date: {}", e.getMessage());
+            return null;
+        }
+    }
     @Override
     public List<StatisticalDTO> getActivitiesByStatus() {
         Map<String, Long> statusCount = new HashMap<>();
@@ -295,13 +338,64 @@ public class DashboardServiceImpl implements DashboardService {
     }
 
 
+    @Override
+    public AgentGroupingDTO getAgentGrouping() {
+        List<AgentEntity> agents = agentRepository.findAll();
 
+        Map<String, Map<String, Long>> grouped = new LinkedHashMap<>();
+        List<String> tranches = List.of("18-25", "26-35", "36-45", "46-55", "56-60", "60+");
 
+        // Initialiser les tranches avec 0
+        for (String tranche : tranches) {
+            grouped.put(tranche, new HashMap<>(Map.of("masculin", 0L, "feminin", 0L)));
+        }
 
-    /**
-     * Read all agents for card
-     * @return
-     */
+        long totalHommes = 0;
+        long totalFemmes = 0;
+
+        for (AgentEntity agent : agents) {
+            if (agent.getDateNaissance() == null || agent.getSexe() == null) continue;
+
+            LocalDate naissance = (agent.getDateNaissance() instanceof java.sql.Date sqlDate)
+                    ? sqlDate.toLocalDate()
+                    : agent.getDateNaissance().toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
+
+            int age = LocalDate.now().getYear() - naissance.getYear();
+
+            String tranche;
+            if (age >= 18 && age <= 25) {
+                tranche = "18-25";
+            } else if (age >= 26 && age <= 35) {
+                tranche = "26-35";
+            } else if (age >= 36 && age <= 45) {
+                tranche = "36-45";
+            } else if (age >= 46 && age <= 55) {
+                tranche = "46-55";
+            } else if (age >= 56 && age <= 60) {
+                tranche = "56-60";
+            } else {
+                tranche = "60+";
+            }
+
+            String sexeKey = (agent.getSexe() == Sexe.MASCULIN) ? "masculin" : "feminin";
+
+            Map<String, Long> counts = grouped.get(tranche);
+            counts.put(sexeKey, counts.get(sexeKey) + 1);
+            grouped.put(tranche, counts);
+
+            if (agent.getSexe() == Sexe.MASCULIN) totalHommes++;
+            else totalFemmes++;
+        }
+
+        return AgentGroupingDTO.builder()
+                .ageGroups(grouped)
+                .totalHommes(totalHommes)
+                .totalFemmes(totalFemmes)
+                .build();
+    }
+
 
     @Override
     public Map<String, Object> getBudgetSummaryKpis() {
@@ -1107,32 +1201,6 @@ public class DashboardServiceImpl implements DashboardService {
     }
 
     @Override
-    public AgentDashboardDTO getAgentDashboard() {
-        Long totalAgents = agentRepository.count();
-        Long totalAgentsEnConges = (long) congeService.readAll().size();
-        Long totalAgentsParDirection = agentRepository.countAgentsByDirection()
-                .stream()
-                .mapToLong(AgentCountByDirectionDTO::getTotalAgents)
-                .sum();
-        return new AgentDashboardDTO(totalAgents, totalAgentsEnConges, totalAgentsParDirection);
-    }
-
-    @Override
-    public List<DataPoint<String, Long>> getRepartitionNiveauConformite() {
-        return inspectionICPERepository.countByComplianceLevel();
-    }
-    /* Icpe Dashboard END*/
-
-    @Override
-    public AgentDashboardDTO readAllAgents() {
-        return null;
-    }
-    @Override
-    public List<AgentCountByDirectionDTO> readAgentCountByDirection() {
-        return List.of();
-    }
-
-    @Override
     public AgentDashboardDTO getAgentsDashboard() {
         Long totalAgents = agentRepository.count();
         Long totalAgentsEnConges = (long) congeService.readAll().size();
@@ -1142,6 +1210,18 @@ public class DashboardServiceImpl implements DashboardService {
                 .sum();
         return new AgentDashboardDTO(totalAgents, totalAgentsEnConges, totalAgentsParDirection);
     }
+
+    @Override
+    public List<RetraiteProjectionDTO> getRetraiteProjections(Integer annee) {
+        return agentRepository.countFutureRetraitesByDirection(annee);
+    }
+
+    @Override
+    public List<DataPoint<String, Long>> getRepartitionNiveauConformite() {
+        return inspectionICPERepository.countByComplianceLevel();
+    }
+    /* Icpe Dashboard END*/
+
 
     @Override
     public List<AgentCountByDirectionDTO> AgentCountByDirections() {

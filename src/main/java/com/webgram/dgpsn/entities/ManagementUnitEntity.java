@@ -108,6 +108,9 @@ public class ManagementUnitEntity extends Auditable<Long> implements Serializabl
     @ManyToOne(fetch = FetchType.LAZY)
     private ManagementUnitEntity parent;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    private BudgetDgpsnEntity budgetDgpsn;
+
 
     @ManyToMany
     @JoinTable(name = "management_unit_subsector",
@@ -138,6 +141,12 @@ public class ManagementUnitEntity extends Auditable<Long> implements Serializabl
             joinColumns = {@JoinColumn(name = "management_unit_id")},
             inverseJoinColumns = {@JoinColumn(name = "actorsInvolved_id")})
     private List<StructureEntity> actorsInvolved;
+
+    @ManyToMany
+    @JoinTable(name = "management_unit_structuresResponsables",
+            joinColumns = {@JoinColumn(name = "management_unit_id")},
+            inverseJoinColumns = {@JoinColumn(name = "structuresResponsables_id")})
+    private List<StructureEntity> structuresResponsables;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private StructureEntity structure;
