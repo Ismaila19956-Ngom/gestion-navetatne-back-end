@@ -1,6 +1,7 @@
 package com.webgram.dgpsn.repositories;
 
 import com.querydsl.core.BooleanBuilder;
+import com.webgram.dgpsn.entities.enums.TypeLigneBugetaire;
 import com.webgram.dgpsn.models.RealisationDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -67,4 +68,26 @@ public interface RealisationRepository extends JpaRepository<RealisationEntity, 
     }
 
     List<RealisationEntity> findByLigneBudgetaireIdIn(List<Long> ligneBudgetaireIds);
+
+    /**
+     * Trouve les réalisations par année et type de ligne budgétaire
+     */
+    default List<RealisationEntity> findByYearAndType(Integer annee, TypeLigneBugetaire typeDepense) {
+        var booleanBuilder = new BooleanBuilder();
+
+        if (annee != null) {
+            // Filtrer par année directement en SQL
+            booleanBuilder.and(QRealisationEntity.realisationEntity.date.year().eq(annee));
+        }
+
+        if (typeDepense != null) {
+            // Filtrer par type de ligne budgétaire
+            booleanBuilder.and(QRealisationEntity.realisationEntity.ligneBudgetaire.typeLigneBugetaire.eq(typeDepense));
+        }
+
+        // Filtrer les réalisations sans ligne budgétaire
+        booleanBuilder.and(QRealisationEntity.realisationEntity.ligneBudgetaire.isNotNull());
+
+        return (List<RealisationEntity>) findAll(booleanBuilder);
+    }
 }

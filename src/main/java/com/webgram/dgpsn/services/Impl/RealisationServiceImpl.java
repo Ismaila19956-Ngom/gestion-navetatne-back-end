@@ -1,6 +1,7 @@
 package com.webgram.dgpsn.services.Impl;
 
 import com.webgram.dgpsn.annotations.Journal;
+import com.webgram.dgpsn.entities.RealisationEntity;
 import com.webgram.dgpsn.exceptions.ResourceNotFoundException;
 import com.webgram.dgpsn.mappers.RealisationMapper;
 import com.webgram.dgpsn.models.LigneBudgetaireDTO;
@@ -369,61 +370,18 @@ public class RealisationServiceImpl implements RealisationService {
      */
     private List<RealisationDTO> getAllRealisationsByYear(Integer annee, TypeLigneBugetaire typeDepense) {
         try {
-            log.info(">>> Fetching all realisations for year {} and type {}", annee, typeDepense);
+            log.info("Fetching realisations for year {} and type {}", annee, typeDepense);
 
-            // Récupérer toutes les réalisations et filtrer
-            Page<RealisationDTO> allRealisations = readAll(
-                    Pageable.unpaged(),
-                    null, null, null, null, null, null, null, null, null, null
-            );
+            // Récupération optimisée : filtrage en base de données
+            List<RealisationEntity> entities = realisationRepository.findByYearAndType(annee, typeDepense);
 
-            log.info(">>> Total realisations fetched: {}", allRealisations.getTotalElements());
+            log.info("Found {} realisations for year {} and type {}", entities.size(), annee, typeDepense);
 
-            // Premier filtre: par année
-            List<RealisationDTO> filteredByYear = allRealisations.getContent().stream()
-                    .filter(r -> {
-                        try {
-                            LocalDate date = r.getDate();
-                            boolean matches = date != null && date.getYear() == annee;
-                            if (!matches && date != null) {
-                                log.info(">>> Realisation {} excluded by year filter: {} != {}", r.getId(), date.getYear(), annee);
-                            }
-                            return matches;
-                        } catch (Exception e) {
-                            log.warn(">>> Error checking date for realisation id {}: {}", r.getId(), e.getMessage());
-                            return false;
-                        }
-                    })
+            // Conversion en DTO
+            return entities.stream()
+                    .map(realisationMapper::asDto)
                     .collect(Collectors.toList());
 
-            log.info(">>> After year filter: {} realisations", filteredByYear.size());
-
-            // Deuxième filtre: par type
-            List<RealisationDTO> filtered = filteredByYear.stream()
-                    .filter(r -> {
-                        try {
-                            // Filtrer par type de dépense basé sur la ligne budgétaire
-                            if (r.getLigneBudgetaire() != null && r.getLigneBudgetaire().getTypeLigneBugetaire() != null) {
-                                // Comparer les noms des enums au lieu de == pour éviter les problèmes de sérialisation
-                                TypeLigneBugetaire type = r.getLigneBudgetaire().getTypeLigneBugetaire();
-                                boolean matches = type.name().equals(typeDepense.name());
-                                if (!matches) {
-                                    log.info(">>> Realisation {} excluded by type filter: {} != {}", r.getId(), type.name(), typeDepense.name());
-                                }
-                                return matches;
-                            } else {
-                                log.info(">>> Realisation {} excluded: ligne budgetaire or type is null", r.getId());
-                                return false;
-                            }
-                        } catch (Exception e) {
-                            log.warn(">>> Error checking type for realisation id {}: {}", r.getId(), e.getMessage());
-                            return false;
-                        }
-                    })
-                    .collect(Collectors.toList());
-
-            log.info(">>> FINAL filtered realisations: {} for year {} and type {}", filtered.size(), annee, typeDepense);
-            return filtered;
         } catch (Exception e) {
             log.error("Error fetching realisations for year {} and type {}", annee, typeDepense, e);
             return Collections.emptyList();
