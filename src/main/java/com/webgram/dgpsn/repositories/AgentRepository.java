@@ -16,6 +16,8 @@ import org.springframework.stereotype.Repository;
 import com.webgram.dgpsn.entities.enums.TypeStructure;
 import com.webgram.dgpsn.entities.AgentEntity;
 import com.webgram.dgpsn.entities.QAgentEntity;
+import com.webgram.dgpsn.entities.enums.SituationMatrimoniale;
+
 
 import java.util.Date;
 import java.util.List;
@@ -41,8 +43,8 @@ public interface AgentRepository extends JpaRepository<AgentEntity, Long>, Query
             Long fonctionId,
             Long directionId,
             String sortBy,
-            Boolean ascending
-    ) {
+            Boolean ascending,
+            SituationMatrimoniale situationMatrimoniale) {
         var booleanBuider = new BooleanBuilder();
         Sort sort = Sort.unsorted();
 
@@ -84,6 +86,9 @@ public interface AgentRepository extends JpaRepository<AgentEntity, Long>, Query
         }
         if((Objects.nonNull(ascending))) {
             sort.ascending();
+        }
+        if (Objects.nonNull(situationMatrimoniale)) {
+            booleanBuider.and(QAgentEntity.agentEntity.situationMatrimoniale.eq(situationMatrimoniale));
         }
 
         var pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);

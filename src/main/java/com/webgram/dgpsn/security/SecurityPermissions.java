@@ -26,6 +26,13 @@ public enum SecurityPermissions {
     AGENTS_FOR_DIRECTIONS("", Feature.DASHBOARD),
     RETRAITE_PROJECTIONS("", Feature.DASHBOARD),
 
+//    -------------
+
+    READ_CONTRAT_AGENT("Consulter un contrat agent (RH)", Feature.AGENT),
+    ADD_CONTRAT_AGENT("Ajouter un contrat agent (RH)",Feature.AGENT),
+    DELETE_CONTRAT_AGENT("Supprimer un contrat agent (RH)",Feature.AGENT),
+    UPDATE_CONTRAT_AGENT("Modifier un contrat agent (RH)",Feature.AGENT),
+
     /* début fonctionnalités sur la sécurité */
     ADD_PROFILE("Ajouter profil", Feature.PROFILE),
     EDIT_PROFILE("Modifier profil", Feature.PROFILE),

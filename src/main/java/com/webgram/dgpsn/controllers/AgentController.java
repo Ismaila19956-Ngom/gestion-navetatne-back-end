@@ -1,6 +1,7 @@
 package com.webgram.dgpsn.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.webgram.dgpsn.entities.enums.SituationMatrimoniale;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -110,10 +111,12 @@ public class AgentController {
             @Parameter(name = "fonctionId", description = "value of fonctionId used to filter list agent") @RequestParam(value = "fonctionId", required = false) Long fonctionId,
             @Parameter(name = "directionId", description = "value of directionId used to filter list agent") @RequestParam(value = "directionId", required = false) Long directionId,
             @Parameter(name = "sortBy", description = "list of sortRequest used to filter list agent") @RequestParam(value = "sortBy", required = false) String sortBy,
-            @Parameter(name = "ascending", description = "list of ascending used to filter list agent") @RequestParam(value = "ascending", required = false) Boolean ascending
+            @Parameter(name = "ascending", description = "list of ascending used to filter list agent") @RequestParam(value = "ascending", required = false) Boolean ascending,
+            @Parameter(name = "situationMatrimoniale", description = "filtre sur la situation matrimoniale") @RequestParam(value = "situationMatrimoniale", required = false) SituationMatrimoniale situationMatrimoniale
 
-    ) {
-        return agentService.readAll(pageable, idsToIgnore, typeStructure, nom, prenom, adresse, email, telephone, dateCreation, structureId , fonctionId, directionId, sortBy, ascending);
+
+            ) {
+        return agentService.readAll(pageable, idsToIgnore, typeStructure, nom, prenom, adresse, email, telephone, dateCreation, structureId , fonctionId, directionId, sortBy, ascending, situationMatrimoniale);
     }
 
     @Operation(
