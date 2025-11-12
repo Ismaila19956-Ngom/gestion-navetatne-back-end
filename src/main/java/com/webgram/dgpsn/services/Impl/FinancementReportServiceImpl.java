@@ -151,7 +151,7 @@ public class FinancementReportServiceImpl implements FinancementReportService {
                 .numMandat(entity.getNumeroMandat())
                 .factureEtat(entity.getFacture() != null ? entity.getFacture() : entity.getDescription())
                 .montants(entity.getMontant())
-                .fournisseurBeneficiaire(entity.getFournisseur().getRaisonSociale() != null ? entity.getFournisseur().getRaisonSociale() : "")
+                .fournisseurBeneficiaire(entity.getFournisseur() != null && entity.getFournisseur().getRaisonSociale() != null ? entity.getFournisseur().getRaisonSociale() : "")
                 .servicesDGPSN(servicesDGPSN)
                 .compte(compte)
                 .date(entity.getDate())
