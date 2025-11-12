@@ -80,7 +80,6 @@ public enum Feature {
     FOURNISSEUR("Fournisseur", Module.PARAMETRAGE),
 
     ALERTE("Alertes", Module.ALERTE),
-    TEMPLATE("Templates", Module.ALERTE),
 
     USER("Utilisateurs", Module.SECURITY),
     PROFILE("Profils", Module.SECURITY),
