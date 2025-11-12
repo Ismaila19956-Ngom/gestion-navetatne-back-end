@@ -39,7 +39,7 @@ public class MilieuxPollutionServiceImpl implements MilieuxPollutionService {
     public MilieuxPollutionDTO create(MilieuxPollutionDTO milieuxPollutionDTO) {
         milieuxPollutionDTO.setTypeStatut(StatutType.EN_COURS);
         // Appeler la méthode de génération d'alerte
-        alerteService.generateAlertForMilieux(milieuxPollutionDTO);
+//        alerteService.generateAlertForMilieux(milieuxPollutionDTO);
          var saved = milieuxPollutionRepository
                  .save(milieuxPollutionMapper.asEntity(milieuxPollutionDTO));
         log.info("actorProject successfully added {}", saved);

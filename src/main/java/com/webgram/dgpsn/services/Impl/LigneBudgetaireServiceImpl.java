@@ -33,6 +33,7 @@ public class LigneBudgetaireServiceImpl implements LigneBudgetaireService {
     private final LigneBudgetaireMapper ligneBudgetaireMapper;
     @PersistenceContext
     private EntityManager entityManager;
+    private final AlerteServiceImpl alerteService;
 
     @Override
     @Transactional
@@ -50,53 +51,97 @@ public class LigneBudgetaireServiceImpl implements LigneBudgetaireService {
         updateMontantEngage(budget);
         var saved = ligneBudgetaireRepository.save(ligne);
         entityManager.merge(budget);
-        log.info("LigneBudgetaire ajoutée, budget engagé: {}/{}", budget.getMontantEngage(), budget.getMontant());
+        alerteService.generateAlertNouvelleLigneBudget(ligneBudgetaireMapper.asDto(saved));
+//        log.info("LigneBudgetaire ajoutée, budget engagé: {}/{}", budget.getMontantEngage(), budget.getMontant());
         return ligneBudgetaireMapper.asDto(saved);
     }
 
-    @Override
-    @Transactional
-    @Journal(actionType = ActionType.ADD_DATES_IMPORTANTE)
-    public List<LigneBudgetaireDTO> createMultiple(List<LigneBudgetaireDTO> dtos) {
-        if (dtos.isEmpty()) return List.of();
+//    @Override
+//    @Transactional
+//    @Journal(actionType = ActionType.ADD_DATES_IMPORTANTE)
+//    public List<LigneBudgetaireDTO> createMultiple(List<LigneBudgetaireDTO> dtos) {
+//        if (dtos.isEmpty()) return List.of();
+//
+//        var budgetId = dtos.get(0).getBudgetId();
+//        var budget = entityManager.find(BudgetDgpsnEntity.class, budgetId);
+//
+//        if (budget == null) {
+//            throw new ResourceNotFoundException("Budget", budgetId);
+//        }
+//
+//        double totalAjout = dtos.stream()
+//                .mapToDouble(dto -> dto.getMontant() != null ? dto.getMontant() : 0.0)
+//                .sum();
+//
+//        double nouveauTotal = budget.getMontantEngage() + totalAjout;
+//
+//        if (nouveauTotal > budget.getMontant()) {
+//            throw new BudgetDepassementException(
+//                    String.format("Dépassement du Budget : le total %.2f FCFA dépasse le budget autorisé de %.2f FCFA. " +
+//                                    "Montant actuellement engagé : %.2f FCFA, montant à ajouter : %.2f FCFA",
+//                            nouveauTotal, budget.getMontant(), budget.getMontantEngage(), totalAjout)
+//            );
+//        }
+//
+//        var entities = dtos.stream()
+//                .map(ligneBudgetaireMapper::asEntity)
+//                .peek(l -> l.setBudget(budget))
+//                .collect(Collectors.toList());
+//
+//        var saved = ligneBudgetaireRepository.saveAll(entities);
+//        budget.getLignesBudgetaires().addAll(entities);
+//        updateMontantEngage(budget);
+//        entityManager.merge(budget);
+//
+//        log.info("Multiple lignes budgétaires ajoutées. Nouveau montant engagé: {}/{}",
+//                budget.getMontantEngage(), budget.getMontant());
+//
+//        return saved.stream().map(ligneBudgetaireMapper::asDto).collect(Collectors.toList());
+//    }
+@Override
+@Transactional
+@Journal(actionType = ActionType.ADD_DATES_IMPORTANTE)
+public List<LigneBudgetaireDTO> createMultiple(List<LigneBudgetaireDTO> dtos) {
+    if (dtos.isEmpty()) return List.of();
+    var budgetId = dtos.get(0).getBudgetId();
+    var budget = entityManager.find(BudgetDgpsnEntity.class, budgetId);
 
-        var budgetId = dtos.get(0).getBudgetId();
-        var budget = entityManager.find(BudgetDgpsnEntity.class, budgetId);
-
-        if (budget == null) {
-            throw new ResourceNotFoundException("Budget", budgetId);
-        }
-
-        double totalAjout = dtos.stream()
-                .mapToDouble(dto -> dto.getMontant() != null ? dto.getMontant() : 0.0)
-                .sum();
-
-        double nouveauTotal = budget.getMontantEngage() + totalAjout;
-
-        if (nouveauTotal > budget.getMontant()) {
-            throw new BudgetDepassementException(
-                    String.format("Dépassement du Budget : le total %.2f FCFA dépasse le budget autorisé de %.2f FCFA. " +
-                                    "Montant actuellement engagé : %.2f FCFA, montant à ajouter : %.2f FCFA",
-                            nouveauTotal, budget.getMontant(), budget.getMontantEngage(), totalAjout)
-            );
-        }
-
-        var entities = dtos.stream()
-                .map(ligneBudgetaireMapper::asEntity)
-                .peek(l -> l.setBudget(budget))
-                .collect(Collectors.toList());
-
-        var saved = ligneBudgetaireRepository.saveAll(entities);
-        budget.getLignesBudgetaires().addAll(entities);
-        updateMontantEngage(budget);
-        entityManager.merge(budget);
-
-        log.info("Multiple lignes budgétaires ajoutées. Nouveau montant engagé: {}/{}",
-                budget.getMontantEngage(), budget.getMontant());
-
-        return saved.stream().map(ligneBudgetaireMapper::asDto).collect(Collectors.toList());
+    if (budget == null) {
+        throw new ResourceNotFoundException("Budget", budgetId);
     }
+    double totalAjout = dtos.stream()
+            .mapToDouble(dto -> dto.getMontant() != null ? dto.getMontant() : 0.0)
+            .sum();
+    double nouveauTotal = budget.getMontantEngage() + totalAjout;
+    if (nouveauTotal > budget.getMontant()) {
+        throw new BudgetDepassementException(
+                String.format("Dépassement du Budget : le total %.2f FCFA dépasse le budget autorisé de %.2f FCFA. " +
+                                "Montant actuellement engagé : %.2f FCFA, montant à ajouter : %.2f FCFA",
+                        nouveauTotal, budget.getMontant(), budget.getMontantEngage(), totalAjout)
+        );
+    }
+    var entities = dtos.stream()
+            .map(ligneBudgetaireMapper::asEntity)
+            .peek(l -> l.setBudget(budget))
+            .collect(Collectors.toList());
 
+    var saved = ligneBudgetaireRepository.saveAll(entities);
+    budget.getLignesBudgetaires().addAll(entities);
+    updateMontantEngage(budget);
+    entityManager.merge(budget);
+
+    log.info("Multiple lignes budgétaires ajoutées. Nouveau montant engagé: {}/{}",
+            budget.getMontantEngage(), budget.getMontant());
+
+    // === UNE SEULE ALERTE POUR TOUTES LES LIGNES ===
+    var savedDtos = saved.stream()
+            .map(ligneBudgetaireMapper::asDto)
+            .collect(Collectors.toList());
+
+    alerteService.generateAlertMultipleLignesBudgetAjoutees(savedDtos, budgetId, totalAjout);
+
+    return savedDtos;
+}
     @Override
     @Transactional
     @Journal(actionType = ActionType.UPDATE_DATES_IMPORTANTE)
@@ -131,6 +176,7 @@ public class LigneBudgetaireServiceImpl implements LigneBudgetaireService {
         entityManager.merge(budget);
 
         var updated = ligneBudgetaireRepository.save(existing);
+        alerteService.generateAlertNouvelleLigneBudget(ligneBudgetaireMapper.asDto(updated));
         log.info("LigneBudgetaire mise à jour. Nouveau montant engagé: {}/{}",
                 budget.getMontantEngage(), budget.getMontant());
 
@@ -157,6 +203,9 @@ public class LigneBudgetaireServiceImpl implements LigneBudgetaireService {
         var budget = ligne.getBudget();
         budget = entityManager.find(BudgetDgpsnEntity.class, budget.getId());
         budget.getLignesBudgetaires().remove(ligne);
+
+        // ALERTE DE SUPPRESSION (avant suppression)
+        alerteService.generateAlertDeleteLigneBudget(ligneBudgetaireMapper.asDto(ligne));
 
         ligneBudgetaireRepository.delete(ligne);
         updateMontantEngage(budget);

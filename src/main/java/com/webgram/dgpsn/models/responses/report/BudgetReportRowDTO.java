@@ -17,6 +17,8 @@ import java.util.Map;
 public class BudgetReportRowDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    private boolean isTitle = false;
+
     // Identifiants hiérarchiques
     private String classe;
     private String compte;
@@ -29,8 +31,10 @@ public class BudgetReportRowDTO implements Serializable {
     private Boolean isTotal;
 
     // Budgets
-    private Double budget2024;
-    private Double budget2025;
+    private Double budgetInitial;
+    private Double primitif;
+    private Double modification;
+    private Double budgetModifie;
 
     // Réalisations par période (mois ou trimestres)
     private Map<String, Double> realisationsPeriodiques; // janvier, fevrier, t1, t2, etc.

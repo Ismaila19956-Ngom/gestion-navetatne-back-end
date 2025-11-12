@@ -81,7 +81,6 @@ public enum Feature {
     PLAN_DE_PASSATION_MARKET("Plan de passation market", Module.PROJECT_LIST),
 
     ALERTE("Alertes", Module.ALERTE),
-    TEMPLATE("Templates", Module.ALERTE),
 
     USER("Utilisateurs", Module.SECURITY),
     PROFILE("Profils", Module.SECURITY),

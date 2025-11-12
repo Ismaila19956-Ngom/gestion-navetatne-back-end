@@ -39,7 +39,7 @@ public class RejetPollutionServiceImpl implements RejetPollutionService {
     public RejetPollutionDTO create(RejetPollutionDTO rejetPollution) {
         rejetPollution.setTypeStatut(StatutType.EN_COURS);
         // Appeler la méthode de génération d'alerte
-        alerteService.generateAlertForRejet(rejetPollution);
+//        alerteService.generateAlertForRejet(rejetPollution);
         var savedrejetPollution = rejetPollutionRepository
                 .save(rejetPollutionMapper.asEntity(rejetPollution));
         log.info("actorProject successfully added {}", savedrejetPollution);

@@ -26,6 +26,13 @@ public enum SecurityPermissions {
     AGENTS_FOR_DIRECTIONS("", Feature.DASHBOARD),
     RETRAITE_PROJECTIONS("", Feature.DASHBOARD),
 
+//    -------------
+
+    READ_CONTRAT_AGENT("Consulter un contrat agent (RH)", Feature.AGENT),
+    ADD_CONTRAT_AGENT("Ajouter un contrat agent (RH)",Feature.AGENT),
+    DELETE_CONTRAT_AGENT("Supprimer un contrat agent (RH)",Feature.AGENT),
+    UPDATE_CONTRAT_AGENT("Modifier un contrat agent (RH)",Feature.AGENT),
+
     /* début fonctionnalités sur la sécurité */
     ADD_PROFILE("Ajouter profil", Feature.PROFILE),
     EDIT_PROFILE("Modifier profil", Feature.PROFILE),
@@ -47,6 +54,7 @@ public enum SecurityPermissions {
     ADD_ALERTE("Ajouter alerte", Feature.ALERTE),
     EDIT_ALERTE("Modifier alerte", Feature.ALERTE),
     DELETE_ALERTE("Supprimer alerte", Feature.ALERTE),
+    READ_NOTIFICATION("Consulter les notifications", Feature.ALERTE),
 
     ADD_PLAN_DE_PASSATION("ajouter plan passation", Feature.PLAN_DE_PASSATION),
     READ_PLAN_DE_PASSATION("consulter plan passation", Feature.PLAN_DE_PASSATION),
@@ -58,10 +66,6 @@ public enum SecurityPermissions {
     EDIT_DIRECTION("Modifier  direction", Feature.ORGANIGRAMME),
     DELETE_DIRECTION("Supprimer  direction", Feature.ORGANIGRAMME),
 
-    READ_TEMPLATE("Consulter liste alerte", Feature.TEMPLATE),
-    ADD_TEMPLATE("Ajouter alerte", Feature.TEMPLATE),
-    EDIT_TEMPLATE("Modifier alerte", Feature.TEMPLATE),
-    DELETE_TEMPLATE("Supprimer alerte", Feature.TEMPLATE),
 
     READ_PROJECT("Consulter liste projet", Feature.PROJECT_LIST),
     ADD_PROJECT("Ajouter projet", Feature.PROJECT_LIST),
