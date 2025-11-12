@@ -114,10 +114,10 @@ public enum SecurityPermissions {
     DELETE_CONGE("Supprimer congé", Feature.DEMANDE_CONGE),
     READ_CONGE("Consulter congé", Feature.DEMANDE_CONGE),
     VALIDATION_CONGE("Valider congé", Feature.DEMANDE_CONGE),
-    GENERATE_FICHE_CONGE("Générer fiche de renseignement  congé", Feature.DEMANDE_CONGE),
+    GENERATE_FICHE_CONGE("Générer l’attestation de reprise", Feature.DEMANDE_CONGE),
     GENERATE_DEMANDE_CONGE("Générer demande  congé", Feature.DEMANDE_CONGE),
     GENERATE_DECISION_CONGE("Générer décision  congé", Feature.DEMANDE_CONGE),
-    GENERATE_BE_CONGE("Générer BE congé", Feature.DEMANDE_CONGE),
+   // GENERATE_BE_CONGE("Générer BE congé", Feature.DEMANDE_CONGE),
     READ_DOCUMENT_CONGE("Consulter document congé", Feature.DEMANDE_CONGE),
 
     READ_CESSATION_CONGE("Consulter Cessation Service", Feature.DEMANDE_CONGE),
@@ -261,16 +261,16 @@ public enum SecurityPermissions {
     DELETE_ETAPE_MISSION_ACTIVITY("Supprimer etape", Feature.ETAPE_MISSION_ACTIVITY),
     READ_ETAPE_MISSION_ACTIVITY("Lire etape", Feature.ETAPE_MISSION_ACTIVITY),
 
-    ADD_FORMATION_EXTERIEUR("Ajouter formation externe", Feature.FORMATION),
-    READ_FORMATION_EXTERIEUR("Consulter formation externe", Feature.FORMATION),
-    EDIT_FORMATION_EXTERIEUR("Modifier formation externe", Feature.FORMATION),
-    DELETE_FORMATION_EXTERIEUR("Supprimer formation externe", Feature.FORMATION),
+    ADD_FORMATION_EXTERIEUR("Ajouter formation externe", Feature.SERVICE_EXTERIEUR),
+    READ_FORMATION_EXTERIEUR("Consulter formation externe", Feature.SERVICE_EXTERIEUR),
+    EDIT_FORMATION_EXTERIEUR("Modifier formation externe", Feature.SERVICE_EXTERIEUR),
+    DELETE_FORMATION_EXTERIEUR("Supprimer formation externe", Feature.SERVICE_EXTERIEUR),
 
 
-    READ_ATELIER("lier atelier", Feature.ATELIER),
-    ADD_ATELIER("ajouter atelier ", Feature.ATELIER),
-    EDIT_ATELIER("modifier atelier ", Feature.ATELIER),
-    DELETE_ATELIER("supprimer atelier ", Feature.ATELIER),
+    READ_ATELIER("lier atelier", Feature.SERVICE_EXTERIEUR),
+    ADD_ATELIER("ajouter atelier ", Feature.SERVICE_EXTERIEUR),
+    EDIT_ATELIER("modifier atelier ", Feature.SERVICE_EXTERIEUR),
+    DELETE_ATELIER("supprimer atelier ", Feature.SERVICE_EXTERIEUR),
 
     READ_PARTICIPANT("lire participant ", Feature.PARTICIPANT),
     ADD_PARTICIPANT("ajouter participant ", Feature.PARTICIPANT),
@@ -306,13 +306,13 @@ public enum SecurityPermissions {
     READ_FILE_RECRUTEMENT("read file recrutement", Feature.RECRUTEMENT),
 
     /*parametrage plant comptable*/
-    READ_PLAN_COMPTABLE("Consulter parametrage plant comptable", Feature.PLAN_COMPTABLE),
-    ADD_PLAN_COMPTABLE("Ajouter parametrage plant comptable", Feature.PLAN_COMPTABLE),
-    EDIT_PLAN_COMPTABLE("Modifier parametrage plant comptable", Feature.PLAN_COMPTABLE),
-    DELETE_PLAN_COMPTABLE("Supprimer parametrage plant comptable", Feature.PLAN_COMPTABLE),
-    IMPORT_PLAN_COMPTABLE("Import parametrage plant comptable", Feature.PLAN_COMPTABLE),
-    EXPORT_PLAN_COMPTABLE("Export parametrage plant comptable", Feature.PLAN_COMPTABLE),
-    READ_FILE_PLAN_COMPTABLE("Read file parametrage plant comptable", Feature.PLAN_COMPTABLE),
+    READ_PLAN_COMPTABLE("Consulter classe comptable", Feature.PLAN_COMPTABLE),
+    ADD_PLAN_COMPTABLE("Ajouter classe comptable", Feature.PLAN_COMPTABLE),
+    EDIT_PLAN_COMPTABLE("Modifier classe comptable", Feature.PLAN_COMPTABLE),
+    DELETE_PLAN_COMPTABLE("Supprimer classe comptable", Feature.PLAN_COMPTABLE),
+    IMPORT_PLAN_COMPTABLE("Import classe comptable", Feature.PLAN_COMPTABLE),
+    EXPORT_PLAN_COMPTABLE("Export class comptable", Feature.PLAN_COMPTABLE),
+    READ_FILE_PLAN_COMPTABLE("Read file class comptable", Feature.PLAN_COMPTABLE),
 
     /*fournisseur */
     READ_FOURNISSEUR("Consulter fournisseur", Feature.FOURNISSEUR),

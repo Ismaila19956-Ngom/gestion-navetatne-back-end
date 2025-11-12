@@ -3,7 +3,6 @@ package com.webgram.dgpsn.entities.enums;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
-import com.webgram.dgpsn.entities.enums.Module;
 
 import java.text.MessageFormat;
 import java.util.*;
@@ -26,8 +25,7 @@ public enum Feature {
     ORDRE_MISSION("Ordre de mission", Module.ACTES_GESTION),
     CANDIDAT("Candidat", Module.ACTES_GESTION),
     DEMANDE_CONGE("Demandes de congés", Module.ACTES_GESTION),
-    FORMATION("Formation externe", Module.ACTES_GESTION),
-    ATELIER("atelier", Module.ACTES_GESTION),
+     SERVICE_EXTERIEUR("Service externe", Module.ACTES_GESTION),
     PARTICIPANT("participant", Module.ACTES_GESTION),
     AGENT("Agents", Module.ACTES_GESTION),
     RECRUTEMENT("Recrutement", Module.ACTES_GESTION),
@@ -74,11 +72,11 @@ public enum Feature {
     ASSIGNMENT_TYPE("Types mission", Module.PARAMETRAGE),
     ROLE("Roles", Module.PARAMETRAGE),
     AXE_PSE("Axe PSE", Module.PARAMETRAGE),
-    CATEGORY("Catégorie", Module.PARAMETRAGE),
+     CATEGORY("Catégorie", Module.PARAMETRAGE),
     SOURCE("Sources", Module.PARAMETRAGE),
     LABEL("Label", Module.PARAMETRAGE),
     PROMOTEUR("Promoteur", Module.PARAMETRAGE),
-    PLAN_COMPTABLE("Plan comptable", Module.PARAMETRAGE),
+    PLAN_COMPTABLE("Classe", Module.PARAMETRAGE),
     FOURNISSEUR("Fournisseur", Module.PARAMETRAGE),
 
     ALERTE("Alertes", Module.ALERTE),
