@@ -76,6 +76,10 @@ public enum SecurityPermissions {
     READ_PROJECT_EENTREPRISE("Consulter entreprises", Feature.PROJECT_LIST),
     READ_SUMMARY_SHEET("Consulter fiche de synthèse", Feature.PROJECT_LIST),
     READ_DETAIL("Consulter détails", Feature.PROJECT_LIST),
+    ADD_PLAN_DE_PASSATION_MARKET("Ajouter plan de passation", Feature.PROJECT_LIST),
+    READ_PLAN_DE_PASSATION_MARKET("Consulter plan de passation", Feature.PROJECT_LIST),
+    DELETE_PLAN_DE_PASSATION_MARKET("Supprimer plan de passation", Feature.PROJECT_LIST),
+    EDIT_PLAN_DE_PASSATION_MARKET("Modifier plan de passation", Feature.PROJECT_LIST),
 
     /* fin fonctionnalités sur la liste des projets */
 

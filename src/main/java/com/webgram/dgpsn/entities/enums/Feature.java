@@ -78,6 +78,7 @@ public enum Feature {
     PROMOTEUR("Promoteur", Module.PARAMETRAGE),
     PLAN_COMPTABLE("Classe", Module.PARAMETRAGE),
     FOURNISSEUR("Fournisseur", Module.PARAMETRAGE),
+    PLAN_DE_PASSATION_MARKET("Plan de passation market", Module.PROJECT_LIST),
 
     ALERTE("Alertes", Module.ALERTE),
 
