@@ -14,7 +14,7 @@ spring:
     name: ${DB_NAME:dgpsn-db}
     host: ${DB_HOST:127.0.0.1}
     username: ${DB_USERNAME:postgres}
-    password: ${DB_PASSWORD:root}
+    password: ${DB_PASSWORD:passer}
 
     url: jdbc:postgresql://${spring.datasource.host}:5432/${spring.datasource.name}?autoReconnect=true&useSSL=false&createDatabaseIfNotExist=true
   servlet:
