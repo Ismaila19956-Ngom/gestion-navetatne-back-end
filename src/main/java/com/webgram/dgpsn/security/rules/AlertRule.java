@@ -20,10 +20,7 @@ public class AlertRule {
                 .apiPattern(ALERTE_API_PREFIX + ALERT_ID)
                 .build()
                 .condition()
-                .hasPermission(SecurityPermissions.READ_ALERTE)
-                .hasPermission(SecurityPermissions.ADD_ALERTE)
-                .hasPermission(SecurityPermissions.EDIT_ALERTE)
-                .hasPermission(SecurityPermissions.DELETE_ALERTE)
+                .hasPermission(SecurityPermissions.READ_NOTIFICATION)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
@@ -35,10 +32,7 @@ public class AlertRule {
                 .apiPattern(ALERTE_API_PREFIX)
                 .build()
                 .condition()
-                .hasPermission(SecurityPermissions.READ_ALERTE)
-                .hasPermission(SecurityPermissions.ADD_ALERTE)
-                .hasPermission(SecurityPermissions.EDIT_ALERTE)
-                .hasPermission(SecurityPermissions.DELETE_ALERTE)
+                .hasPermission(SecurityPermissions.READ_NOTATION)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }

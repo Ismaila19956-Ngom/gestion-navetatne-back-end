@@ -208,4 +208,7 @@ Optional<Double> countTotalProjects();
     List<ManagementUnitEntity> findByParentIdInAndType(@Param("parentIds") List<Long> parentIds, @Param("type") TypeProjet type);
 
     List<ManagementUnitEntity> findByBudgetDgpsnId(@Param("budgetDgpsnId") Long budgetDgpsnId);
+
+    @Query("SELECT m FROM ManagementUnitEntity m WHERE m.budgetDgpsn.id = :budgetId AND m.type = :type ORDER BY m.code ASC")
+    List<ManagementUnitEntity> findByBudgetDgpsnIdAndType(@Param("budgetId") Long budgetId, @Param("type") TypeProjet type);
 }
