@@ -11,7 +11,7 @@ spring:
   profiles:
     active: default
   datasource:
-    name: ${DB_NAME:dgpsn-db}
+    name: ${DB_NAME:dgpsn_db}
     host: ${DB_HOST:127.0.0.1}
     username: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD:passer}
