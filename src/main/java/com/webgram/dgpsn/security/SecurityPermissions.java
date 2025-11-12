@@ -504,6 +504,7 @@ public enum SecurityPermissions {
     READ_STATISTIQUES("Consulter statistiques", Feature.COURRIER),
     IMPORT_COURRIER("Importer courrier", Feature.COURRIER),
     EXPORT_COURRIER("Exporter courrier", Feature.COURRIER),
+    DOCUMENT_COURIER("Consulter document courrier ", Feature.COURRIER),
     /* Fin security courriers */
 
     ADD_PROMOTEUR("Ajouter promoteur", Feature.PROMOTEUR),
