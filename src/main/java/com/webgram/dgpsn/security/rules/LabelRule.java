@@ -60,6 +60,8 @@ public class LabelRule {
                 .hasPermission(SecurityPermissions.EDIT_LABEL)
                 .hasPermission(SecurityPermissions.DELETE_LABEL)
                 .hasPermission(SecurityPermissions.READ_PROJECT_PROGRESS_TRACKING)
+                .hasPermission(SecurityPermissions.READ_PTBA)
+                .hasPermission(SecurityPermissions.READ_FINANCEMENT_BUDGET)
 //                .hasPermission(SecurityPermissions.ADD_PASSATION)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();

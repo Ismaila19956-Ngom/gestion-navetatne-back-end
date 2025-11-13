@@ -20,11 +20,9 @@ public class FinancementReportRule {
                 .apiPattern(FINANCEMENT_REPORT_API_PREFIX)
                 .build()
                 .condition()
-//                .hasPermission(SecurityPermissions.READ_FINANCEMENT_REPORT)
-//                .hasPermission(SecurityPermissions.ADD_FINANCEMENT_REPORT)
-//                .hasPermission(SecurityPermissions.EDIT_FINANCEMENT_REPORT)
-//                .hasPermission(SecurityPermissions.DELETE_FINANCEMENT_REPORT)
-                .hasPermission(SecurityPermissions.READ_PROJECT_SETTINGS)
+                .hasPermission(SecurityPermissions.READ_RAPPORT)
+                .hasPermission(SecurityPermissions.EXPORT_RAPPORT)
+                .hasPermission(SecurityPermissions.GENERATE_RAPPORT)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
