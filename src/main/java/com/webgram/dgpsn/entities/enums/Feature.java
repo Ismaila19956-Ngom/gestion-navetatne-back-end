@@ -37,6 +37,7 @@ public enum Feature {
     DOCUMENT("Documents", Module.DOCUMENT),
 
     ORGANIGRAMME("Organigramme",Module.ORGANIGRAMMER),
+    PTBA("PTBA",Module.FINANCEMENT_SETTINGS),
 
     BUDGET("Budget", Module.FINANCEMENT_SETTINGS),
     FUNDING_CONFIG(" besoin financement,Mobilisation et execution", Module.FINANCEMENT_SETTINGS),

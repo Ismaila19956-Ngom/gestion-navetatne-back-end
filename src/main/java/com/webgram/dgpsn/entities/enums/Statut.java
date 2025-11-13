@@ -10,7 +10,7 @@ import java.util.Map;
 
 public enum Statut {
     NOUVELLE("Nouvelle"),
-    EN_COURS("En cours de traitement"),
+    EN_COURS("En cours de trayitement"),
     TRAITEE("Traitée"),
     REJETEE("Rejetée");
 
