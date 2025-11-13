@@ -15,7 +15,7 @@ public enum Module {
     ACTES_GESTION("Gestion Administrative"),
     PROJECT_LIST("Gestion des projets"),
     GESTION_COURRIER("Gestion courrier"),
-    FINANCEMENT_SETTINGS("Financement"),
+    FINANCEMENT_SETTINGS("Gestion Financière"),
     DOCUMENT("Gestion Documentaires"),
     ORGANIGRAMMER("Organigramme"),
     PARAMETRAGE("Parametrage"),
