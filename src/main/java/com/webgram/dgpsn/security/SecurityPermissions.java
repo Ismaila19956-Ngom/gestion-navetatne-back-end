@@ -223,28 +223,29 @@ public enum SecurityPermissions {
     READ_FILE_DOCUMENT("Lire document", Feature.DOCUMENT),
 
 
-    ADD_REALISATION("Ajouter realisation", Feature.BUDGET),
-    EDIT_REALISATION("Modifier realisation", Feature.BUDGET),
-    DELETE_REALISATION("Supprimer realisation", Feature.BUDGET),
-    READ_REALISATION("Consulter realisation", Feature.BUDGET),
+    ADD_REALISATION("Suivi des lignes budgétaires / Rubriques / Réalisation / Ajouter une réalisation", Feature.BUDGET),
+    EDIT_REALISATION("Suivi des lignes budgétaires / Rubriques / Réalisation / Modifier realisation", Feature.BUDGET),
+    DELETE_REALISATION("Suivi des lignes budgétaires / Rubriques / Réalisation / Supprimer realisation", Feature.BUDGET),
+    READ_REALISATION("Suivi des lignes budgétaires / Rubriques / Réalisation / Consulter realisation", Feature.BUDGET),
 
     ADD_BUDGET("Ajouter budget", Feature.BUDGET),
     EDIT_BUDGET("Modifier budget", Feature.BUDGET),
     DELETE_BUDGET("Supprimer budget", Feature.BUDGET),
     READ_BUDGET("Consulter budget", Feature.BUDGET),
+    SUIVIS_LIGNE_BUDGETAIRE("Budjet / Suivis ligne budgetaire", Feature.BUDGET),
 
     READ_FINANCEMENT_BUDGET("Consulter financement budget", Feature.BUDGET),
-    READ_PTBA("Consulter PTBA", Feature.BUDGET),
+    READ_PTBA("Consulter PTBA", Feature.PTBA),
 
-    ADD_LIGNE_BUDGETAIRE("Ajouter ligne budgetaire", Feature.BUDGET),
-    EDIT_LIGNE_BUDGETAIRE("Modifier ligne budgetaire", Feature.BUDGET),
-    DELETE_LIGNE_BUDGETAIRE("Supprimer ligne budgetaire", Feature.BUDGET),
-    READ_LIGNE_BUDGETAIRE("Consulter ligne budgetaire", Feature.BUDGET),
+    ADD_LIGNE_BUDGETAIRE("Suivi des lignes budgétaires / Rubriques /Ajouter une ligne budgetaire", Feature.BUDGET),
+    EDIT_LIGNE_BUDGETAIRE("Suivi des lignes budgétaires / Rubriques /Modifier ligne budgetaire", Feature.BUDGET),
+    DELETE_LIGNE_BUDGETAIRE("Suivi des lignes budgétaires / Rubriques /Supprimer ligne budgetaire", Feature.BUDGET),
+    READ_LIGNE_BUDGETAIRE("Suivi des lignes budgétaires / Rubriques /Consulter ligne budgetaire", Feature.BUDGET),
 
-    ADD_FUNDING_SOURCE("Ajouter Souce financement", Feature.BUDGET),
-    EDIT_FUNDING_SOURCE("Modifier Souce financement", Feature.BUDGET),
-    DELETE_FUNDING_SOURCE("Supprimer Souce financement", Feature.BUDGET),
-    READ_FUNDING_SOURCE("Lire Souce financement", Feature.BUDGET),
+    ADD_FUNDING_SOURCE("Financement / Objectifs / Ajouter Souce financement", Feature.BUDGET),
+    EDIT_FUNDING_SOURCE("Financement / Objectifs / Modifier Souce financement", Feature.BUDGET),
+    DELETE_FUNDING_SOURCE("Financement / Objectifs / Supprimer Souce financement", Feature.BUDGET),
+    READ_FUNDING_SOURCE("Financement / Objectifs / Lire Souce financement", Feature.BUDGET),
 
     ADD_FUNDING_CONFIG("Ajout  besoin financement,Mobilisation et execution ", Feature.FUNDING_CONFIG),
     EDIT_FUNDING_CONFIG("Ajout  besoin financement,Mobilisation et execution ", Feature.FUNDING_CONFIG),
