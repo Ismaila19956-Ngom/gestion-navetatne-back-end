@@ -69,6 +69,7 @@ public class StructureRule {
                 .hasPermission(SecurityPermissions.READ_PROJECT_PROGRESS_TRACKING)
                 .hasPermission(SecurityPermissions.READ_PROJECT_SETTINGS)
                 .hasPermission(SecurityPermissions.READ_TDB_RESUME)
+                .hasPermission(SecurityPermissions.READ_PTBA)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }

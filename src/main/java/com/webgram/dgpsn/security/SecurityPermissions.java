@@ -233,6 +233,9 @@ public enum SecurityPermissions {
     DELETE_BUDGET("Supprimer budget", Feature.BUDGET),
     READ_BUDGET("Consulter budget", Feature.BUDGET),
 
+    READ_FINANCEMENT_BUDGET("Consulter financement budget", Feature.BUDGET),
+    READ_PTBA("Consulter PTBA", Feature.BUDGET),
+
     ADD_LIGNE_BUDGETAIRE("Ajouter ligne budgetaire", Feature.BUDGET),
     EDIT_LIGNE_BUDGETAIRE("Modifier ligne budgetaire", Feature.BUDGET),
     DELETE_LIGNE_BUDGETAIRE("Supprimer ligne budgetaire", Feature.BUDGET),
