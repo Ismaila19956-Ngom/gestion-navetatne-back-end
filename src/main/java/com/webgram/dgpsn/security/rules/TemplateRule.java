@@ -27,7 +27,7 @@ public class TemplateRule {
                 .apiPattern(TEMPLATE_PREFIX)
                 .build()
                 .condition()
-                .hasPermission(SecurityPermissions.ADD_TEMPLATE)
+                .hasPermission(SecurityPermissions.ADD_ALERTE)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
@@ -39,7 +39,7 @@ public class TemplateRule {
                 .apiPattern(TEMPLATE_PREFIX + TEMPLATE_ID)
                 .build()
                 .condition()
-                .hasPermission(SecurityPermissions.EDIT_TEMPLATE)
+                .hasPermission(SecurityPermissions.EDIT_ALERTE)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
@@ -51,10 +51,10 @@ public class TemplateRule {
                 .apiPattern(TEMPLATE_PREFIX + TEMPLATE_ID)
                 .build()
                 .condition()
-                .hasPermission(SecurityPermissions.READ_TEMPLATE)
-                .hasPermission(SecurityPermissions.ADD_TEMPLATE)
-                .hasPermission(SecurityPermissions.EDIT_TEMPLATE)
-                .hasPermission(SecurityPermissions.DELETE_TEMPLATE)
+                .hasPermission(SecurityPermissions.READ_ALERTE)
+                .hasPermission(SecurityPermissions.ADD_ALERTE)
+                .hasPermission(SecurityPermissions.EDIT_ALERTE)
+                .hasPermission(SecurityPermissions.DELETE_ALERTE)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
@@ -66,10 +66,10 @@ public class TemplateRule {
                 .apiPattern(TEMPLATE_PREFIX)
                 .build()
                 .condition()
-                .hasPermission(SecurityPermissions.READ_TEMPLATE)
-                .hasPermission(SecurityPermissions.ADD_TEMPLATE)
-                .hasPermission(SecurityPermissions.EDIT_TEMPLATE)
-                .hasPermission(SecurityPermissions.DELETE_TEMPLATE)
+                .hasPermission(SecurityPermissions.READ_ALERTE)
+                .hasPermission(SecurityPermissions.ADD_ALERTE)
+                .hasPermission(SecurityPermissions.EDIT_ALERTE)
+                .hasPermission(SecurityPermissions.DELETE_ALERTE)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
@@ -80,10 +80,10 @@ public class TemplateRule {
                 .apiPattern(TEMPLATE_PREFIX + TEMPLATE_ALERTE )
                 .build()
                 .condition()
-                .hasPermission(SecurityPermissions.READ_TEMPLATE)
-                .hasPermission(SecurityPermissions.ADD_TEMPLATE)
-                .hasPermission(SecurityPermissions.EDIT_TEMPLATE)
-                .hasPermission(SecurityPermissions.DELETE_TEMPLATE)
+                .hasPermission(SecurityPermissions.READ_ALERTE)
+                .hasPermission(SecurityPermissions.ADD_ALERTE)
+                .hasPermission(SecurityPermissions.EDIT_ALERTE)
+                .hasPermission(SecurityPermissions.DELETE_ALERTE)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
@@ -95,10 +95,10 @@ public class TemplateRule {
                 .apiPattern(TEMPLATE_PREFIX + TEMPLATE_ALERTE_NOT )
                 .build()
                 .condition()
-                .hasPermission(SecurityPermissions.READ_TEMPLATE)
-                .hasPermission(SecurityPermissions.ADD_TEMPLATE)
-                .hasPermission(SecurityPermissions.EDIT_TEMPLATE)
-                .hasPermission(SecurityPermissions.DELETE_TEMPLATE)
+                .hasPermission(SecurityPermissions.READ_ALERTE)
+                .hasPermission(SecurityPermissions.ADD_ALERTE)
+                .hasPermission(SecurityPermissions.EDIT_ALERTE)
+                .hasPermission(SecurityPermissions.DELETE_ALERTE)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
@@ -109,7 +109,7 @@ public class TemplateRule {
                 .apiPattern(TEMPLATE_PREFIX + TEMPLATE_ID )
                 .build()
                 .condition()
-                .hasPermission(SecurityPermissions.DELETE_TEMPLATE)
+                .hasPermission(SecurityPermissions.DELETE_ALERTE)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
@@ -121,10 +121,10 @@ public class TemplateRule {
                 .apiPattern(TEMPLATE_PREFIX + TEMPLATE_PRIORITY)
                 .build()
                 .condition()
-                .hasPermission(SecurityPermissions.READ_TEMPLATE)
-                .hasPermission(SecurityPermissions.ADD_TEMPLATE)
-                .hasPermission(SecurityPermissions.EDIT_TEMPLATE)
-                .hasPermission(SecurityPermissions.DELETE_TEMPLATE)
+                .hasPermission(SecurityPermissions.READ_ALERTE)
+                .hasPermission(SecurityPermissions.ADD_ALERTE)
+                .hasPermission(SecurityPermissions.EDIT_ALERTE)
+                .hasPermission(SecurityPermissions.DELETE_ALERTE)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }

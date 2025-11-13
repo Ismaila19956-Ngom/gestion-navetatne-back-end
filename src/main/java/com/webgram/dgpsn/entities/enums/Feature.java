@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 public enum Feature {
     DASHBOARD("Tableau de bord", Module.DASHBOARD),
+    RAPPORT("Rapports", Module.DASHBOARD),
     PROJECT_LIST("Projets", Module.PROJECT_LIST),
     UGP("UGP", Module.PROJECT_LIST),
     PLAN_DE_PASSATION("Appel d'offre", Module.PROJECT_LIST),
@@ -81,7 +82,6 @@ public enum Feature {
     PLAN_DE_PASSATION_MARKET("Plan de passation market", Module.PROJECT_LIST),
 
     ALERTE("Alertes", Module.ALERTE),
-    TEMPLATE("Templates", Module.ALERTE),
 
     USER("Utilisateurs", Module.SECURITY),
     PROFILE("Profils", Module.SECURITY),

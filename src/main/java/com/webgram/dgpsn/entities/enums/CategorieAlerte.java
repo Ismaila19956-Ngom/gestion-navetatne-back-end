@@ -12,15 +12,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public enum CategorieAlerte {
-//    PROJET("Activite"),
-    EVALUATION_ENVIRONNEMENTAL("Evaluation Environmental"),
-    GESTION_POLLUTION("Gestions pollution");
-//    QUALITE_AIR("Gestions qualite air"),
-//    INSPECTION_ICPE("Gestions inspection icpe"),
-//    URGENCE_ENVIRONNEMENTAL("Urgence Environmental"),
-//    FORMULAIRE_GENERAL("Formulaire General"),
-//    DIRECTION_REGIONAL("Direction Regional"),
-//    EVALUATION_STARTUP("Evaluation Startup");
+    ACTES_GESTION("Gestions Administrative"),
+    FINANCES_GESTIONS("Finances Gestions"),
+    GESTION_COURRIER("Gestion Courrier");
+
 
     @Getter
     @Setter

@@ -36,6 +36,7 @@ public class ManagementUnitRule {
                 .apiPattern(PROJECT_API_PREFIX + PTBA_ANNEE_BUDGET)
                 .build()
                 .condition()
+                .hasPermission(SecurityPermissions.READ_PTBA)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
@@ -47,6 +48,7 @@ public class ManagementUnitRule {
                 .apiPattern(PROJECT_API_PREFIX + PTBA_BUDGET)
                 .build()
                 .condition()
+                .hasPermission(SecurityPermissions.READ_PTBA)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
@@ -58,6 +60,7 @@ public class ManagementUnitRule {
                 .apiPattern(PROJECT_API_PREFIX + BUDGET_TREE)
                 .build()
                 .condition()
+                .hasPermission(SecurityPermissions.READ_FINANCEMENT_BUDGET)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }

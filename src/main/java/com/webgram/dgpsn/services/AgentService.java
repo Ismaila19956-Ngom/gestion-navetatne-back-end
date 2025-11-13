@@ -1,5 +1,6 @@
 package com.webgram.dgpsn.services;
 
+import com.webgram.dgpsn.entities.enums.SituationMatrimoniale;
 import com.webgram.dgpsn.models.AgentCountByDirectionDTO;
 import com.webgram.dgpsn.models.AgentDashboardDTO;
 import org.springframework.data.domain.Page;
@@ -34,7 +35,8 @@ public interface AgentService {
             Long fonctionId,
             Long directionId,
             String sortBy,
-            Boolean ascending
+            Boolean ascending,
+            SituationMatrimoniale situationMatrimoniale
     );
     void importAgent(MultipartFile file);
     void exportAgent(PrintWriter writer);

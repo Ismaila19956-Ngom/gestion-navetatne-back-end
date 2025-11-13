@@ -11,7 +11,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
 
-
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -42,17 +41,22 @@ public class OrdreMissionDTO implements Serializable {
     private Date dateRetourOrdre;
     private Date dateDepartMission;
     private Date dateRetourMission;
-    private ResponsableMission structure;
+    private String responsableMission;
+    private List<ResponsableMission> structures;
 
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private List<LabelDTO> priseEnCharge;
+
+    // CHANGEMENT : frais devient une liste
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private LabelDTO frais;
+    private List<LabelDTO> frais;
+
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private List<AgentDTO> agent;
+
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private List<DocumentDto> document;
 
@@ -60,11 +64,14 @@ public class OrdreMissionDTO implements Serializable {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LabelDTO moyenTranport;
 
-    private Long fraisId;
+    // CHANGEMENT : fraisId devient une liste
+    private List<Long> fraisIds;
+
     private List<Long> priseEnChargeId;
     private List<Long> agentIds;
     private List<Long> documentIds;
     private Long moyenTranportId;
+
 
 
 }

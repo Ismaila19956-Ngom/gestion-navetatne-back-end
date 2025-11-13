@@ -93,7 +93,7 @@ public class EvaluationEnvironnementaleServiceImpl implements EvaluationEnvironn
 
         EvaluationEnvironnementaleEntity updatedEvaluation = evaluationEnvironnementaleRepository.save(savedEvaluation);
         // Generate alert for creation
-        alerteServiceImpl.generateAlertForEvaluationEnvironnementale(evaluationEnvironnementaleDTO);
+//        alerteServiceImpl.generateAlertForEvaluationEnvironnementale(evaluationEnvironnementaleDTO);
         log.info("Evaluation Environnementale added successfully: {}", updatedEvaluation.getId());
 
         return evaluationEnvironnementaleMapper.asDto(updatedEvaluation);
