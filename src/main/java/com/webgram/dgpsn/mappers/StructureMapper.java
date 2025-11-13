@@ -10,6 +10,7 @@ import com.webgram.dgpsn.models.StructureDTO;
 import com.webgram.dgpsn.entities.StructureEntity;
 import com.webgram.dgpsn.services.modelExcel.StructureExcelDTO;
 
+import java.util.List;
 import java.util.Objects;
 
 
@@ -99,4 +100,5 @@ public interface StructureMapper extends EntityMapper<StructureDTO, StructureEnt
         return typeStructure.name();
 
     }
+
 }
