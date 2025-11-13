@@ -35,6 +35,7 @@ public class BudgetDgpsnServiceImpl implements BudgetDgpsnService {
     private final LigneBudgetaireService ligneBudgetaireService;
     private final RealisationService realisationService;
     private final LigneBudgetaireRepository ligneBudgetaireRepository;
+    private final AlerteServiceImpl alerteService;
 
 //    @Override
 //    @Journal(actionType = ActionType.ADD_DATES_IMPORTANTE)
@@ -64,7 +65,6 @@ public class BudgetDgpsnServiceImpl implements BudgetDgpsnService {
 @Journal(actionType = ActionType.ADD_BUDGET)
 public BudgetDgpsnDTO create(BudgetDgpsnDTO budgetDgpsnDTO) {
     var budgetEntity = budgetDgpsnMapper.asEntity(budgetDgpsnDTO);
-    // Sauvegarder d'abord le budget
     var savedBudget = budgetDgpsnRepository.save(budgetEntity);
     // Calculer le montant total des lignes budgétaires existantes pour ce budget
     Double montantTotalLignes = ligneBudgetaireRepository.findByBudgetId(savedBudget.getId())
@@ -81,8 +81,8 @@ public BudgetDgpsnDTO create(BudgetDgpsnDTO budgetDgpsnDTO) {
         savedBudget.setMontantEngage(0.0);
         log.info("Budget créé sans lignes budgétaires existantes");
     }
-
-    return budgetDgpsnMapper.asDto(savedBudget);
+       alerteService.generateAlertNouveauBudget(budgetDgpsnMapper.asDto(savedBudget));
+         return budgetDgpsnMapper.asDto(savedBudget);
 }
 
     @Override
@@ -105,7 +105,7 @@ public BudgetDgpsnDTO create(BudgetDgpsnDTO budgetDgpsnDTO) {
         var updatedBudget = budgetDgpsnRepository.save(budgetEntity);
         log.info("Budget mis à jour avec montantEngage recalculé: {}/{}",
                 updatedBudget.getMontantEngage(), updatedBudget.getMontant());
-
+        alerteService.generateAlertUpdateBudget(budgetDgpsnMapper.asDto(updatedBudget));
         return budgetDgpsnMapper.asDto(updatedBudget);
     }
 
@@ -122,12 +122,11 @@ public BudgetDgpsnDTO create(BudgetDgpsnDTO budgetDgpsnDTO) {
     @Override
     @Journal(actionType = ActionType.DELETE_DATES_IMPORTANTE)
     public void delete(Long budgetDgpsnId) {
-        try {
-            budgetDgpsnRepository.deleteById(budgetDgpsnId);
-            log.info("The BudgetDgpsn id {} is deleted", budgetDgpsnId);
-        } catch (IllegalArgumentException ex) {
-            throw new ResourceNotFoundException("BudgetDgpsn", budgetDgpsnId);
-        }
+        var budget = budgetDgpsnRepository.findById(budgetDgpsnId)
+                .orElseThrow(() -> new ResourceNotFoundException("BudgetDgpsn", budgetDgpsnId));
+        alerteService.generateAlertDeleteBudget(budgetDgpsnMapper.asDto(budget));
+        budgetDgpsnRepository.deleteById(budgetDgpsnId);
+        log.info("The BudgetDgpsn id {} is deleted", budgetDgpsnId);
     }
 
     @Override

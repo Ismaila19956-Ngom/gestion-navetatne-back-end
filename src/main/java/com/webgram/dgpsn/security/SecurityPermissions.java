@@ -21,10 +21,21 @@ public enum SecurityPermissions {
     READ_TDB_RESUME("Consulter tableau de bord - Rapport", Feature.DASHBOARD),
     READ_TDB_SERVICE("Consulter tableau de bord - Service Exterieur", Feature.DASHBOARD),
     READ_TDB_CONGE("Consulter tableau de bord - Congés", Feature.DASHBOARD),
-    AGENT_GROUPING("",Feature.DASHBOARD),
-    AGENT_STAT_CARD("", Feature.DASHBOARD),
-    AGENTS_FOR_DIRECTIONS("", Feature.DASHBOARD),
-    RETRAITE_PROJECTIONS("", Feature.DASHBOARD),
+    READ_TDB_AGENT("Consulter le tableau de bord des agents", Feature.DASHBOARD),
+    READ_RAPPORT("Consulter le rapport", Feature.RAPPORT),
+    EXPORT_RAPPORT("Exporter le rapport", Feature.RAPPORT),
+    GENERATE_RAPPORT("Générer le rapport", Feature.RAPPORT),
+//    AGENT_GROUPING("Consulter le tableau de bord des agents", Feature.DASHBOARD),
+//    AGENT_STAT_CARD("Consulter le tableau de bord des agents", Feature.DASHBOARD),
+//    AGENTS_FOR_DIRECTIONS("Consulter les agents par direction", Feature.DASHBOARD),
+//    RETRAITE_PROJECTIONS("Consulter les previsions de retraite", Feature.DASHBOARD),
+
+//    -------------
+
+    READ_CONTRAT_AGENT("Consulter un contrat agent (RH)", Feature.AGENT),
+    ADD_CONTRAT_AGENT("Ajouter un contrat agent (RH)",Feature.AGENT),
+    DELETE_CONTRAT_AGENT("Supprimer un contrat agent (RH)",Feature.AGENT),
+    UPDATE_CONTRAT_AGENT("Modifier un contrat agent (RH)",Feature.AGENT),
 
     /* début fonctionnalités sur la sécurité */
     ADD_PROFILE("Ajouter profil", Feature.PROFILE),
@@ -221,6 +232,9 @@ public enum SecurityPermissions {
     EDIT_BUDGET("Modifier budget", Feature.BUDGET),
     DELETE_BUDGET("Supprimer budget", Feature.BUDGET),
     READ_BUDGET("Consulter budget", Feature.BUDGET),
+
+    READ_FINANCEMENT_BUDGET("Consulter financement budget", Feature.BUDGET),
+    READ_PTBA("Consulter PTBA", Feature.BUDGET),
 
     ADD_LIGNE_BUDGETAIRE("Ajouter ligne budgetaire", Feature.BUDGET),
     EDIT_LIGNE_BUDGETAIRE("Modifier ligne budgetaire", Feature.BUDGET),

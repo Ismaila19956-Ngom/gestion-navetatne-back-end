@@ -13,6 +13,7 @@ import com.opencsv.bean.StatefulBeanToCsvBuilder;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import com.webgram.dgpsn.entities.AgentEntity;
+import com.webgram.dgpsn.entities.enums.SituationMatrimoniale;
 import com.webgram.dgpsn.entities.enums.TypeStructure;
 import com.webgram.dgpsn.exceptions.ResourceNotFoundException;
 import com.webgram.dgpsn.mappers.AgentMapper;
@@ -137,11 +138,14 @@ public class AgentServiceImpl implements AgentService {
             Long fonctionId,
             Long directionId,
             String sortBy,
-            Boolean ascending
+            Boolean ascending,
+            SituationMatrimoniale situationMatrimoniale
     ) {
         return agentRepository
-                .readAllByFiltering(pageable, idsToIgnore, typeStructure, nom, prenom, adresse, email, telephone, dateCreation, structureId, fonctionId, directionId, sortBy, ascending)
+                .readAllByFiltering(pageable, idsToIgnore, typeStructure, nom, prenom, adresse, email, telephone,
+                        dateCreation, structureId, fonctionId, directionId, sortBy, ascending, situationMatrimoniale)
                 .map(agentMapper::asDto);
+
     }
 
     @Override

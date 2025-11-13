@@ -14,20 +14,25 @@ import java.util.stream.Collectors;
 
 
 public enum TypeAlerte {
-    CREATION_EVALUATION_ENVIRONNEMENTAL("Création evaluation Environmental",CategorieAlerte.EVALUATION_ENVIRONNEMENTAL, List.of(Tag.TITRE_PROJET,Tag.TYPE_PROJET,Tag.DATE,Tag.REFERENCE)),
-//    FORMULAIRE_GENERAL("Creation  demande",CategorieAlerte.FORMULAIRE_GENERAL, List.of(Tag.TYPE_DEMANDE,Tag.LiBELLE,Tag.DATE)),
-    POLLUTION_REJET(" Creation Rejet d’Eau Usée ",CategorieAlerte.GESTION_POLLUTION,List.of(Tag.DATE_PRELEVEMENT,Tag.LiBELLE)),
-    GESTION_QUALITE(" Creation  qualite des Milieux",CategorieAlerte.GESTION_POLLUTION,List.of(Tag.DATE_PRELEVEMENT,Tag.LiBELLE)),
-    GESTION_PRODUIT(" Creation produit chimique ",CategorieAlerte.GESTION_POLLUTION,List.of(Tag.DATE_TRANSPORT,Tag.ORIGINE,Tag.DESTINATION,Tag.LiBELLE)),
-    GESTION_DECHET(" Creation  dechets dangereux ",CategorieAlerte.GESTION_POLLUTION,List.of(Tag.DATE_TRANSPORT,Tag.ORIGINE,Tag.DESTINATION,Tag.LiBELLE)),
-    GESTION_PLASTIQUE(" Creation  produit plastique ",CategorieAlerte.GESTION_POLLUTION,List.of(Tag.DATE_MOUVEMENT,Tag.ORIGINE,Tag.DESTINATION,Tag.LiBELLE));
-//    QUALITE_AIR(" Creation  mesure qualite air",CategorieAlerte.QUALITE_AIR,List.of(Tag.DATE_MESURE,Tag.LiBELLE,Tag.POLLUANT_PRINCIPAL)),
-//    INSPECTION_ICPE(" Creation inspection ",CategorieAlerte.INSPECTION_ICPE,List.of(Tag.DATE_INSPECTION,Tag.REFERENCE_INSPECTION)),
-//    URGENCE_ENVIRONNEMENTAL(" Creation declaration ",CategorieAlerte.URGENCE_ENVIRONNEMENTAL,List.of(Tag.REFERENCE,Tag.DATE_RECEPTION,Tag.AGENT)),
-//    DIRECTION_REGIONAL(" Creation  fiche declaration ",CategorieAlerte.DIRECTION_REGIONAL,List.of(Tag.LiBELLE,Tag.NUMERO_RCCM,Tag.DATE)),
-//    BUDGET_ACTIVITE("Creation  Budget ",CategorieAlerte.PROJET,List.of(Tag.LiBELLE,Tag.DATE_DEBUT,Tag.DATE_FIN,Tag.ANNEE)),
-//    DEPENSE_ACTIVITE("Creation  depense ",CategorieAlerte.PROJET,List.of(Tag.LiBELLE,Tag.DATE_DEBUT,Tag.DATE_FIN,Tag.ANNEE)),
-//    EVALUATION_STARTUP(" Nouvelle Evaluation ",CategorieAlerte. EVALUATION_STARTUP,List.of(Tag.LiBELLE,Tag.DATE_DEBUT,Tag.DATE_FIN,Tag.ANNEE));
+
+    DEMANDE_GONGE("Nouvelle demande conge",CategorieAlerte.ACTES_GESTION, List.of(Tag.DUREE, Tag.AGENT,Tag.DATE_DEBUT,Tag.TYPE_CONGE)),
+    VALIDATION_CONGE("Validation congé",CategorieAlerte.ACTES_GESTION, List.of(Tag.TYPE_CONGE, Tag.DUREE,Tag.PERSONNE_EN_CONGE,Tag.DATE_DEBUT,Tag.DATE_FIN)),
+    CESSATION_SERVICE("Nouvelle Cessation de Service",CategorieAlerte.ACTES_GESTION, List.of(Tag.DATE_CESSATION,Tag.AGENT,Tag.NOMBRE_JOUR_CESSATION)),
+    APPROCHE_FIN_CESSATION("Approche date fin de Cessation Service",CategorieAlerte.ACTES_GESTION, List.of(Tag.DATE_CESSATION,Tag.AGENT,Tag.PERSONNE_EN_CONGE,Tag.NOMBRE_JOUR_CESSATION,Tag.DATE_FIN)),
+    FIN_CESSATION("Cessation Service Terminée",CategorieAlerte.ACTES_GESTION, List.of(Tag.DATE_CESSATION,Tag.AGENT,Tag.NOMBRE_JOUR_CESSATION,Tag.DATE_FIN)),
+    NOUVEL_ORDRE_DE_MISSION("Nouvel ordre de mission", CategorieAlerte.ACTES_GESTION, List.of(Tag.LIBELLE,Tag.DATE_DEBUT,Tag.DATE_FIN,Tag.AGENT)),
+    FIN_MISSION("Fin de la mission", CategorieAlerte.ACTES_GESTION,List.of(Tag.LIBELLE,Tag.DATE_DEBUT,Tag.DATE_FIN,Tag.AGENT)),
+    VALIDATION_MISSION("Validation d'une mission",CategorieAlerte.ACTES_GESTION,List.of(Tag.LIBELLE,Tag.DATE_DEBUT,Tag.DATE_FIN,Tag.AGENT)),
+    NOUVEAU_RECRUTEMENT("Nouveau Recrutement", CategorieAlerte.ACTES_GESTION, List.of(Tag.LIBELLE,Tag.DATE,Tag.TYPE_CONTRAT)),
+    NOUVEAU_COURRIER("Nouveau Courrier", CategorieAlerte.GESTION_COURRIER, List.of(Tag.LIBELLE,Tag.DATE_RECEPTION,Tag.NUMERO_REFERENCE,Tag.NATURE_COURRIER,Tag.MODE_ENVOI)),
+    NOUVELLE_ARCHIVAGE("Nouvelle Archivage", CategorieAlerte.GESTION_COURRIER, List.of(Tag.LIBELLE,Tag.DATE_RECEPTION,Tag.NUMERO_REFERENCE,Tag.NATURE_COURRIER,Tag.MODE_ENVOI)),
+    NOUVEAU_BUDGET("Nouveau Budget ", CategorieAlerte.FINANCES_GESTIONS, List.of(Tag.LIBELLE,Tag.MONTANT_BUDGET,Tag.DATE)),
+    UPDATE__BUDGET("Modifiication Budget ", CategorieAlerte.FINANCES_GESTIONS, List.of(Tag.LIBELLE,Tag.MONTANT_BUDGET,Tag.DATE)),
+    DELETE_BUDGET("Suppression Budget ", CategorieAlerte.FINANCES_GESTIONS, List.of(Tag.LIBELLE,Tag.MONTANT_BUDGET,Tag.DATE)),
+    NOUVELLE_LIGNE_BUDGET("Nouvelle lignes  Budgetaires ", CategorieAlerte.FINANCES_GESTIONS, List.of(Tag.LIBELLE,Tag.MONTANT_BUDGET,Tag.DATE,Tag.COMPTE)),
+    UPDATE_LIGNE_BUDGET("Modification lignes  Budgetaires ", CategorieAlerte.FINANCES_GESTIONS, List.of(Tag.RUBRIQUE,Tag.MONTANT_LIGNE_BUDGET,Tag.DATE,Tag.COMPTE)),
+    DELETE_LIGNE_BUDGET("Suppression lignes  Budgetaires ", CategorieAlerte.FINANCES_GESTIONS, List.of(Tag.LIBELLE,Tag.MONTANT_BUDGET,Tag.DATE,Tag.COMPTE));
+
 
 
     @Getter

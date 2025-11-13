@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
 import com.webgram.dgpsn.entities.LabelEntity;
+import com.webgram.dgpsn.entities.enums.SituationMatrimoniale;
 
 
 import java.io.Serializable;
@@ -28,7 +29,7 @@ public class AgentDTO implements Serializable {
 
     private Date dateNaissance;
     private Sexe sexe;
-
+    private SituationMatrimoniale situationMatrimoniale;
     @Schema(description = "L'id technique, généré au moment de persister l'objet", accessMode = Schema.AccessMode.READ_ONLY)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
@@ -40,6 +41,8 @@ public class AgentDTO implements Serializable {
     private String telephone;
     private String photoProfil;
     private Date dateCreation;
+
+
 
 
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)

@@ -79,7 +79,7 @@ public class DashboardRule {
                 .apiPattern(DASHBOARD_API_PREFIX + RETRAITE_PROJECTIONS)
                 .build()
                 .condition()
-                .hasPermission(SecurityPermissions.RETRAITE_PROJECTIONS)
+                .hasPermission(SecurityPermissions.READ_TDB_AGENT)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
@@ -91,7 +91,7 @@ public class DashboardRule {
                 .apiPattern(DASHBOARD_API_PREFIX + AGENT_STAT_CARD)
                 .build()
                 .condition()
-                .hasPermission(SecurityPermissions.AGENT_STAT_CARD)
+                .hasPermission(SecurityPermissions.READ_TDB_AGENT)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
@@ -102,7 +102,7 @@ public class DashboardRule {
                 .apiPattern(DASHBOARD_API_PREFIX + AGENTS_FOR_DIRECTIONS)
                 .build()
                 .condition()
-                .hasPermission(SecurityPermissions.AGENTS_FOR_DIRECTIONS)
+                .hasPermission(SecurityPermissions.READ_TDB_AGENT)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
@@ -114,7 +114,7 @@ public class DashboardRule {
                 .apiPattern(DASHBOARD_API_PREFIX + AGENT_GROUPING)
                 .build()
                 .condition()
-                .hasPermission(SecurityPermissions.AGENT_GROUPING)
+                .hasPermission(SecurityPermissions.READ_TDB_AGENT)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
