@@ -28,12 +28,10 @@ public class PreselectionnedFileDTO implements Serializable {
 
     private boolean winner;
 
-    @JsonIgnore
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private MarketFileDTO marketFileEntity;
 
-    @JsonIgnore
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private PassationMarketDTO passationMarket;
