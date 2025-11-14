@@ -43,15 +43,26 @@ public class TreeNodeDTO implements Serializable {
     private Double depense;
     private Double tauxExecution;
 
+    private List<StructureDTO> structuresResponsables;
+    private List<StructureDTO> actorsInvolved;
+
     private List<TreeNodeDTO> children = new ArrayList<>();
 
-    public TreeNodeDTO(Long id, String code, String nomenclature, String name, TypeProjet type) {
+    public TreeNodeDTO(Long id, String code, String nomenclature, String name, TypeProjet type, StructureDTO structuresResponsables, StructureDTO actorsInvolved) {
         this.id = id;
         this.code = code;
         this.nomenclature = nomenclature;
         this.name = name;
         this.type = type;
         this.children = new ArrayList<>();
+        this.structuresResponsables = new ArrayList<>();
+        this.actorsInvolved = new ArrayList<>();
+        if (structuresResponsables != null) {
+            this.structuresResponsables.add(structuresResponsables);
+        }
+        if (actorsInvolved != null) {
+            this.actorsInvolved.add(actorsInvolved);
+        }
     }
 
     public void addChild(TreeNodeDTO child) {

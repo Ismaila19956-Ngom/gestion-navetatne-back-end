@@ -11,21 +11,19 @@ import java.util.List;
 import java.util.Objects;
 
 
-@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = "spring")
+@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = "spring", uses = {PassationMarketMapper.class, MarketFileMapper.class})
 public interface PreselectionnedFileMapper extends EntityMapper<PreselectionnedFileDTO, PreselectionnedFileEntity> {
 
 
 
-    @Mapping(target = "passationMarket", source = "passationMarketId", qualifiedByName = "getPassationMarket")
+    @Mapping(target = "passationMarket", source = "passationMarketId", qualifiedByName = "getPassationMarketLocal")
     @Mapping(target = "marketFileEntity", source = "marketFileId",qualifiedByName ="getMarketFile")
     PreselectionnedFileEntity asEntity(PreselectionnedFileDTO dto);
 
 
-    @Mapping(source = "passationMarket.id", target = "passationMarketId")
-    @Mapping(source = "marketFileEntity.id", target = "marketFileId")
     PreselectionnedFileDTO asDto( PreselectionnedFileEntity PreselectionnedFileEntity);
 
-    @Mapping(target = "passationMarket", source = "passationMarketId", qualifiedByName = "getPassationMarket")
+    @Mapping(target = "passationMarket", source = "passationMarketId", qualifiedByName = "getPassationMarketLocal")
     @Mapping(target = "marketFileEntity", source = "marketFileId",qualifiedByName ="getMarketFile")
     List<PreselectionnedFileEntity> parseToEntity(List<PreselectionnedFileDTO> dto);
 
@@ -36,7 +34,7 @@ public interface PreselectionnedFileMapper extends EntityMapper<PreselectionnedF
 
 
     @Named("getMarketFile")
-    default MarketFileEntity builtTutele(Long marketFileId) {
+    default MarketFileEntity getMarketFile(Long marketFileId) {
         if(Objects.nonNull(marketFileId)){
             return MarketFileEntity.builder().id(marketFileId).build();
         }
@@ -44,8 +42,8 @@ public interface PreselectionnedFileMapper extends EntityMapper<PreselectionnedF
     }
 
 
-    @Named("getPassationMarket")
-    default PassationMarketEntity getCible(Long passationMarketId) {
+    @Named("getPassationMarketLocal")
+    default PassationMarketEntity getPassationMarketLocal(Long passationMarketId) {
         if(Objects.nonNull(passationMarketId)){
             return PassationMarketEntity.builder().id(passationMarketId).build();
         }
