@@ -19,7 +19,8 @@ public enum CategoryDocument {
     COURRIER("Document Courrier", "Paramétrage des types de documents pour les courriers"),
     RECRUTEMENT("Document Recrutement", "Paramétrage des types de documents pour les Recrutements"),
 
-    AUTRES("Document Absence", "Paramétrage des types de documents pour lesAbsence");
+    AUTRES("Document Absence", "Paramétrage des types de documents pour lesAbsence"),
+    PRESELECTION_DOSSIER("Document Présélection", "Paramétrage des types de documents pour les documents de présélection");
 
 
 
