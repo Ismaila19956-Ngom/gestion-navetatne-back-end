@@ -49,7 +49,7 @@ public class ParticipantEntity implements Serializable {
     private AgentEntity agent;
 
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "formation_Id")
     private FormationExterieurEntity formation;
 

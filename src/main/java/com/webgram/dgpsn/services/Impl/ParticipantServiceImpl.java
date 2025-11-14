@@ -92,6 +92,8 @@ public class ParticipantServiceImpl implements ParticipantService {
 
             if (searchParams.containsKey("agentId"))
                 booleanBuilder.and(qEntity.agent.id.eq(Long.valueOf(searchParams.get("agentId"))));
+            if (searchParams.containsKey("formationId"))
+                booleanBuilder.and(qEntity.formation.id.eq(Long.valueOf(searchParams.get("formationId"))));
 
             if (searchParams.containsKey("typeParticipant"))
                 booleanBuilder.and(qEntity.typeParticipant.eq(TypeParticipant.valueOf(searchParams.get("typeParticipant"))));

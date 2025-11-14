@@ -82,6 +82,8 @@ public class FormationExterieurServiceImpl implements FormationExterieurService 
             if (searchParams.containsKey("agentId"))
                     booleanBuilder.and(qEntity.agent.id.eq(Long.valueOf(searchParams.get("agentId"))));
 
+
+
             if (searchParams.containsKey("lieu"))
                 booleanBuilder.and(qEntity.lieu.containsIgnoreCase(searchParams.get("lieu")));
 

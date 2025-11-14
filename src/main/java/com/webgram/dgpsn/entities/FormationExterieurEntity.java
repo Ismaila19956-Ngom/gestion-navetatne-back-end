@@ -53,4 +53,5 @@ public class FormationExterieurEntity implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column(name = "statut")
     private Statut statut;
+
 }

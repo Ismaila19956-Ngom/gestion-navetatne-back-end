@@ -41,7 +41,6 @@ public class ParticipantDTO implements Serializable {
 
     private AgentDTO agent;
 
-    private FormationExterieurDTO formation;
     private Long formationId;
 
     private AtelierDTO atelier;
