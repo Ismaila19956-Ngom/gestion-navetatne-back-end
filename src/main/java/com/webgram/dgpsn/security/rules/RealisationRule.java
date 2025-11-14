@@ -30,6 +30,7 @@ public class RealisationRule {
                 .condition()
                 .hasPermission(SecurityPermissions.ADD_REALISATION)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .hasPermission(SecurityPermissions.SUIVIS_LIGNE_BUDGETAIRE)
                 .end();
     }
 

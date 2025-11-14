@@ -19,8 +19,10 @@ import com.webgram.dgpsn.exceptions.PublishProjectOutOfBoundsException;
 import com.webgram.dgpsn.exceptions.ResourceNotFoundException;
 import com.webgram.dgpsn.mappers.ManagementUnitMapper;
 import com.webgram.dgpsn.mappers.PartnerProjectMapper;
+import com.webgram.dgpsn.mappers.StructureMapper;
 import com.webgram.dgpsn.models.DownloadFile;
 import com.webgram.dgpsn.models.ManagementUnitDTO;
+import com.webgram.dgpsn.models.StructureDTO;
 import com.webgram.dgpsn.models.TreeNodeDTO;
 import com.webgram.dgpsn.models.responses.StatisticProjectDTO;
 import com.webgram.dgpsn.properties.DocumentProperties;
@@ -84,8 +86,7 @@ public class ManagementUnitServiceImpl implements ManagementUnitService {
     private final ValueIndicatorRepository valueIndicatorRepository;
     private final TacheRepository tacheRepository;
     private final FundingSourceRepository fundingSourceRepository;
-    private final BudgetDgpsnRepository budgetDgpsnRepository;
-
+    private final StructureMapper structureMapper;
     final WorkbookService workbookService;
 
     String PROJECT_DIRECTORY = "//project";
@@ -454,7 +455,7 @@ public class ManagementUnitServiceImpl implements ManagementUnitService {
 //    }
 
     @Override
-    @CacheEvict(value = "managementUnitTree", allEntries = true) // INVALIDE TOUT LE CACHE
+    @CacheEvict(value = "managementUnitTree", allEntries = true)
     public TreeNodeDTO addNodeToTreeManagmentUnit(Long parentId, TreeNodeDTO nodeDTO) {
         var parent = managementUnitRepository.findById(parentId)
                 .orElseThrow(() -> new ResourceNotFoundException("Parent non trouvé"));
@@ -471,14 +472,14 @@ public class ManagementUnitServiceImpl implements ManagementUnitService {
 
         var saved = managementUnitRepository.save(managementUnit);
 
-        // Retourne le nœud avec l'ID généré
-        return new TreeNodeDTO(
-                saved.getId(),
-                saved.getCode(),
-                saved.getNomenclature(),
-                saved.getName(),
-                saved.getType()
-        );
+        // Retourne le nœud avec l'ID généré en utilisant le Builder
+        return TreeNodeDTO.builder()
+                .id(saved.getId())
+                .code(saved.getCode())
+                .nomenclature(saved.getNomenclature())
+                .name(saved.getName())
+                .type(saved.getType())
+                .build();
     }
 
     @Override
@@ -496,7 +497,15 @@ public class ManagementUnitServiceImpl implements ManagementUnitService {
 
         // Créer tous les nœuds et les stocker dans le Map
         allUnits.forEach(unit -> {
-            TreeNodeDTO node = new TreeNodeDTO(unit.getId(), unit.getCode(), unit.getNomenclature(), unit.getName(), unit.getType());
+            // CORRECTION ICI : Utiliser le Builder
+            TreeNodeDTO node = TreeNodeDTO.builder()
+                    .id(unit.getId())
+                    .code(unit.getCode())
+                    .nomenclature(unit.getNomenclature())
+                    .name(unit.getName())
+                    .type(unit.getType())
+                    .build();
+
             nodeMap.put(unit.getId(), node);
 
             // Identifier les racines (Projets)
@@ -600,43 +609,44 @@ public class ManagementUnitServiceImpl implements ManagementUnitService {
     ////////Laty
     @Override
     public TreeNodeDTO readTreeManagmentUnit(Long projetId) {
-        ManagementUnitEntity project = managementUnitRepository.findById(projetId)
-                .filter(p -> p.getType() == TypeProjet.PROJECT)
-                .orElseThrow(() -> new NoSuchElementException("Projet non trouvé ou type incorrect."));
-
-        TreeNodeDTO rootNode = new TreeNodeDTO(
-                project.getId(),
-                project.getCode(),
-                project.getNomenclature(),
-                project.getName(),
-                project.getType()
-        );
-
-        // Charger toutes les entités
-        List<ManagementUnitEntity> allProjects = managementUnitRepository.findAll();
-        List<ValueIndicatorEntity> allIndicators = valueIndicatorRepository.findAll();
-        List<TacheEntity> allTaches = tacheRepository.findAll();
-
-        Map<Long, TreeNodeDTO> nodeMap = new HashMap<>();
-
-        // Créer les nœuds pour les ManagementUnit
-        allProjects.forEach(p ->
-                nodeMap.put(p.getId(), new TreeNodeDTO(
-                        p.getId(),
-                        p.getCode(),
-                        p.getNomenclature(),
-                        p.getName(),
-                        p.getType()
-                ))
-        );
-
-        // Construire l'arbre avec indicateurs et tâches
-        buildCompleteTree(rootNode, allProjects, allIndicators, allTaches, nodeMap);
-
-        // Trier l'arbre
-        sortRecursively(rootNode);
-
-        return rootNode;
+        return null;
+//        ManagementUnitEntity project = managementUnitRepository.findById(projetId)
+//                .filter(p -> p.getType() == TypeProjet.PROJECT)
+//                .orElseThrow(() -> new NoSuchElementException("Projet non trouvé ou type incorrect."));
+//
+//        TreeNodeDTO rootNode = new TreeNodeDTO(
+//                project.getId(),
+//                project.getCode(),
+//                project.getNomenclature(),
+//                project.getName(),
+//                project.getType()
+//        );
+//
+//        // Charger toutes les entités
+//        List<ManagementUnitEntity> allProjects = managementUnitRepository.findAll();
+//        List<ValueIndicatorEntity> allIndicators = valueIndicatorRepository.findAll();
+//        List<TacheEntity> allTaches = tacheRepository.findAll();
+//
+//        Map<Long, TreeNodeDTO> nodeMap = new HashMap<>();
+//
+//        // Créer les nœuds pour les ManagementUnit
+//        allProjects.forEach(p ->
+//                nodeMap.put(p.getId(), new TreeNodeDTO(
+//                        p.getId(),
+//                        p.getCode(),
+//                        p.getNomenclature(),
+//                        p.getName(),
+//                        p.getType()
+//                ))
+//        );
+//
+//        // Construire l'arbre avec indicateurs et tâches
+//        buildCompleteTree(rootNode, allProjects, allIndicators, allTaches, nodeMap);
+//
+//        // Trier l'arbre
+//        sortRecursively(rootNode);
+//
+//        return rootNode;
     }
 
     private void buildCompleteTree(
@@ -882,13 +892,31 @@ public class ManagementUnitServiceImpl implements ManagementUnitService {
             Set<Long> financedIndicatorIds,
             Long budgetId) {
 
-        TreeNodeDTO rootNode = new TreeNodeDTO(
-                root.getId(),
-                root.getCode(),
-                root.getNomenclature(),
-                root.getName(),
-                root.getType()
-        );
+        // Étape 1: Mapper les listes d'entités en listes de DTOs
+        List<StructureDTO> responsibleStructures = new ArrayList<>();
+        if (root.getStructuresResponsables() != null) {
+            responsibleStructures = root.getStructuresResponsables().stream()
+                    .map(structureMapper::asDto)
+                    .collect(Collectors.toList());
+        }
+
+        List<StructureDTO> involvedActors = new ArrayList<>();
+        if (root.getActorsInvolved() != null) {
+            involvedActors = root.getActorsInvolved().stream()
+                    .map(structureMapper::asDto)
+                    .collect(Collectors.toList());
+        }
+
+        // Étape 2: Créer le TreeNodeDTO et assigner les propriétés
+        TreeNodeDTO rootNode = new TreeNodeDTO();
+        rootNode.setId(root.getId());
+        rootNode.setCode(root.getCode());
+        rootNode.setNomenclature(root.getNomenclature());
+        rootNode.setName(root.getName());
+        rootNode.setType(root.getType());
+        rootNode.setStructuresResponsables(responsibleStructures);
+        rootNode.setActorsInvolved(involvedActors);
+        rootNode.setChildren(new ArrayList<>()); // Initialiser la liste des enfants
 
         // Calculer le budget agrégé pour ce nœud
         calculateAggregatedBudget(rootNode, root.getId(), financedActivityIds, financedTacheIds, financedIndicatorIds, budgetId);

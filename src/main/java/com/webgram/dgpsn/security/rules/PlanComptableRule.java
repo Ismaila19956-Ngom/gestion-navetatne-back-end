@@ -16,14 +16,17 @@ public class PlanComptableRule {
     static final String PLAN_COMPTABLE_RUBRIQUE = "/rubriques";
     static final String PLAN_COMPTABLE_CLASSE = "/classes";
 
+
+
     @Bean
     public SecurityRule getClassesPlanComptable() {
         return SecurityRule.builder()
                 .httpMethod(HttpMethod.GET)
-                .apiPattern(PLAN_COMPTABLE_API_PREFIX + PLAN_COMPTABLE_API_PREFIX)
+                .apiPattern(PLAN_COMPTABLE_API_PREFIX + PLAN_COMPTABLE_CLASSE)
                 .build()
                 .condition()
                 .hasPermission(SecurityPermissions.READ_PLAN_COMPTABLE)
+                .hasPermission(SecurityPermissions.SUIVIS_LIGNE_BUDGETAIRE)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }

@@ -23,6 +23,7 @@ public class FournisseurRule {
                 .hasPermission(SecurityPermissions.ADD_FOURNISSEUR)
                 .hasPermission(SecurityPermissions.READ_PROJECT_SETTINGS)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
 
@@ -55,6 +56,7 @@ public class FournisseurRule {
                 .hasPermission(SecurityPermissions.DELETE_FOURNISSEUR)
                 .hasPermission(SecurityPermissions.READ_PROJECT_SETTINGS)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .hasPermission(SecurityPermissions.SUIVIS_LIGNE_BUDGETAIRE)
                 .end();
     }
 

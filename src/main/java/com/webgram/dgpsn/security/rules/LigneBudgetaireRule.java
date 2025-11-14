@@ -24,6 +24,7 @@ public class LigneBudgetaireRule {
                 .hasPermission(SecurityPermissions.ADD_LIGNE_BUDGETAIRE)
                 .hasPermission(SecurityPermissions.READ_PLAN_COMPTABLE)
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
+                .hasPermission(SecurityPermissions.SUIVIS_LIGNE_BUDGETAIRE)
                 .end();
     }
 
