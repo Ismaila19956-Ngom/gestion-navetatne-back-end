@@ -1,7 +1,7 @@
 server:
   port: 2015
   servlet:
-    context-path: /dgpsn-api
+    context-path: /naavetane-api
     error:
       include-message: always
       include-binding-errors: always
@@ -11,10 +11,10 @@ spring:
   profiles:
     active: default
   datasource:
-    name: ${DB_NAME:dgpsn_db}
+    name: ${DB_NAME:navetane_db}
     host: ${DB_HOST:127.0.0.1}
     username: ${DB_USERNAME:postgres}
-    password: ${DB_PASSWORD:postgres}
+    password: ${DB_PASSWORD:1995}
 
     url: jdbc:postgresql://${spring.datasource.host}:5432/${spring.datasource.name}?autoReconnect=true&useSSL=false&createDatabaseIfNotExist=true
   servlet:
@@ -30,7 +30,7 @@ spring:
     properties:
       hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
   application:
-    name: DGPSN
+    name: NAAVETANE
 
 storage-document:
   file-storage-root-path: ${user.home}//Documents//upload//docs
@@ -41,11 +41,18 @@ security-jwt:
   token-validity-in-seconds: 86400
   token-validity-in-seconds-for-remember-me: 86400
 
-dgpsn-cors:
+naavetane-cors:
   cors:
-    allowed-origins: "http://localhost:4200,http://localhost:4600,http://185.166.39.101,http://185.166.39.101/,http://localhost:4300"
+    allowed-origins: "http://localhost:4200,http://localhost:4600,http://185.166.39.101,http://185.166.39.101/,http://localhost:4300,http://localhost:55555,http://127.0.0.1:55555"
     allowed-methods: "*"
     allowed-headers: "*"
     exposed-headers: "Authorization,Link,Content-Disposition"
     allow-credentials: true
     max-age: 1800
+
+paydunya:
+  master-key: ClgaecKt-jHO8-xLS8-6E6J-s3vjYZr9nIRV
+  public-key: test_public_naeoUJxPwvyj5JgwTVNDUHoCg2d
+  private-key: test_private_tNBclYu7Q75GomBCvKBIcySLRqE
+  token: gcnLJ1DYfKhJdCUxmp0K
+  mode: test

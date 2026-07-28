@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Rapport de Statistiques - Naavétane</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+        }
+        .report-header {
+            background-color: #1a2a3a;
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border-left: 5px solid #0d6efd;
+            height: 100%;
+        }
+        .stat-card.success { border-left-color: #198754; }
+        .stat-card.warning { border-left-color: #ffc107; }
+        .stat-card.danger { border-left-color: #dc3545; }
+        .stat-card.info { border-left-color: #0dcaf0; }
+        
+        .stat-title {
+            font-size: 0.9rem;
+            color: #6c757d;
+            text-transform: uppercase;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #212529;
+            margin: 0;
+        }
+        
+        @media print {
+            body {
+                background-color: white;
+            }
+            .report-header {
+                box-shadow: none;
+                border: 1px solid #ddd;
+                background-color: #f8f9fa;
+                color: #000;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .stat-card {
+                box-shadow: none;
+                border: 1px solid #ddd;
+                border-left-width: 5px;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .no-print {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-5">
+        
+        <div class="d-flex justify-content-end mb-3 no-print">
+            <button class="btn btn-primary" onclick="window.print()">
+                🖨️ Imprimer / Sauvegarder en PDF
+            </button>
+        </div>
+
+        <div class="report-header text-center">
+            <h1 class="fw-bold mb-2">⚽ NAAVÉTANE</h1>
+            <h3 class="mb-3">Rapport des Statistiques Officielles</h3>
+            <div class="d-inline-block bg-white text-dark px-4 py-2 rounded-pill fw-medium">
+                <span th:text="${filtreNom}">Toutes les journées</span>
+            </div>
+            <p class="mt-3 mb-0 text-white-50">
+                Généré le <span th:text="${dateExport}"></span>
+                <span th:if="${vendeur != null}"> par <strong class="text-white" th:text="${vendeur}"></strong></span>
+            </p>
+        </div>
+
+        <div class="row g-4 mb-5">
+            <div class="col-md-6 col-lg-4">
+                <div class="stat-card">
+                    <div class="stat-title">Billets Vendus</div>
+                    <p class="stat-value" th:text="${totalBilletsVendus}">0</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="stat-card success">
+                    <div class="stat-title">Billets Scannés (Validés)</div>
+                    <p class="stat-value" th:text="${totalBilletsScannes}">0</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="stat-card danger">
+                    <div class="stat-title">Fraudes Détectées</div>
+                    <p class="stat-value" th:text="${totalFraudes}">0</p>
+                </div>
+            </div>
+        </div>
+
+        <h4 class="mb-4 fw-bold border-bottom pb-2">Répartition Financière</h4>
+        
+        <div class="row g-4 mb-5">
+            <div class="col-md-4">
+                <div class="stat-card info">
+                    <div class="stat-title">Revenus Totaux</div>
+                    <p class="stat-value"><span th:text="${totalRevenus}">0</span> FCFA</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-card border-left-secondary" style="border-left-color: #6c757d;">
+                    <div class="stat-title">Revenus En Ligne (Transactions)</div>
+                    <p class="stat-value text-secondary"><span th:text="${onlineRevenus}">0</span> FCFA</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-card warning">
+                    <div class="stat-title">Revenus Guichet Physique</div>
+                    <p class="stat-value text-warning"><span th:text="${physicalRevenus}">0</span> FCFA</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center text-muted mt-5" style="font-size: 0.8rem;">
+            <p>© 2026 Plateforme Naavétane. Document généré automatiquement.</p>
+        </div>
+    </div>
+</body>
+</html>

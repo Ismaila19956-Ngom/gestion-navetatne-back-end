@@ -1,7 +1,7 @@
 server:
   port: 2015
   servlet:
-    context-path: /dgpsn-api
+    context-path: /naavetane-api
     error:
       include-message: always
       include-binding-errors: always
@@ -9,7 +9,7 @@ server:
       include-exception: false
 spring:
   datasource:
-    name: ${DB_NAME:dgpsn-db}
+    name: ${DB_NAME:navetane-db}
     host: ${DB_HOST:185.166.39.101}
     username: ${DB_USERNAME:webgram-pg}
     password: ${DB_PASSWORD:Webgram2024#}
@@ -27,7 +27,7 @@ spring:
     properties:
       hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
   application:
-    name: DGPSN
+    name: NAAVETANE
 
 storage-document:
   file-storage-root-path: ${user.home}//Documents//upload//docs
@@ -38,7 +38,7 @@ security-jwt:
   token-validity-in-seconds: 86400
   token-validity-in-seconds-for-remember-me: 86400
 
-dgpsn-cors:
+naavetane-cors:
   cors:
   allowed-origins: "http://185.166.39.101/,http://185.166.39.101,http://185.166.39.101/"
   allowed-methods: "*"

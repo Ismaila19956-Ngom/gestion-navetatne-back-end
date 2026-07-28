@@ -1,0 +1,34 @@
+package sn.naavetane.backend.entities;
+
+import lombok.*;
+import sn.naavetane.backend.entities.audits.Auditable;
+import sn.naavetane.backend.entities.enums.ReferentielType;
+
+import jakarta.persistence.*;
+import java.io.Serializable;
+
+@Table(name = "label")
+@Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class LabelEntity extends Auditable<Long> implements Serializable {
+
+    private static final long serialVersionUID = -5387827484974552092L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "lab_id")
+    private Long id;
+
+    @Column(name = "lab_referentiel_type")
+    @Enumerated(EnumType.STRING)
+    private ReferentielType referentielType;
+
+    @Column(name = "lab_code")
+    private String code;
+
+    @Column(name = "lab_label")
+    private String libelle;
+}

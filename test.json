@@ -1,0 +1,9 @@
+{
+  "invoice": {
+    "total_amount": 1000,
+    "description": "Test Invoice"
+  },
+  "store": {
+    "name": "Navetane App"
+  }
+}
