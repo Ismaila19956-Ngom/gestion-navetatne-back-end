@@ -62,7 +62,7 @@ public class NaavetaneApplication {
                     .agent(agent)
                     .profile(profile)
                     .login("admin")
-                    .password(passwordEncoder.encode("navetane@2025"))
+                    .password(passwordEncoder.encode("navetane@2026"))
                     .status(true)
                     .firstAttempt(false)
                     .build()

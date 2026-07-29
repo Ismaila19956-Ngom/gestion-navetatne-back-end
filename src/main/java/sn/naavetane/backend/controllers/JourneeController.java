@@ -11,7 +11,9 @@ import sn.naavetane.backend.repositories.JourneeRepository;
 import sn.naavetane.backend.repositories.SaisonRepository;
 import sn.naavetane.backend.entities.SaisonEntity;
 import sn.naavetane.backend.services.AuditService;
+import sn.naavetane.backend.services.JourneeImportService;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,6 +33,7 @@ public class JourneeController {
     private final TicketRepository ticketRepository;
     private final SaisonRepository saisonRepository;
     private final AuditService auditService;
+    private final JourneeImportService journeeImportService;
 
     private String getCurrentUser() {
         if (SecurityContextHolder.getContext().getAuthentication() != null) {
@@ -42,6 +45,16 @@ public class JourneeController {
     private boolean isSuperAdmin() {
         // Bypass de la sécurité temporaire car l'utilisateur n'a pas le profil Super Admin
         return true;
+    }
+
+    @PostMapping(value = "/import", consumes = org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> importJournees(@RequestParam("file") MultipartFile file) {
+        try {
+            List<JourneeEntity> journees = journeeImportService.importJourneesFromExcel(file, getCurrentUser());
+            return ResponseEntity.ok(journees.stream().map(this::mapToDto).collect(Collectors.toList()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
     @PostMapping

@@ -30,6 +30,15 @@ public class JourneeRule {
     }
 
     @Bean
+    public SecurityRule importJournees() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.POST)
+                .apiPattern("/api/journees/import")
+                .authenticated(true)
+                .build();
+    }
+
+    @Bean
     public SecurityRule readJournees() {
         return SecurityRule.builder()
                 .httpMethod(HttpMethod.GET)
