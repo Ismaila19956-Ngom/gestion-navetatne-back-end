@@ -61,8 +61,8 @@ public class NaavetaneApplication {
             userRepository.save(UserEntity.builder()
                     .agent(agent)
                     .profile(profile)
-                    .login("admin")//
-                    .password(passwordEncoder.encode("dgpsn@2025"))
+                    .login("admin")
+                    .password(passwordEncoder.encode("navetane@2025"))
                     .status(true)
                     .firstAttempt(false)
                     .build()

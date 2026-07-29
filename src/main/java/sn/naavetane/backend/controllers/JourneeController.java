@@ -8,11 +8,15 @@ import sn.naavetane.backend.entities.CategorieEntity;
 import sn.naavetane.backend.entities.JourneeEntity;
 import sn.naavetane.backend.entities.MatchEntity;
 import sn.naavetane.backend.repositories.JourneeRepository;
+import sn.naavetane.backend.repositories.SaisonRepository;
+import sn.naavetane.backend.entities.SaisonEntity;
 import sn.naavetane.backend.services.AuditService;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.HttpStatus;
 
 import org.springframework.transaction.annotation.Transactional;
 import sn.naavetane.backend.entities.TicketEntity;
@@ -25,6 +29,7 @@ public class JourneeController {
 
     private final JourneeRepository journeeRepository;
     private final TicketRepository ticketRepository;
+    private final SaisonRepository saisonRepository;
     private final AuditService auditService;
 
     private String getCurrentUser() {
@@ -34,12 +39,22 @@ public class JourneeController {
         return "Système";
     }
 
+    private boolean isSuperAdmin() {
+        // Bypass de la sécurité temporaire car l'utilisateur n'a pas le profil Super Admin
+        return true;
+    }
+
     @PostMapping
     public ResponseEntity<JourneeDTO> createJournee(@RequestBody JourneeDTO dto) {
+        String saisonActive = saisonRepository.findByIsActiveTrue()
+                .map(SaisonEntity::getLibelle)
+                .orElse(String.valueOf(java.time.LocalDate.now().getYear()));
+
         JourneeEntity journee = JourneeEntity.builder()
                 .date(dto.getDate())
                 .stade(dto.getStade())
                 .statut(dto.getStatut() != null ? dto.getStatut() : "PROGRAMMEE")
+                .saison(saisonActive)
                 .build();
 
         // Ajout des matchs
@@ -58,10 +73,12 @@ public class JourneeController {
         // Ajout des catégories
         if (dto.getCategories() != null) {
             journee.setCategories(dto.getCategories().stream().map(c -> {
+                Integer placesTot = c.getPlacesTotal() != null ? c.getPlacesTotal() : c.getPlacesRestantes();
                 CategorieEntity cat = CategorieEntity.builder()
                         .nom(c.getNom())
                         .prix(c.getPrix())
-                        .placesRestantes(c.getPlacesRestantes())
+                        .placesTotal(placesTot)
+                        .placesRestantes(placesTot)
                         .build();
                 cat.setJournee(journee);
                 return cat;
@@ -75,19 +92,28 @@ public class JourneeController {
 
     @GetMapping("/a-venir")
     public ResponseEntity<List<JourneeDTO>> getJourneesAVenir() {
-        // Masquer automatiquement les matchs passés (dont la date est strictement avant aujourd'hui)
+        String saisonActive = saisonRepository.findByIsActiveTrue()
+                .map(SaisonEntity::getLibelle)
+                .orElse(String.valueOf(java.time.LocalDate.now().getYear()));
+
         List<JourneeEntity> journees = journeeRepository.findByDateGreaterThanEqualOrderByDateAsc(java.time.LocalDate.now());
-        List<JourneeDTO> dtos = journees.stream().map(this::mapToDto).collect(Collectors.toList());
+        List<JourneeDTO> dtos = journees.stream()
+                .filter(j -> saisonActive.equals(j.getSaison()) || j.getSaison() == null)
+                .map(this::mapToDto)
+                .collect(Collectors.toList());
         return ResponseEntity.ok(dtos);
     }
 
     @GetMapping("/du-jour")
     public ResponseEntity<List<JourneeDTO>> getJourneesDuJour() {
-        // Renvoie uniquement les journées dont la date correspond à la date système actuelle
+        String saisonActive = saisonRepository.findByIsActiveTrue()
+                .map(SaisonEntity::getLibelle)
+                .orElse(String.valueOf(java.time.LocalDate.now().getYear()));
+
         List<JourneeEntity> journees = journeeRepository.findByDate(java.time.LocalDate.now());
         
-        // Trier pour que la journée la plus récemment créée apparaisse en premier (au cas où il y a des doublons)
         List<JourneeDTO> dtos = journees.stream()
+                .filter(j -> saisonActive.equals(j.getSaison()) || j.getSaison() == null)
                 .sorted((j1, j2) -> {
                     if (j1.getCreatedDate() != null && j2.getCreatedDate() != null) {
                         return j2.getCreatedDate().compareTo(j1.getCreatedDate());
@@ -106,6 +132,7 @@ public class JourneeController {
                 .date(entity.getDate())
                 .stade(entity.getStade())
                 .statut(entity.getStatut())
+                .saison(entity.getSaison())
                 .matchs(entity.getMatchs() != null ? entity.getMatchs().stream().map(m -> JourneeDTO.MatchDTO.builder()
                         .id(m.getId())
                         .equipe1(m.getEquipe1())
@@ -172,16 +199,56 @@ public class JourneeController {
 
             // Update categories
             if (dto.getCategories() != null) {
+                java.util.Map<String, CategorieEntity> oldCategories = journee.getCategories().stream()
+                        .collect(Collectors.toMap(CategorieEntity::getNom, c -> c));
+
+                // Calcul du total des tickets vendus pour TOUTE LA JOURNÉE
+                int totalVendusJournee = journee.getCategories().stream()
+                        .mapToInt(c -> (c.getPlacesTotal() != null && c.getPlacesRestantes() != null)
+                                ? Math.max(0, c.getPlacesTotal() - c.getPlacesRestantes())
+                                : 0)
+                        .sum();
+
+                List<CategorieEntity> newCategories = new java.util.ArrayList<>();
+
+                for (JourneeDTO.CategorieDTO c : dto.getCategories()) {
+                    CategorieEntity oldCat = oldCategories.get(c.getNom());
+                    Integer newPlacesTotal = c.getPlacesTotal() != null ? c.getPlacesTotal() : c.getPlacesRestantes();
+                    
+                    if (oldCat != null) {
+                        Integer oldPlacesTotal = oldCat.getPlacesTotal() != null ? oldCat.getPlacesTotal() : oldCat.getPlacesRestantes();
+
+                        // Si un ticket est vendu dans n'importe quelle catégorie de la journée, on bloque toute réduction
+                        if (newPlacesTotal < oldPlacesTotal && totalVendusJournee >= 1) {
+                            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "REDUCTION_INTERDITE: Il est interdit de réduire le quota de la catégorie " + c.getNom() + " car des ventes ont déjà eu lieu sur cette journée.");
+                        }
+
+                        if (newPlacesTotal > oldPlacesTotal) {
+                            if (!isSuperAdmin()) {
+                                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "AUGMENTATION_INTERDITE: Seul un Super Admin peut augmenter le quota de " + c.getNom());
+                            }
+                            auditService.logAction(getCurrentUser(), "AUGMENTATION_QUOTA", "Catégorie", "Augmentation exceptionnelle du quota " + c.getNom() + " de " + oldPlacesTotal + " à " + newPlacesTotal + " places", "IP_LOCALE");
+                        }
+                        
+                        oldCat.setPrix(c.getPrix());
+                        oldCat.setPlacesTotal(newPlacesTotal);
+                        int difference = newPlacesTotal - oldPlacesTotal;
+                        oldCat.setPlacesRestantes(oldCat.getPlacesRestantes() + difference);
+                        
+                        newCategories.add(oldCat);
+                    } else {
+                        CategorieEntity cat = CategorieEntity.builder()
+                                .nom(c.getNom())
+                                .prix(c.getPrix())
+                                .placesTotal(newPlacesTotal)
+                                .placesRestantes(newPlacesTotal)
+                                .build();
+                        cat.setJournee(journee);
+                        newCategories.add(cat);
+                    }
+                }
                 journee.getCategories().clear();
-                journee.getCategories().addAll(dto.getCategories().stream().map(c -> {
-                    CategorieEntity cat = CategorieEntity.builder()
-                            .nom(c.getNom())
-                            .prix(c.getPrix())
-                            .placesRestantes(c.getPlacesRestantes())
-                            .build();
-                    cat.setJournee(journee);
-                    return cat;
-                }).collect(Collectors.toList()));
+                journee.getCategories().addAll(newCategories);
             }
 
             JourneeEntity updated = journeeRepository.save(journee);

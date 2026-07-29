@@ -43,7 +43,7 @@ security-jwt:
 
 naavetane-cors:
   cors:
-    allowed-origins: "http://localhost:4200,http://localhost:4600,http://185.166.39.101,http://185.166.39.101/,http://localhost:4300,http://localhost:55555,http://127.0.0.1:55555"
+    allowed-origins: "http://localhost:4200,http://localhost:4600,http://37.27.12.2,http://37.27.12.2/,http://localhost:4300,http://localhost:55555,http://127.0.0.1:55555"
     allowed-methods: "*"
     allowed-headers: "*"
     exposed-headers: "Authorization,Link,Content-Disposition"

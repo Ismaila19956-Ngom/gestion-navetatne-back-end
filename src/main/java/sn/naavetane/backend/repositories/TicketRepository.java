@@ -40,6 +40,12 @@ public interface TicketRepository extends JpaRepository<TicketEntity, UUID> {
     
     long countByTypeAchat(TypeAchat typeAchat);
 
+    @Query("SELECT COUNT(t) FROM TicketEntity t WHERE t.matchId IN :matchIds AND t.statut IN :statuts")
+    long countByMatchIdInAndStatutIn(@Param("matchIds") List<UUID> matchIds, @Param("statuts") List<StatutTicket> statuts);
+
+    @Query("SELECT COUNT(t) FROM TicketEntity t WHERE t.matchId IN :matchIds AND t.statut IN :statuts AND t.prix = :prix")
+    long countByMatchIdInAndStatutInAndPrix(@Param("matchIds") List<UUID> matchIds, @Param("statuts") List<StatutTicket> statuts, @Param("prix") Double prix);
+
     @Query("SELECT COALESCE(SUM(t.prix), 0) FROM TicketEntity t WHERE t.matchId = :matchId AND t.typeAchat = :typeAchat")
     Double sumPrixByMatchIdAndTypeAchat(@Param("matchId") UUID matchId, @Param("typeAchat") TypeAchat typeAchat);
 

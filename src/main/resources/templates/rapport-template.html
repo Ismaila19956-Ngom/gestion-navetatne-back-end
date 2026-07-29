@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Bilan de la Journée</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 20mm;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            color: #333;
+            line-height: 1.5;
+            font-size: 12px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #0056b3;
+            padding-bottom: 15px;
+        }
+        .header h1 {
+            color: #0056b3;
+            font-size: 24px;
+            margin: 0;
+        }
+        .header p {
+            margin: 5px 0 0 0;
+            font-size: 14px;
+            color: #666;
+        }
+        .summary-box {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 30px;
+        }
+        .summary-box h3 {
+            margin-top: 0;
+            color: #0056b3;
+            border-bottom: 1px solid #dee2e6;
+            padding-bottom: 10px;
+        }
+        .summary-stats {
+            display: table;
+            width: 100%;
+        }
+        .stat-item {
+            display: table-cell;
+            width: 33.33%;
+            text-align: left;
+        }
+        .stat-item strong {
+            display: block;
+            color: #495057;
+            font-size: 11px;
+            text-transform: uppercase;
+        }
+        .stat-item span {
+            font-size: 18px;
+            color: #0056b3;
+            font-weight: bold;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #dee2e6;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #e9ecef;
+            color: #495057;
+            font-weight: bold;
+            font-size: 12px;
+        }
+        .text-right {
+            text-align: right;
+        }
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 10px;
+            color: #888;
+            border-top: 1px solid #eee;
+            padding-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Bilan de la Journée</h1>
+        <p>Généré le : <span th:text="${#dates.format(#dates.createNow(), 'dd/MM/yyyy HH:mm')}"></span></p>
+    </div>
+
+    <div class="summary-box">
+        <h3>Résumé Global</h3>
+        <div class="summary-stats">
+            <div class="stat-item">
+                <strong>Total Ventes</strong>
+                <span th:text="${totalVentes} + ' FCFA'"></span>
+            </div>
+            <div class="stat-item">
+                <strong>Tickets Scannés</strong>
+                <span th:text="${totalScannes}"></span>
+            </div>
+            <div class="stat-item">
+                <strong>Tickets Frauduleux</strong>
+                <span th:text="${totalFrauduleux}"></span>
+            </div>
+        </div>
+    </div>
+
+    <h3>Détail par Catégorie</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Catégorie</th>
+                <th class="text-right">Prix Unitaire</th>
+                <th class="text-right">Tickets Vendus</th>
+                <th class="text-right">Scannés</th>
+                <th class="text-right">Total (FCFA)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="cat : ${categories}">
+                <td th:text="${cat.nom}"></td>
+                <td class="text-right" th:text="${cat.prix}"></td>
+                <td class="text-right" th:text="${cat.ticketsVendus}"></td>
+                <td class="text-right" th:text="${cat.ticketsScannes}"></td>
+                <td class="text-right"><strong th:text="${cat.recette}"></strong></td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <th colspan="4" class="text-right">Montant Global :</th>
+                <th class="text-right"><strong th:text="${totalVentes} + ' FCFA'"></strong></th>
+            </tr>
+        </tfoot>
+    </table>
+
+    <div class="footer">
+        <p>Document généré automatiquement par la plateforme Naavétane.</p>
+    </div>
+
+</body>
+</html>

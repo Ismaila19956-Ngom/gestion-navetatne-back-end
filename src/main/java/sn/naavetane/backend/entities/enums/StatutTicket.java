@@ -4,5 +4,6 @@ public enum StatutTicket {
     VALIDE,
     UTILISE,
     CONSOMME,
-    ANNULE
+    ANNULE,
+    FRAUDULEUX
 }

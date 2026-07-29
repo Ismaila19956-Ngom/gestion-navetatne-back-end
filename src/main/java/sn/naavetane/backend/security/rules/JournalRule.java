@@ -10,7 +10,7 @@ import sn.naavetane.backend.security.SecurityPermissions;
 @Component
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class JournalRule {
-    static final String JOURNAL_API_PREFIX = "/journals";
+    static final String JOURNAL_API_PREFIX = "/api/audits";
 
     @Bean
     public SecurityRule readAllJournal() {

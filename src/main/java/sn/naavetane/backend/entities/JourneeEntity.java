@@ -34,6 +34,9 @@ public class JourneeEntity extends Auditable<Long> implements Serializable {
     @Column(name = "statut")
     private String statut = "PROGRAMMEE";
 
+    @Column(name = "saison")
+    private String saison;
+
     @OneToMany(mappedBy = "journee", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MatchEntity> matchs = new ArrayList<>();
 

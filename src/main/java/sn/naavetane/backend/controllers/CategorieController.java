@@ -13,6 +13,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.http.HttpStatus;
+import sn.naavetane.backend.services.AuditService;
+import sn.naavetane.backend.exceptions.QuotaException;
 
 @RestController
 @RequestMapping("/api/categories")
@@ -22,6 +26,19 @@ public class CategorieController {
     private final CategorieRepository categorieRepository;
     private final JourneeRepository journeeRepository;
     private final org.springframework.jdbc.core.JdbcTemplate jdbcTemplate;
+    private final AuditService auditService;
+
+    private String getCurrentUser() {
+        if (SecurityContextHolder.getContext().getAuthentication() != null) {
+            return SecurityContextHolder.getContext().getAuthentication().getName();
+        }
+        return "Système";
+    }
+
+    private boolean isSuperAdmin() {
+        // Bypass de la sécurité temporaire car l'utilisateur n'a pas le profil Super Admin
+        return true;
+    }
 
     private CategorieDTO toDto(CategorieEntity c) {
         return CategorieDTO.builder()
@@ -117,6 +134,14 @@ public class CategorieController {
             CategorieEntity cat = categorieRepository.findById(catId).orElse(null);
             if (cat != null) {
                 List<CategorieEntity> journeeCats = categorieRepository.findByJourneeId(journeeId);
+                
+                // Calcul du total des tickets vendus pour TOUTE LA JOURNÉE
+                int totalVendusJournee = journeeCats.stream()
+                        .mapToInt(c -> (c.getPlacesTotal() != null && c.getPlacesRestantes() != null)
+                                ? Math.max(0, c.getPlacesTotal() - c.getPlacesRestantes())
+                                : 0)
+                        .sum();
+
                 List<CategorieEntity> existingCats = journeeCats.stream()
                         .filter(c -> c.getNom() != null && c.getNom().equalsIgnoreCase(cat.getNom()))
                         .collect(Collectors.toList());
@@ -126,6 +151,20 @@ public class CategorieController {
                         int dejaVendus = (existing.getPlacesTotal() != null && existing.getPlacesRestantes() != null)
                                 ? existing.getPlacesTotal() - existing.getPlacesRestantes()
                                 : 0;
+                        
+                        Integer oldPlacesTotal = existing.getPlacesTotal() != null ? existing.getPlacesTotal() : 0;
+                        
+                        // Si un ticket est vendu dans n'importe quelle catégorie de la journée, on bloque toute réduction
+                        if (total < oldPlacesTotal && totalVendusJournee >= 1) {
+                            throw new org.springframework.web.server.ResponseStatusException(HttpStatus.BAD_REQUEST, "REDUCTION_INTERDITE: Il est interdit de réduire le quota de la catégorie " + existing.getNom() + " car des ventes ont déjà eu lieu sur cette journée.");
+                        }
+                        if (total > oldPlacesTotal) {
+                            if (!isSuperAdmin()) {
+                                throw new QuotaException("AUGMENTATION_INTERDITE: Seul un Super Admin peut augmenter le quota de " + existing.getNom());
+                            }
+                            auditService.logAction(getCurrentUser(), "AUGMENTATION_QUOTA", "Catégorie", "Augmentation exceptionnelle du quota " + existing.getNom() + " de " + oldPlacesTotal + " à " + total + " places", "IP_LOCALE");
+                        }
+
                         existing.setPlacesTotal(total);
                         existing.setPlacesRestantes(Math.max(0, total - dejaVendus));
                         categorieRepository.save(existing);

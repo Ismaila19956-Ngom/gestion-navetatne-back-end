@@ -67,4 +67,13 @@ public class RapportRule {
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
                 .end();
     }
+
+    @Bean
+    public SecurityRule readRapportsBilletterie() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern("/api/rapports/**")
+                .authenticated(true)
+                .build();
+    }
 }

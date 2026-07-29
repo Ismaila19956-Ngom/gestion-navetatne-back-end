@@ -19,6 +19,7 @@ public class JourneeDTO {
     private List<MatchDTO> matchs;
     private List<CategorieDTO> categories;
     private String statut;
+    private String saison;
 
     @Data
     @Builder
