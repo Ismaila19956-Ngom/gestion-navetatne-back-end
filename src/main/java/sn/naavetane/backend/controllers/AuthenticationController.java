@@ -8,11 +8,18 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import sn.naavetane.backend.models.UserDTO;
 import sn.naavetane.backend.models.requests.LoginFormDTO;
 import sn.naavetane.backend.models.requests.TemporaryCodeLoginRequest;
 import sn.naavetane.backend.models.responses.SignInAuthentication;
+import sn.naavetane.backend.security.SecurityPermissions;
 import sn.naavetane.backend.services.AuthenticationService;
 import sn.naavetane.backend.services.TemporaryAccessCodeService;
+import sn.naavetane.backend.services.UserService;
+
+import java.security.Principal;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -22,6 +29,7 @@ import sn.naavetane.backend.services.TemporaryAccessCodeService;
 @Slf4j
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
+    private final UserService userService;
 
 
     @Operation(summary = "sign in by login and password", description = "dhdg")
@@ -45,4 +53,44 @@ public class AuthenticationController {
     public SignInAuthentication signUp(@RequestBody sn.naavetane.backend.models.requests.SignUpDTO signUpRequest) {
         return authenticationService.signUp(signUpRequest);
     }
+
+    /**
+     * Retourne les permissions actuelles de l'utilisateur connecté, depuis la BDD (pas le JWT).
+     * Permet au frontend de rafraîchir la sidebar sans se reconnecter après une modification de profil.
+     */
+    @Operation(summary = "Get current user permissions", description = "Returns up-to-date permissions from DB for the authenticated user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success"),
+            @ApiResponse(responseCode = "401", description = "Not authenticated")})
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/me")
+    public Map<String, Object> getCurrentUserPermissions(Principal principal) {
+        Map<String, Object> result = new HashMap<>();
+
+        if (principal == null) {
+            result.put("permissions", Collections.emptyList());
+            return result;
+        }
+
+        try {
+            UserDTO user = userService.readUserByLogin(principal.getName());
+            List<String> permissions = Collections.emptyList();
+
+            if (user != null && user.getProfile() != null && user.getProfile().getPermissions() != null) {
+                permissions = user.getProfile().getPermissions()
+                        .stream()
+                        .map(SecurityPermissions::name)
+                        .collect(Collectors.toList());
+            }
+
+            result.put("login", principal.getName());
+            result.put("permissions", permissions);
+        } catch (Exception e) {
+            log.error("Erreur lors de la récupération des permissions pour {}", principal.getName(), e);
+            result.put("permissions", Collections.emptyList());
+        }
+
+        return result;
+    }
 }
+
