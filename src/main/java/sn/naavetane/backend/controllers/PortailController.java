@@ -29,6 +29,9 @@ public class PortailController {
     @Autowired
     private ActualiteRepository actualiteRepository;
 
+    @Autowired
+    private sn.naavetane.backend.services.DataStorageService dataStorageService;
+
     // --- SLIDERS ---
     @GetMapping("/sliders")
     public ResponseEntity<List<SliderEntity>> getActiveSliders() {
@@ -94,6 +97,25 @@ public class PortailController {
     public ResponseEntity<?> deleteActualite(@PathVariable UUID id) {
         actualiteRepository.deleteById(id);
         return ResponseEntity.ok().build();
+    }
+
+    // --- UPLOAD FICHIER (CMS) ---
+    @PostMapping(value = "/upload", consumes = org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Map<String, String>> uploadFile(@RequestParam("file") org.springframework.web.multipart.MultipartFile file) {
+        try {
+            String extension = org.apache.commons.io.FilenameUtils.getExtension(file.getOriginalFilename());
+            if (extension == null || extension.isEmpty()) {
+                extension = "unknown";
+            }
+            String reference = UUID.randomUUID().toString();
+            String path = dataStorageService.storeFileRelativePath("portail", reference, extension, file.getInputStream());
+            
+            Map<String, String> response = new HashMap<>();
+            response.put("url", path);
+            return ResponseEntity.ok(response);
+        } catch (java.io.IOException e) {
+            return ResponseEntity.status(org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     // --- DASHBOARD PORTAIL ---

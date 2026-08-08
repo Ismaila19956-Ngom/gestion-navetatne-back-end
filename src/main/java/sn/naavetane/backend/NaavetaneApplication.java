@@ -9,6 +9,8 @@ import sn.naavetane.backend.repositories.AgentRepository;
 import sn.naavetane.backend.repositories.DirectionRepository;
 import sn.naavetane.backend.repositories.ProfileRepository;
 import sn.naavetane.backend.repositories.UserRepository;
+import sn.naavetane.backend.repositories.TypeActualiteRepository;
+import sn.naavetane.backend.entities.TypeActualiteEntity;
 import sn.naavetane.backend.security.SecurityPermissions;
 
 import lombok.extern.slf4j.Slf4j;
@@ -31,14 +33,22 @@ public class NaavetaneApplication {
     }
 
     @Bean
-    CommandLineRunner runner(DirectionRepository directionRepository, UserRepository userRepository, ProfileRepository profileRepository, AgentRepository agentRepository, PasswordEncoder passwordEncoder) {
+    CommandLineRunner runner(DirectionRepository directionRepository, UserRepository userRepository, ProfileRepository profileRepository, AgentRepository agentRepository, PasswordEncoder passwordEncoder, TypeActualiteRepository typeActualiteRepository) {
         return args -> {
             createAdminUser(userRepository, profileRepository, agentRepository, passwordEncoder);
             createVendeurUser(userRepository, profileRepository, agentRepository, passwordEncoder);
             createScannerUser(userRepository, profileRepository, agentRepository, passwordEncoder);
             initOrganigramme(directionRepository);
-
+            initTypesActualite(typeActualiteRepository);
         };
+    }
+
+    private void initTypesActualite(TypeActualiteRepository typeRepository) {
+        if (typeRepository.count() == 0) {
+            typeRepository.save(TypeActualiteEntity.builder().code("ACTUALITE").libelle("Actualité Sportive").actif(true).build());
+            typeRepository.save(TypeActualiteEntity.builder().code("COMMUNIQUE").libelle("Communiqué CQRP").actif(true).build());
+            log.info("Référentiel des types d'actualités initialisé.");
+        }
     }
 
     private void createAdminUser(UserRepository userRepository, ProfileRepository profileRepository, AgentRepository agentRepository, PasswordEncoder passwordEncoder) {

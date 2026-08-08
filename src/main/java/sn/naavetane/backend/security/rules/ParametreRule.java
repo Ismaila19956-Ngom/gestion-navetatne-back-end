@@ -15,6 +15,7 @@ public class ParametreRule {
         return SecurityRule.builder()
                 .httpMethod(HttpMethod.GET)
                 .apiPattern("/api/parametres/**")
+                .apiPattern("/api/referentiels/**")
                 .authenticated(true)
                 .build();
     }
@@ -24,6 +25,17 @@ public class ParametreRule {
         return SecurityRule.builder()
                 .httpMethod(HttpMethod.POST)
                 .apiPattern("/api/parametres/**")
+                .apiPattern("/api/referentiels/**")
+                .authenticated(true)
+                .build();
+    }
+
+    @Bean
+    public SecurityRule deleteParametres() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.DELETE)
+                .apiPattern("/api/parametres/**")
+                .apiPattern("/api/referentiels/**")
                 .authenticated(true)
                 .build();
     }

@@ -10,6 +10,7 @@ import sn.naavetane.backend.entities.MatchEntity;
 import sn.naavetane.backend.repositories.JourneeRepository;
 import sn.naavetane.backend.repositories.TicketRepository;
 import sn.naavetane.backend.entities.enums.StatutTicket;
+import sn.naavetane.backend.repositories.FraudeLogRepository;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,6 +32,7 @@ public class RapportController {
 
     private final JourneeRepository journeeRepository;
     private final TicketRepository ticketRepository;
+    private final FraudeLogRepository fraudeLogRepository;
     private final PdfRendererService pdfRendererService;
 
     @GetMapping("/journee/{id}")
@@ -77,13 +79,10 @@ public class RapportController {
             double recetteTotale = 0.0;
             List<RapportDTO.CategorieRapportDTO> details = new ArrayList<>();
             
-            // Récupérer les IDs de tous les matchs de la journée
-            List<UUID> matchIds = journee.getMatchs() != null ? journee.getMatchs().stream()
-                    .map(MatchEntity::getId)
-                    .collect(Collectors.toList()) : new ArrayList<>();
+            // Les tickets sont rattachés à la journée (journee.getId()) et non aux matchs individuels
+            List<UUID> journeeIdList = Arrays.asList(journee.getId());
             
             List<StatutTicket> statutsScannes = Arrays.asList(StatutTicket.UTILISE, StatutTicket.CONSOMME);
-            List<StatutTicket> statutsFraude = Arrays.asList(StatutTicket.FRAUDULEUX);
 
             for (CategorieEntity cat : categories) {
                 int placesTot = cat.getPlacesTotal() != null ? cat.getPlacesTotal() : 0;
@@ -92,17 +91,11 @@ public class RapportController {
                 double prix = cat.getPrix() != null ? cat.getPrix() : 0.0;
                 double recette = vendus * prix;
                 
-                int scannes = 0;
+                int scannes = (int) ticketRepository.countByMatchIdInAndStatutInAndPrix(journeeIdList, statutsScannes, prix);
                 int fraudes = 0;
-                
-                if (!matchIds.isEmpty()) {
-                    scannes = (int) ticketRepository.countByMatchIdInAndStatutInAndPrix(matchIds, statutsScannes, prix);
-                    fraudes = (int) ticketRepository.countByMatchIdInAndStatutInAndPrix(matchIds, statutsFraude, prix);
-                }
 
                 totalTicketsVendus += vendus;
                 totalTicketsScannes += scannes;
-                totalTicketsFrauduleux += fraudes;
                 recetteTotale += recette;
 
                 details.add(RapportDTO.CategorieRapportDTO.builder()
@@ -117,13 +110,16 @@ public class RapportController {
                         .build());
             }
 
+            // Les fraudes sont enregistrées dans FraudeLogEntity avec le matchId = journee.getId()
+            int finalTotalFraudes = (int) fraudeLogRepository.countByMatchId(journee.getId());
+
             RapportDTO rapport = RapportDTO.builder()
                     .journeeId(journee.getId())
                     .date(journee.getDate() != null ? journee.getDate().toString() : "")
                     .stade(journee.getStade())
                     .totalTicketsVendus(totalTicketsVendus)
                     .totalTicketsScannes(totalTicketsScannes)
-                    .totalTicketsFrauduleux(totalTicketsFrauduleux)
+                    .totalTicketsFrauduleux(finalTotalFraudes)
                     .recetteTotale(recetteTotale)
                     .details(details)
                     .build();

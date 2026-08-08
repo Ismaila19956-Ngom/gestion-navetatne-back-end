@@ -43,6 +43,18 @@ public class PortailRule {
                 .authenticated(false) // Public API
                 .build();
     }
+
+    @Bean
+    public SecurityRule readPortailNewEntities() {
+        return SecurityRule.builder()
+                .httpMethod(HttpMethod.GET)
+                .apiPattern("/api/portail/textes")
+                .apiPattern("/api/portail/organisation")
+                .apiPattern("/api/portail/faqs")
+                .apiPattern("/api/portail/contacts")
+                .authenticated(false) // Public API
+                .build();
+    }
     
     // --- ADMIN (CMS) RULES ---
     
@@ -52,6 +64,10 @@ public class PortailRule {
                 .httpMethod(HttpMethod.GET)
                 .apiPattern("/api/portail/sliders/all")
                 .apiPattern("/api/portail/actualites/all")
+                .apiPattern("/api/portail/textes/all")
+                .apiPattern("/api/portail/organisation/all")
+                .apiPattern("/api/portail/faqs/all")
+                .apiPattern("/api/portail/contacts/all")
                 .build()
                 .condition()
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
@@ -66,6 +82,11 @@ public class PortailRule {
                 .apiPattern("/api/portail/sliders")
                 .apiPattern("/api/portail/actualites")
                 .apiPattern("/api/portail/socials")
+                .apiPattern("/api/portail/textes")
+                .apiPattern("/api/portail/organisation")
+                .apiPattern("/api/portail/faqs")
+                .apiPattern("/api/portail/contacts")
+                .apiPattern("/api/portail/upload")
                 .build()
                 .condition()
                 .hasPermission(SecurityPermissions.ALL_ACCESS)
@@ -80,6 +101,10 @@ public class PortailRule {
                 .apiPattern("/api/portail/sliders/{id}")
                 .apiPattern("/api/portail/actualites/{id}")
                 .apiPattern("/api/portail/socials/{id}")
+                .apiPattern("/api/portail/textes/{id}")
+                .apiPattern("/api/portail/organisation/{id}")
+                .apiPattern("/api/portail/faqs/{id}")
+                .apiPattern("/api/portail/contacts/{id}")
                 .build()
                 .condition()
                 .hasPermission(SecurityPermissions.ALL_ACCESS)

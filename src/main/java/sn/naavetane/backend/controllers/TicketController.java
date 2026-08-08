@@ -133,6 +133,19 @@ public class TicketController {
         String journeeIdStr = (String) request.get("journeeId");
         UUID matchId = UUID.fromString(journeeIdStr);
 
+        // ── Validation du statut de la journée (Sécurité Guichet Clôturé) ──
+        Optional<JourneeEntity> journeeOpt = journeeRepository.findById(matchId);
+        if (journeeOpt.isPresent()) {
+            JourneeEntity journee = journeeOpt.get();
+            String statut = journee.getStatut();
+            if (statut != null && !statut.equalsIgnoreCase("PROGRAMMEE")) {
+                Map<String, Object> erreur = new HashMap<>();
+                erreur.put("error", "Ventes bloquées. Cette journée est actuellement " + statut + ".");
+                erreur.put("statut", statut);
+                return ResponseEntity.badRequest().body(erreur);
+            }
+        }
+
         List<Map<String, Object>> generatedTickets = new ArrayList<>();
         List<TicketEntity> ticketsToSave = new ArrayList<>();
 

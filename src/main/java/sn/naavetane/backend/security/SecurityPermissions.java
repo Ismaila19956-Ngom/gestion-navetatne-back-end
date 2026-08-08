@@ -234,6 +234,9 @@ public enum SecurityPermissions {
     READ_BUDGET("Consulter budget", Feature.BUDGET),
     READ_CAISSE("Consulter caisse et recettes", Feature.BUDGET),
     READ_TICKET("Gérer tickets et scanners", Feature.BUDGET),
+    CLOTURE_SUSPENDRE_GUICHET("Clôturer ou suspendre les ventes du guichet", Feature.BUDGET),
+    MANAGE_JOURNEE("Gérer et programmer les journées", Feature.BUDGET),
+    IMPORT_JOURNEE("Importer les journées depuis Excel", Feature.BUDGET),
     SUIVIS_LIGNE_BUDGETAIRE("Budjet / Suivis ligne budgetaire", Feature.BUDGET),
 
     READ_FINANCEMENT_BUDGET("Consulter financement budget", Feature.BUDGET),

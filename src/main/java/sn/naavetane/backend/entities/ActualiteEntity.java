@@ -24,10 +24,10 @@ public class ActualiteEntity {
     private String contenu;
     
     private String imageCouverture;
-    private String fichierJoint; // ex: PDF communiqué
+    private String fichierJoint;
     
     private LocalDateTime datePublication = LocalDateTime.now();
     private Boolean actif = true;
     
-    private String type = "ACTUALITE"; // ACTUALITE ou COMMUNIQUE
+    private String type = "ACTUALITE";
 }
