@@ -42,9 +42,19 @@ public class TicketController {
         fraudeLogRepository.save(fraude);
     }
 
+    @Autowired
+    private sn.naavetane.backend.repositories.UserRepository userRepository;
+
     @GetMapping("/mes-billets")
-    public ResponseEntity<List<TicketEntity>> getMesBillets() {
-        return ResponseEntity.ok(ticketRepository.findAll());
+    public ResponseEntity<List<TicketEntity>> getMesBillets(java.security.Principal principal) {
+        if (principal == null) {
+            return ResponseEntity.status(401).build();
+        }
+        java.util.Optional<sn.naavetane.backend.entities.UserEntity> userOpt = userRepository.findByLogin(principal.getName());
+        if (userOpt.isPresent()) {
+            return ResponseEntity.ok(ticketRepository.findByUserIdOrderByDateAchatDesc(userOpt.get().getId()));
+        }
+        return ResponseEntity.ok(Collections.emptyList());
     }
 
     // ─────────────────────────────────────────────────────────────────────────
